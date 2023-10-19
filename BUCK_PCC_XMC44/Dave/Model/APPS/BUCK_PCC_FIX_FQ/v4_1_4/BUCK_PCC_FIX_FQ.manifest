@@ -1,0 +1,2114 @@
+package Model.APPS.BUCK_PCC_FIX_FQ.v4_1_4;
+
+/*
+ * Copyright (c) 2015-2020, Infineon Technologies AG
+ * All rights reserved.
+ *
+ Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ following conditions are met:
+                                                                             
+ Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ disclaimer.
+  
+ Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
+ disclaimer in the documentation and/or other materials provided with the distribution.
+  
+ Neither the name of the copyright holders nor the names of its contributors may be used to endorse or promote
+ products derived from this software without specific prior written permission.
+                                                                             
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE  FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ WHETHER IN CONTRACT, STRICT LIABILITY,OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+                                                                             
+ To improve the quality of the software, users are encouraged to share modifications, enhancements or bug fixes with
+ Infineon Technologies AG: dave@infineon.com. */
+
+/*************** Revision History **********************************************
+ Version        Date          Description
+ 
+   4.0.0       08-Oct-2015   Initial version for DAVEv4
+   4.0.1       14-Oct-2015   1.Help document is updated <br>
+                             2.Corrected the enumeration for setting GPIO pin level.<br>
+   4.0.3       15-Oct-2015   1.Typo in BUCK_PCC_FIX_FQ_lClearOverloadProtectionVariables() API is corrected. <br>
+                             2.HRPWM Compare 2 configuration in HRPWM APP is made read only.<br>
+                             3.Min/Max range for over limit and under limit configurations are corrected in UI.<br>
+                             4.Help document is updated.<br>
+                             5.Number of samples for overload protection is set as 8 for XMC1x device. <br>
+   4.0.5       16-Oct-2015   1.Over limit & Under limit values are corrected. <br>
+                             2.Help document is updated.<br>
+   4.0.7       16-Oct-2015   1.Help document is updated. <br>
+   4.0.9       26-Oct-2015   1.Help document is updated. <br>
+                             2.Tool tips are updated for UI widgets in Comparator configuration tab.<br>
+                             3.Coordinates are corrected for slope image in Comparator configuration tab.<br>
+                             4.Removed support for XMC1x devices.<br>
+                             5.Updated default values in UI. <br>
+   4.0.10      18-Jan-2016   1.Supported for XMC1x devices.<br>
+                             2.APP uses CONTROL_LIB APP in place of POWER_CONV_LIB APP. <br>
+                             3.Dynamic scaling algorithm implemented for XMC1x device.<br>
+                             4.Control Settings tab UI is modified. <br>
+                             5.APP handle structure is modified. <br>
+   4.0.12      19-Jan-2016   1.Bug fixes. <br>
+   4.0.14      24-Jan-2016   1.PI compensator support is removed.<br>
+                             2.Vout reference voltage is now in steps of ADC voltage.<br>
+                             3.Help documentation is updated <br>              
+   4.1.2       03-Feb-2016   1.Default values are updated in UI. <br>
+                             2.Check is added to detect invalid strings in UI. <br>
+                             3.Tool tips are updated for Max out & Min out in Control Settings tab.<br>
+   4.1.4       09-Jan-2021   Modified check for minimum XMCLib version. <BR>
+ *******************************************************************************/
+ import ifx.davex.app.manifest.*
+ import java.util.regex.Matcher
+ 
+ class  BUCK_PCC_FIX_FQ extends BUCK_PCC_FIX_FQ_GUI {
+
+    // Note  : Following App properties are mandatory and important
+    // Begin : App property section
+    
+    /**
+     * App version
+     * Format: a string with three digit separated by a dot.
+     */
+    def version            = '4.1.4'
+    
+    /**
+     * App categories declaration.
+     * It is list of strings. Subcategories are separated by slash.
+     * No limits on number of categories and subcategories depth.
+     */
+    def categoriesDescription = ["Power Conversion"]
+
+    /**
+     * Minimum DAVE version required for this app.
+     *
+     * It is string with three digit separated by a dot.
+     */
+    def minDaveVersion        = '4.0.0'
+    
+    /**
+     * Keywords used by search feature in Apps selection view
+     *
+     * It is a list of string.
+     */
+    def keywords              = ["Buck peak current control", "BUCK_PCC_FIX_FQ", "Power Conversion", "all"]
+    
+    /**
+     * softwareIDs is used to declare which devices are compatible with this app.
+     * It is a map with key a string containing a pattern that shall match the SW id of
+     * the device and as value the minimal version of the app.
+     *
+     *
+     */
+    def softwareIDs       = [
+                              //XMC44
+                              "XMC4.4.*.*.*":"1.0.0",
+                              //"XMC42
+                              "XMC4.2.*.*.*":"1.0.0",
+                              //"XMC41
+                              "XMC4.1.*.*.*":"1.0.0",
+                              //"XMC13
+                              "XMC1.3.*.*.*":"1.0.0",
+                              //"XMC14
+                              //"XMC1.4.*.*.*":"1.0.0",
+                            ]
+ 
+    /**
+     * Singleton property:
+     * When it is true the app can be instantiated only once.
+     */
+    def singleton     = false
+    
+    /**
+     * initProvider property
+     * It shall be true to add a call to <AppName>_Init()
+     */
+    def initProvider  = true
+    
+    /**
+     * Deprecated APP
+     * Set it to true to indicate that the app shall be not used for new projects.
+     */
+    def deprecated    = false
+    
+    /**
+     * Sharable property.
+     * It shall be true to allows multiple apps to require the same instance of this app.
+     */
+    def sharable      = false
+
+    /**
+     *  App function description.
+     */
+    def description = "APP can be used to control different configurations of buck in peak current control mode using fixed frequency."
+    
+    // End   : App property section
+    
+    
+    // Begin : User app property section
+
+    /*The MCU pin resource group for ADC*/
+    MVirtualResourceGroup hwres_chan_a_pin
+    MVirtualResourceGroup hwres_chan_b_pin
+    MVirtualResourceGroup hwres_chan_c_pin
+    MVirtualResourceGroup hwres_chan_d_pin
+    MVirtualResourceGroup hwres_chan_e_pin
+    MVirtualResourceGroup hwres_chan_f_pin
+    MVirtualResourceGroup hwres_chan_g_pin
+    
+    /*The MCU pin resource group of ADC is stored in the array*/
+    RArray<MVirtualResourceGroup>  rarray_hwres_adcchan            = RArray(7);
+    
+    /*The result register resource group is stored in array*/
+    RArray<MVirtualResourceGroup>  rarray_hwres_result             = RArray(7);
+    
+    MVirtualResourceGroup hwres_nvicnode
+    
+    MRequiredApp appres_queue_a
+    MRequiredApp appres_queue_b
+    MRequiredApp appres_queue_c
+    MRequiredApp appres_queue_d
+    MRequiredApp appres_queue_e
+    MRequiredApp appres_queue_f
+    MRequiredApp appres_queue_g
+
+    /*The ADC queue app is stored in the array when queue is used*/
+    RArray<MRequiredApp> rarray_appres_scan                        = RArray(7);
+    
+    MRequiredApp appres_scan_a
+    MRequiredApp appres_scan_b
+    MRequiredApp appres_scan_c
+    MRequiredApp appres_scan_d
+    MRequiredApp appres_scan_e
+    MRequiredApp appres_scan_f
+    MRequiredApp appres_scan_g
+    
+    /*The ADC scan APP is stored in the array when scan is used*/
+    RArray<MRequiredApp> rarray_appres_queue                       = RArray(7);
+    
+    /*HRPWM APP is used to generate the high resolution complementary signals
+     * when XMC4x device is selected*/
+    MRequiredApp appres_hrpwm_1
+    MRequiredApp appres_hrpwm_2
+    MRequiredApp appres_hrpwm_3
+    
+    /*The HRPWM APP is stored in the array when HRPWM is used*/
+    RArray<MRequiredApp> rarray_appres_hrpwm                       = RArray(4);
+    
+    /*PWM_CCU8 APP is used to generate the complementary signals*/
+    MRequiredApp appres_pwm_ccu8_1
+    MRequiredApp appres_pwm_ccu8_2
+    MRequiredApp appres_pwm_ccu8_3
+    
+    /*The PWM_CCU8 APP is stored in the array when PWM_CCU8 is used*/
+    RArray<MRequiredApp> rarray_appres_pwm_ccu8                    = RArray(4);
+    
+    /*The PWM_CCU4 is used for blanking when XMC1x device is selected*/
+    MRequiredApp appres_pwm_ccu4_1
+    MRequiredApp appres_pwm_ccu4_2
+    MRequiredApp appres_pwm_ccu4_3
+    
+    /*The PWM_CCU4 APP is stored in the array when PWM_CCU4 is used*/
+    RArray<MRequiredApp> rarray_appres_pwm_ccu4                    = RArray(4);
+    
+    /*The COMP_SLOPE_GEN APP is used when XMC4x device is selected*/
+    MRequiredApp appres_csg_1
+    MRequiredApp appres_csg_2
+    MRequiredApp appres_csg_3
+    
+    /*The COMP_SLOPE_GEN APP is stored in the array when COMP_SLOPE_GEN is used*/
+    RArray<MRequiredApp> rarray_appres_csg                         = RArray(4);
+    
+    /*The COMP_REF APP is used when XMC1x device is selected*/
+    MRequiredApp appres_comp_ref_1
+    MRequiredApp appres_comp_ref_2
+    MRequiredApp appres_comp_ref_3
+    
+    /*The COMP_REF APP is stored in the array when COMP_REF is used*/
+    RArray<MRequiredApp> rarray_appres_comp_ref                    = RArray(4);
+    
+    /*The digital IO resource is used when a dedicated pin is required for
+     * external slope generation when XMC1x devices is selected*/
+    MRequiredApp appres_digital_io_1
+    MRequiredApp appres_digital_io_2
+    MRequiredApp appres_digital_io_3
+    
+    /*The DIGITAL IO APP is stored in the array when external slope gen is used*/
+    RArray<MRequiredApp> rarray_appres_digital_io                  = RArray(4);
+    
+    /*The GLOBAL_CCU8 APP is used to add constraint to make
+     * the HRPWM and COMP_SLOPE_GEN APP use the common resource.*/
+    MRequiredApp appres_global_ccu8
+    
+    MRequiredApp appres_power_con_library
+    MRequiredApp appres_cpu_4x
+    MRequiredApp appres_cpu_1x
+    
+    /*SYSTIMER APP is used to generate the soft start*/
+    MRequiredApp appres_systimer
+    
+    /* Signals for ADC pin pad*/
+    MVirtualSignal vs_buck_pcc_fix_fq_adcch1_io
+    MVirtualSignal vs_buck_pcc_fix_fq_adcch2_io
+    MVirtualSignal vs_buck_pcc_fix_fq_adcch3_io
+    MVirtualSignal vs_buck_pcc_fix_fq_adcch4_io
+    MVirtualSignal vs_buck_pcc_fix_fq_adcch5_io
+    MVirtualSignal vs_buck_pcc_fix_fq_adcch6_io
+    MVirtualSignal vs_buck_pcc_fix_fq_adcch7_io
+    
+    /*Signals for ADC channel*/
+    MVirtualSignal vs_buck_pcc_fix_fq_adcch1
+    MVirtualSignal vs_buck_pcc_fix_fq_adcch2
+    MVirtualSignal vs_buck_pcc_fix_fq_adcch3
+    MVirtualSignal vs_buck_pcc_fix_fq_adcch4
+    MVirtualSignal vs_buck_pcc_fix_fq_adcch5
+    MVirtualSignal vs_buck_pcc_fix_fq_adcch6
+    MVirtualSignal vs_buck_pcc_fix_fq_adcch7
+    /*The ADC channel signals are stored in the array*/
+    RArray<MVirtualSignal> rarray_vs_buck_pcc_fix_fq_adcch         = RArray(7);
+    
+    /*Signals for ADC Channel iclass */
+    MVirtualSignal vs_buck_pcc_fix_fq_adcch1_iclass_sel
+    MVirtualSignal vs_buck_pcc_fix_fq_adcch2_iclass_sel
+    MVirtualSignal vs_buck_pcc_fix_fq_adcch3_iclass_sel
+    MVirtualSignal vs_buck_pcc_fix_fq_adcch4_iclass_sel
+    MVirtualSignal vs_buck_pcc_fix_fq_adcch5_iclass_sel
+    MVirtualSignal vs_buck_pcc_fix_fq_adcch6_iclass_sel
+    MVirtualSignal vs_buck_pcc_fix_fq_adcch7_iclass_sel
+    /*The ADC channel iclass signals are stored in the array*/
+    RArray<MVirtualSignal> rarray_vs_buck_pcc_fix_fq_adcch_iclass_sel = RArray(7);
+    
+    /* These are iclass signals coming from ADC_SCAN APP*/
+    RArray<MVirtualSignal> rarray_vs_buck_pcc_fix_fq_adc_scan_iclass  = RArray(7);
+    /* These are iclass signals coming from ADC_QUEUE APP*/
+    RArray<MVirtualSignal> rarray_vs_buck_pcc_fix_fq_adc_queue_iclass = RArray(7);
+    
+    /*The ADC channel */
+    MVirtualSignal vs_buck_pcc_fix_fq_adcch1_sel
+    MVirtualSignal vs_buck_pcc_fix_fq_adcch2_sel
+    MVirtualSignal vs_buck_pcc_fix_fq_adcch3_sel
+    MVirtualSignal vs_buck_pcc_fix_fq_adcch4_sel
+    MVirtualSignal vs_buck_pcc_fix_fq_adcch5_sel
+    MVirtualSignal vs_buck_pcc_fix_fq_adcch6_sel
+    MVirtualSignal vs_buck_pcc_fix_fq_adcch7_sel
+    /*The ADC channel signals are stored in the array*/
+    RArray<MVirtualSignal> rarray_vs_buck_pcc_fix_fq_adcch_sel       = RArray(7);
+    
+    MVirtualSignal vs_result_event_out
+    MVirtualSignal vs_nvic_signal_in
+    
+    MVirtualSignalRA vs_pwm_ccu8_pm_out
+    MVirtualSignalRA vs_hrpwm_pm_out
+    
+    /*The res_sel from resource group ACD CHANNEL*/
+    MVirtualSignal vs_buck_pcc_fix_fq_adcch1_ressel
+    MVirtualSignal vs_buck_pcc_fix_fq_adcch2_ressel
+    MVirtualSignal vs_buck_pcc_fix_fq_adcch3_ressel
+    MVirtualSignal vs_buck_pcc_fix_fq_adcch4_ressel
+    MVirtualSignal vs_buck_pcc_fix_fq_adcch5_ressel
+    MVirtualSignal vs_buck_pcc_fix_fq_adcch6_ressel
+    MVirtualSignal vs_buck_pcc_fix_fq_adcch7_ressel
+    RArray<MVirtualSignal>   rarray_vs_buck_pcc_fix_fq_adcch_ressel  = RArray(7);
+    
+    /*The res_sel from resource group ACD RESULT*/
+    MVirtualSignal vs_buck_pcc_fix_fq_adcch1_res
+    MVirtualSignal vs_buck_pcc_fix_fq_adcch2_res
+    MVirtualSignal vs_buck_pcc_fix_fq_adcch3_res
+    MVirtualSignal vs_buck_pcc_fix_fq_adcch4_res
+    MVirtualSignal vs_buck_pcc_fix_fq_adcch5_res
+    MVirtualSignal vs_buck_pcc_fix_fq_adcch6_res
+    MVirtualSignal vs_buck_pcc_fix_fq_adcch7_res
+    RArray<MVirtualSignal>   rarray_vs_buck_pcc_fix_fq_adcch_res    = RArray(7);
+    
+    /*queue2channel signals from ADC QUEUE APP*/
+    RArray<MVirtualSignalRA> rarray_vs_buck_pcc_fix_fq_adc_queue    = RArray(7);
+    
+    /*scan2channel signals from ADC SCAN APP*/
+    RArray<MVirtualSignalRA> rarray_vs_buck_pcc_fix_fq_adc_scan     = RArray(7);
+    
+    
+    MVirtualSignalRA vs_global_ccu8_synch_start
+    
+    RArray<MVirtualSignalRA> rarray_vs_hrpwm_st                      = RArray(4);
+    RArray<MVirtualSignalRA> rarray_vs_hrpwm_hrc_clear_0             = RArray(4);
+    
+    RArray<MVirtualSignalRA> rarray_vs_csg_blanking                  = RArray(4);
+    RArray<MVirtualSignalRA> rarray_vs_csg_slope_start               = RArray(4);
+    RArray<MVirtualSignalRA> rarray_vs_csg_comp_out                  = RArray(4);
+    
+    RArray<MVirtualSignalRA> rarray_vs_pwm_ccu8_ev1                  = RArray(4);
+    RArray<MVirtualSignalRA> rarray_vs_pwm_ccu8_ev2                  = RArray(4);
+    RArray<MVirtualSignalRA> rarray_vs_comp_ref_pdout                = RArray(4);
+    
+    RArray<MVirtualSignalRA> rarray_vs_pwm_ccu4_output               = RArray(4);
+    RArray<MVirtualSignalRA> rarray_vs_digital_io_input              = RArray(4);    
+    
+    RArray<MVirtualSignalRA> rarray_vs_adc_scan_trigger_in           = RArray(7);
+    RArray<MVirtualSignalRA> rarray_vs_adc_queue_trigger_in          = RArray(7);
+    RArray<GCheck>           rarray_gcheck_measure_entity            = RArray(7);
+    RArray<GString>          rarray_gstring_measure_entity           = RArray(7);
+    RArray<GCheck>           rarray_gcombo_q_position                = RArray(7);
+    RArray<GFloat>           rarray_gfloat_divider_gain              = RArray(6); //array size is 6 because 'User_Defined' measurement does not have gain ratio
+    
+/*
+ *   ____________________                  ____________________                         ____________________
+ *  |    RG:_chan_a_pin  |                |     RG:_adcch1     |                       |    RG:_result      |
+ *  |                    |_io      _adcch1|                    |_ressel      _adcch_res|                    |
+ *  |               PAD  |--------------> |GCH          res_sel|---------------------->|res_sel             |
+ *  |                    |                |       select       |                       |                    |
+ *  |____________________|                |____________________|                       |____________________|
+ *                                                  ^ _adcch_sel
+ *                                                  |
+ *                                        _adc_scan | _adc_queue
+ *                                  ________________|_________________
+ *                                 |   scan2channel |  queue2channel  |
+ *                                 | ______________ | ______________  |
+ *                                 |                |                 |
+ *                                 | APP:ADC_SCAN   | APP:ADC_QUEUE   |
+ *                                 |________________|_________________|
+ * */
+    
+    // End   : User app property section
+    
+    /*GInteger ginteger_adc_num_bits         = GInteger(widgetName:"ginteger_adc_num_bits",  value:12, minValue:Long.MIN_VALUE, maxValue:Long.MAX_VALUE,enabled:true, visible:false, isMandatoryValue:false)*/
+    GInteger ginteger_max_error            = GInteger(widgetName:"ginteger_max_error",     value:12, minValue:Long.MIN_VALUE, maxValue:Long.MAX_VALUE,enabled:true, visible:false, isMandatoryValue:false)
+    GInteger ginteger_min_error            = GInteger(widgetName:"ginteger_min_error",     value:12, minValue:Long.MIN_VALUE, maxValue:Long.MAX_VALUE,enabled:true, visible:false, isMandatoryValue:false)
+    GInteger ginteger_ref                  = GInteger(widgetName:"ginteger_ref",           value:12, minValue:Long.MIN_VALUE, maxValue:Long.MAX_VALUE,enabled:true, visible:false, isMandatoryValue:false)
+    
+    /*GFloat gfloat_adc_ref_voltage          = GFloat  (widgetName:"gfloat_adc_ref_voltage", value:3.3, minValue:Long.MIN_VALUE, maxValue:Long.MAX_VALUE,enabled:true, visible:false, isMandatoryValue:false)*/
+    GFloat gfloat_bxk_max_abs              = GFloat  (widgetName:"gfloat_bxk_max_abs",     value:0,   minValue:Long.MIN_VALUE, maxValue:Long.MAX_VALUE,enabled:true, visible:false, isMandatoryValue:false)
+    GFloat gfloat_a_max_abs                = GFloat  (widgetName:"gfloat_a_max_abs",       value:0,   minValue:Long.MIN_VALUE, maxValue:Long.MAX_VALUE,enabled:true, visible:false, isMandatoryValue:false)
+    GFloat gfloat_wcase_bke                = GFloat  (widgetName:"gfloat_wcase_bke",       value:0,   minValue:Long.MIN_VALUE, maxValue:Long.MAX_VALUE,enabled:true, visible:false, isMandatoryValue:false)
+    GFloat gfloat_wcase_au                 = GFloat  (widgetName:"gfloat_wcase_au",        value:0,   minValue:Long.MIN_VALUE, maxValue:Long.MAX_VALUE,enabled:true, visible:false, isMandatoryValue:false)
+    GFloat gfloat_max_out                  = GFloat  (widgetName:"gfloat_max_out",         value:0,   minValue:Long.MIN_VALUE, maxValue:Long.MAX_VALUE,enabled:true, visible:false, isMandatoryValue:false)
+    GFloat gfloat_min_out                  = GFloat  (widgetName:"gfloat_min_out",         value:0,   minValue:Long.MIN_VALUE, maxValue:Long.MAX_VALUE,enabled:true, visible:false, isMandatoryValue:false)
+    
+    // App Constructor
+    public BUCK_PCC_FIX_FQ(DaveEnv daveEnv) {
+        int i;                   // needed for all indexing options
+        Boolean is_4x_device; // true for XMC4x target, false for XMC1x target
+        
+        /* ---------------------------------------------------------- */
+        /* ------------ Initializations - assigning to array -------- */
+        /* ---------------------------------------------------------- */
+        
+        /* user given measurement entity name */
+        rarray_gstring_measure_entity[0]    = gstring_vout_measurement
+        rarray_gstring_measure_entity[1]    = gstring_vin_measurement
+        rarray_gstring_measure_entity[2]    = gstring_iout1_measurement
+        rarray_gstring_measure_entity[3]    = gstring_iout2_measurement
+        rarray_gstring_measure_entity[4]    = gstring_iout3_measurement
+        rarray_gstring_measure_entity[5]    = gstring_iout4_measurement
+        rarray_gstring_measure_entity[6]    = gstring_udef1_measurement
+        
+        /* measurement entity selection */
+        rarray_gcheck_measure_entity[0]     = gcheck_measure_vout
+        rarray_gcheck_measure_entity[1]     = gcheck_measure_vin
+        rarray_gcheck_measure_entity[2]     = gcheck_measure_iout1
+        rarray_gcheck_measure_entity[3]     = gcheck_measure_iout2
+        rarray_gcheck_measure_entity[4]     = gcheck_measure_iout3
+        rarray_gcheck_measure_entity[5]     = gcheck_measure_iout4
+        rarray_gcheck_measure_entity[6]     = gcheck_measure_user_defined_1
+        
+        /* q position */
+        rarray_gcombo_q_position[0]         = gcombo_vout_q_pos
+        rarray_gcombo_q_position[1]         = gcombo_vin_q_pos
+        rarray_gcombo_q_position[2]         = gcombo_iout1_q_pos
+        rarray_gcombo_q_position[3]         = gcombo_iout2_q_pos
+        rarray_gcombo_q_position[4]         = gcombo_iout3_q_pos
+        rarray_gcombo_q_position[5]         = gcombo_iout4_q_pos
+        rarray_gcombo_q_position[6]         = gcombo_adc_q_pos_user_defined_1
+        
+        
+        rarray_gfloat_divider_gain[0]       = gfloat_vout_gain
+        rarray_gfloat_divider_gain[1]       = gfloat_vin_gain
+        rarray_gfloat_divider_gain[2]       = gfloat_iout1_gain
+        rarray_gfloat_divider_gain[3]       = gfloat_iout2_gain
+        rarray_gfloat_divider_gain[4]       = gfloat_iout3_gain
+        rarray_gfloat_divider_gain[5]       = gfloat_iout4_gain
+        
+        //below are dummy tabs used for documentation purpose
+        gtab_dummy_adc_measurement.visible          = false;
+        gtab_dummy_overload_protections.visible     = false;
+
+        
+        /* -------------------------------------------------------------- */
+        /* ---------- Target Specific User Variable Initialization ------ */
+        /* -------------------------------------------------------------- */
+                
+        if (daveEnv.project.selectedDevice.deviceId.family == "XMC4")
+        {
+            is_4x_device = true   // target device is XMC4x
+        }
+        else
+        {
+            is_4x_device = false  // target device is XMC1x
+        }
+        
+        /* ---------- 4 HRPWM APP ------ */
+        appres_hrpwm_1              = MRequiredApp("HRPWM","Phase 0", RNOTSHARABLE, "4.1.14", MF({(is_4x_device) && (gcombo_no_of_phases.value.toInteger() >= 1) },Boolean))
+        appres_hrpwm_2              = MRequiredApp("HRPWM","Phase 1", RNOTSHARABLE, "4.1.14", MF({(is_4x_device) && (gcombo_no_of_phases.value.toInteger() >= 2) },Boolean))
+        appres_hrpwm_3              = MRequiredApp("HRPWM","Phase 2", RNOTSHARABLE, "4.1.14", MF({(is_4x_device) && (gcombo_no_of_phases.value.toInteger() >= 3) },Boolean))
+        
+        rarray_appres_hrpwm[0]      = appres_hrpwm_1
+        rarray_appres_hrpwm[1]      = appres_hrpwm_2
+        rarray_appres_hrpwm[2]      = appres_hrpwm_3
+        
+        /* ---------- 4 COMP_SOPE_GEN APP ------ */
+        appres_csg_1                = MRequiredApp("COMP_SLOPE_GEN","Phase 0", RNOTSHARABLE, "4.0.4", MF({(is_4x_device) && (gcombo_no_of_phases.value.toInteger() >= 1)},Boolean))
+        appres_csg_2                = MRequiredApp("COMP_SLOPE_GEN","Phase 1", RNOTSHARABLE, "4.0.4", MF({(is_4x_device) && (gcombo_no_of_phases.value.toInteger() >= 2)},Boolean))
+        appres_csg_3                = MRequiredApp("COMP_SLOPE_GEN","Phase 2", RNOTSHARABLE, "4.0.4", MF({(is_4x_device) && (gcombo_no_of_phases.value.toInteger() >= 3)},Boolean))
+                
+        rarray_appres_csg[0]        = appres_csg_1
+        rarray_appres_csg[1]        = appres_csg_2
+        rarray_appres_csg[2]        = appres_csg_3
+        
+        /* ---------- 4 PWM_CCU8 APP ------ */
+        appres_pwm_ccu8_1           = MRequiredApp("PWM_CCU8","Phase 0", RNOTSHARABLE, "4.1.16", MF({(!is_4x_device) && (gcombo_no_of_phases.value.toInteger() >= 1)},Boolean))
+        appres_pwm_ccu8_2           = MRequiredApp("PWM_CCU8","Phase 1", RNOTSHARABLE, "4.1.16", MF({(!is_4x_device) && (gcombo_no_of_phases.value.toInteger() >= 2)},Boolean))
+        appres_pwm_ccu8_3           = MRequiredApp("PWM_CCU8","Phase 2", RNOTSHARABLE, "4.1.16", MF({(!is_4x_device) && (gcombo_no_of_phases.value.toInteger() >= 3)},Boolean))
+        
+        rarray_appres_pwm_ccu8[0]   = appres_pwm_ccu8_1
+        rarray_appres_pwm_ccu8[1]   = appres_pwm_ccu8_2
+        rarray_appres_pwm_ccu8[2]   = appres_pwm_ccu8_3
+        
+        /* ---------- 4 COMP_REF APP ------ */
+        appres_comp_ref_1           = MRequiredApp("COMP_REF","Phase 0", RNOTSHARABLE, "4.0.16", MF({(!is_4x_device) && (gcombo_no_of_phases.value.toInteger() >= 1)},Boolean))
+        appres_comp_ref_2           = MRequiredApp("COMP_REF","Phase 1", RNOTSHARABLE, "4.0.16", MF({(!is_4x_device) && (gcombo_no_of_phases.value.toInteger() >= 2)},Boolean))
+        appres_comp_ref_3           = MRequiredApp("COMP_REF","Phase 2", RNOTSHARABLE, "4.0.16", MF({(!is_4x_device) && (gcombo_no_of_phases.value.toInteger() >= 3)},Boolean))
+                
+        rarray_appres_comp_ref[0]   = appres_comp_ref_1
+        rarray_appres_comp_ref[1]   = appres_comp_ref_2
+        rarray_appres_comp_ref[2]   = appres_comp_ref_3
+        
+        /* ---------- 4 PWM CCU4 APP ------ */
+        appres_pwm_ccu4_1           = MRequiredApp("PWM_CCU4","Slope/Blanking Phase 0", RNOTSHARABLE, "4.1.14", MF({(!is_4x_device) && (gcheck_slope_compensation.value || gcheck_blanking.value) && (gcombo_no_of_phases.value.toInteger() >= 1)},Boolean))
+        appres_pwm_ccu4_2           = MRequiredApp("PWM_CCU4","Slope/Blanking Phase 1", RNOTSHARABLE, "4.1.14", MF({(!is_4x_device) && (gcheck_slope_compensation.value || gcheck_blanking.value) && (gcombo_no_of_phases.value.toInteger() >= 2)},Boolean))
+        appres_pwm_ccu4_3           = MRequiredApp("PWM_CCU4","Slope/Blanking Phase 2", RNOTSHARABLE, "4.1.14", MF({(!is_4x_device) && (gcheck_slope_compensation.value || gcheck_blanking.value) && (gcombo_no_of_phases.value.toInteger() >= 3)},Boolean))
+
+        rarray_appres_pwm_ccu4[0]   = appres_pwm_ccu4_1
+        rarray_appres_pwm_ccu4[1]   = appres_pwm_ccu4_2
+        rarray_appres_pwm_ccu4[2]   = appres_pwm_ccu4_3
+        
+        /* ---------- 4 DIGITAL_IO APP ------ */
+        appres_digital_io_1         = MRequiredApp("DIGITAL_IO","Slope/Blanking Phase 0", RNOTSHARABLE, "4.0.8", MF({(!is_4x_device) && (gcheck_slope_compensation.value && gcheck_blanking.value) && (gcombo_no_of_phases.value.toInteger() >= 1)},Boolean))
+        appres_digital_io_2         = MRequiredApp("DIGITAL_IO","Slope/Blanking Phase 1", RNOTSHARABLE, "4.0.8", MF({(!is_4x_device) && (gcheck_slope_compensation.value && gcheck_blanking.value) && (gcombo_no_of_phases.value.toInteger() >= 2)},Boolean))
+        appres_digital_io_3         = MRequiredApp("DIGITAL_IO","Slope/Blanking Phase 2", RNOTSHARABLE, "4.0.8", MF({(!is_4x_device) && (gcheck_slope_compensation.value && gcheck_blanking.value) && (gcombo_no_of_phases.value.toInteger() >= 3)},Boolean))
+        
+        rarray_appres_digital_io[0] = appres_digital_io_1
+        rarray_appres_digital_io[1] = appres_digital_io_2
+        rarray_appres_digital_io[2] = appres_digital_io_3
+        
+        appres_global_ccu8          = MRequiredApp("GLOBAL_CCU8","GLOBAL_CCU8", RSHARABLE, "4.1.6", true)
+        
+        for(i=0; i<3; i++)
+        {
+            int index = i;
+            /*The setRequired() API is called to ensure all the instances of CSG, HRPWM and CCU8 APPS use common GLOBAL_CCU8.*/
+            rarray_appres_csg[index].setRequired("csg_app_global_ccu8_cc8", appres_global_ccu8)
+            rarray_appres_hrpwm[index].setRequired("hrpwm_app_global_ccu8_cc8", appres_global_ccu8)
+            
+            rarray_appres_pwm_ccu8[index].setRequired("pwm_ccu8_app_global_ccu8_cc8", appres_global_ccu8)
+        }
+
+        
+        /* ---------- CONTROL_LIB APP ------ */
+        appres_power_con_library    = MRequiredApp("CONTROL_LIB","Control Library", RSHARABLE, "4.0.4")
+        
+        /* ---------- CPU APP ------ */
+        appres_cpu_4x               = MRequiredApp("CPU_CTRL_XMC4","CPU", RSHARABLE, "4.0.10", MF({((is_4x_device)  && (gcombo_isr_event.value == "Vout Result Event"))},Boolean))
+        appres_cpu_1x               = MRequiredApp("CPU_CTRL_XMC1","CPU", RSHARABLE, "4.0.6", MF({((!is_4x_device) && (gcombo_isr_event.value == "Vout Result Event"))},Boolean))
+        
+        /* ---------- 4 ADC QUEUE APP ------ */
+        appres_queue_a              = MRequiredApp("ADC_QUEUE","",RSHARABLE,"4.0.14", MF({gcombo_adc_measurement_mode.value == "Queue" && rarray_gcheck_measure_entity[0].value},Boolean))
+        appres_queue_b              = MRequiredApp("ADC_QUEUE","",RSHARABLE,"4.0.14", MF({gcombo_adc_measurement_mode.value == "Queue" && rarray_gcheck_measure_entity[1].value},Boolean))
+        appres_queue_c              = MRequiredApp("ADC_QUEUE","",RSHARABLE,"4.0.14", MF({gcombo_adc_measurement_mode.value == "Queue" && rarray_gcheck_measure_entity[2].value},Boolean))
+        appres_queue_d              = MRequiredApp("ADC_QUEUE","",RSHARABLE,"4.0.14", MF({gcombo_adc_measurement_mode.value == "Queue" && rarray_gcheck_measure_entity[3].value},Boolean))
+        appres_queue_e              = MRequiredApp("ADC_QUEUE","",RSHARABLE,"4.0.14", MF({gcombo_adc_measurement_mode.value == "Queue" && rarray_gcheck_measure_entity[4].value},Boolean))
+        appres_queue_f              = MRequiredApp("ADC_QUEUE","",RSHARABLE,"4.0.14", MF({gcombo_adc_measurement_mode.value == "Queue" && rarray_gcheck_measure_entity[5].value},Boolean))
+        appres_queue_g              = MRequiredApp("ADC_QUEUE","",RSHARABLE,"4.0.14", MF({gcombo_adc_measurement_mode.value == "Queue" && rarray_gcheck_measure_entity[6].value},Boolean))
+
+        rarray_appres_queue[0]      = appres_queue_a
+        rarray_appres_queue[1]      = appres_queue_b
+        rarray_appres_queue[2]      = appres_queue_c
+        rarray_appres_queue[3]      = appres_queue_d
+        rarray_appres_queue[4]      = appres_queue_e
+        rarray_appres_queue[5]      = appres_queue_f
+        rarray_appres_queue[6]      = appres_queue_g
+        
+        /* ---------- ADC SCAN APP ------ */
+        appres_scan_a               = MRequiredApp("ADC_SCAN","",RSHARABLE,"4.0.12", MF({gcombo_adc_measurement_mode.value == "Scan" && rarray_gcheck_measure_entity[0].value},Boolean))
+        appres_scan_b               = MRequiredApp("ADC_SCAN","",RSHARABLE,"4.0.12", MF({gcombo_adc_measurement_mode.value == "Scan" && rarray_gcheck_measure_entity[1].value},Boolean))
+        appres_scan_c               = MRequiredApp("ADC_SCAN","",RSHARABLE,"4.0.12", MF({gcombo_adc_measurement_mode.value == "Scan" && rarray_gcheck_measure_entity[2].value},Boolean))
+        appres_scan_d               = MRequiredApp("ADC_SCAN","",RSHARABLE,"4.0.12", MF({gcombo_adc_measurement_mode.value == "Scan" && rarray_gcheck_measure_entity[3].value},Boolean))
+        appres_scan_e               = MRequiredApp("ADC_SCAN","",RSHARABLE,"4.0.12", MF({gcombo_adc_measurement_mode.value == "Scan" && rarray_gcheck_measure_entity[4].value},Boolean))
+        appres_scan_f               = MRequiredApp("ADC_SCAN","",RSHARABLE,"4.0.12", MF({gcombo_adc_measurement_mode.value == "Scan" && rarray_gcheck_measure_entity[5].value},Boolean))
+        appres_scan_g               = MRequiredApp("ADC_SCAN","",RSHARABLE,"4.0.12", MF({gcombo_adc_measurement_mode.value == "Scan" && rarray_gcheck_measure_entity[6].value},Boolean))
+        
+        rarray_appres_scan[0]       = appres_scan_a
+        rarray_appres_scan[1]       = appres_scan_b
+        rarray_appres_scan[2]       = appres_scan_c
+        rarray_appres_scan[3]       = appres_scan_d
+        rarray_appres_scan[4]       = appres_scan_e
+        rarray_appres_scan[5]       = appres_scan_f
+        rarray_appres_scan[6]       = appres_scan_g
+           
+        /* ---------- SYSTIMER APP ------ */
+        appres_systimer             = MRequiredApp("SYSTIMER","",RSHARABLE, "4.1.10", MF({gcheck_soft_start.value},Boolean))
+        
+        /* ---------------------------------------------------------------------------- */
+        /* ------------ Hardware resource consumption & virtual signals block --------- */
+        /* ---------------------------------------------------------------------------- */
+        for(i=0; i<7; i++)
+        {
+            int index = i;
+            
+            /* ---------- consumes up to 7 ADC channel resources ------ */
+            rarray_hwres_adcchan[index] = MVirtualResourceGroup(MF({rarray_gstring_measure_entity[index].value + " channel"},String), ["peripheral", "vadc", "0", "group", "*", "ch","*"], MF({rarray_gcheck_measure_entity[index].value},Boolean))
+            
+            /* ---------- consumes up to 7 ADC result resources ------ */
+            rarray_hwres_result[index]  = MVirtualResourceGroup(MF({rarray_gstring_measure_entity[index].value + " result"},String), ["peripheral", "vadc", "0", "group", "*", "result","*"], MF({rarray_gcheck_measure_entity[index].value},Boolean))
+            
+                        
+            /* ---------- virtual signals for ADC channel - ADC input pin is connected to this signal --------------- */
+            rarray_vs_buck_pcc_fix_fq_adcch[index]        = MVirtualSignal(rarray_hwres_adcchan[index], MF({rarray_gstring_measure_entity[index].value.toLowerCase() + "_channel"},String), "gch", MF({rarray_gcheck_measure_entity[index].value},Boolean), false)
+            
+            /* ---------- virtual signals for ADC channel - ADC request source (scan/queue) is connected to this signal --------------- */
+            rarray_vs_buck_pcc_fix_fq_adcch_sel[index]    = MVirtualSignal(rarray_hwres_adcchan[index], MF({rarray_gstring_measure_entity[index].value.toLowerCase() + "_channel_select"},String), "select", MF({rarray_gcheck_measure_entity[index].value},Boolean), false)
+            
+            /* ---------- virtual signals for ADC channel - the signal is connected to ADC result resource --------------- */
+            rarray_vs_buck_pcc_fix_fq_adcch_ressel[index] = MVirtualSignal(rarray_hwres_adcchan[index], MF({rarray_gstring_measure_entity[index].value.toLowerCase() + "_result_select"},String), "res_sel", MF({rarray_gcheck_measure_entity[index].value},Boolean), false)
+            
+            /* ---------- virtual signals for ADC result resource ---------------- */
+            rarray_vs_buck_pcc_fix_fq_adcch_res[index]    = MVirtualSignal(rarray_hwres_result[index],  MF({rarray_gstring_measure_entity[index].value.toLowerCase() + "_result"},String), "res_sel", MF({rarray_gcheck_measure_entity[index].value},Boolean), false)
+            
+            /* ---------- virtual signals for ADC channel iclass - the signal is connected to ADC request resource's (scan/queue) iclass signal ---------------- */
+            rarray_vs_buck_pcc_fix_fq_adcch_iclass_sel[index]    = MVirtualSignal(rarray_hwres_adcchan[index], MF({rarray_gstring_measure_entity[index].value.toLowerCase() + "_channel_iclass"},String), "iclass_sel", MF({rarray_gcheck_measure_entity[index].value},Boolean), false)
+            
+            /* ---------- virtual signals for ADC iclass - scan request resource -------- */
+            rarray_vs_buck_pcc_fix_fq_adc_scan_iclass[index]     =  MVirtualSignalRA(rarray_appres_scan[index], "vs_adc_scan_iclass2channel")
+            
+            /* ---------- virtual signals for ADC iclass - queue request resource -------- */
+            rarray_vs_buck_pcc_fix_fq_adc_queue_iclass[index]    =  MVirtualSignalRA(rarray_appres_queue[index], "vs_adc_queue_iclass2channel")
+            
+            /* ---------- virtual signals for ADC channel - scan request resource -------- */
+            rarray_vs_buck_pcc_fix_fq_adc_scan[index]     =  MVirtualSignalRA(rarray_appres_scan[index], "vs_adc_scan_scan2channel")
+            
+            /* ---------- virtual signals for ADC Channel - queue request resource -------- */
+            rarray_vs_buck_pcc_fix_fq_adc_queue[index]    =  MVirtualSignalRA(rarray_appres_queue[index], "vs_adc_queue_queue2channel")
+            
+            /* ---------- virtual signal for ADC scan trigger input  -------- */
+            rarray_vs_adc_scan_trigger_in[index]          =  MVirtualSignalRA(rarray_appres_scan[index], "vs_adc_scan_greqtr0sel")
+            
+            /* ---------- virtual signal for ADC queue trigger input  -------- */
+            rarray_vs_adc_queue_trigger_in[index]         =  MVirtualSignalRA(rarray_appres_queue[index], "vs_adc_queue_greqtr0sel")
+        }
+        
+        /*These signal are used for display in HW connectivity view.
+         * Also the connection constraint to _adcch1_io cannot be put in a for() loop - DAVE MS limitation */
+        vs_buck_pcc_fix_fq_adcch1            = rarray_vs_buck_pcc_fix_fq_adcch[0]
+        vs_buck_pcc_fix_fq_adcch2            = rarray_vs_buck_pcc_fix_fq_adcch[1]
+        vs_buck_pcc_fix_fq_adcch3            = rarray_vs_buck_pcc_fix_fq_adcch[2]
+        vs_buck_pcc_fix_fq_adcch4            = rarray_vs_buck_pcc_fix_fq_adcch[3]
+        vs_buck_pcc_fix_fq_adcch5            = rarray_vs_buck_pcc_fix_fq_adcch[4]
+        vs_buck_pcc_fix_fq_adcch6            = rarray_vs_buck_pcc_fix_fq_adcch[5]
+        vs_buck_pcc_fix_fq_adcch7            = rarray_vs_buck_pcc_fix_fq_adcch[6]
+        
+        /*These signal are used for display in HW connectivity view*/
+        vs_buck_pcc_fix_fq_adcch1_ressel     = rarray_vs_buck_pcc_fix_fq_adcch_ressel[0]
+        vs_buck_pcc_fix_fq_adcch2_ressel     = rarray_vs_buck_pcc_fix_fq_adcch_ressel[1]
+        vs_buck_pcc_fix_fq_adcch3_ressel     = rarray_vs_buck_pcc_fix_fq_adcch_ressel[2]
+        vs_buck_pcc_fix_fq_adcch4_ressel     = rarray_vs_buck_pcc_fix_fq_adcch_ressel[3]
+        vs_buck_pcc_fix_fq_adcch5_ressel     = rarray_vs_buck_pcc_fix_fq_adcch_ressel[4]
+        vs_buck_pcc_fix_fq_adcch6_ressel     = rarray_vs_buck_pcc_fix_fq_adcch_ressel[5]
+        vs_buck_pcc_fix_fq_adcch7_ressel     = rarray_vs_buck_pcc_fix_fq_adcch_ressel[6]
+        
+        /*These signal are used for display in HW connectivity view*/
+        vs_buck_pcc_fix_fq_adcch1_res        = rarray_vs_buck_pcc_fix_fq_adcch_res[0]
+        vs_buck_pcc_fix_fq_adcch2_res        = rarray_vs_buck_pcc_fix_fq_adcch_res[1]
+        vs_buck_pcc_fix_fq_adcch3_res        = rarray_vs_buck_pcc_fix_fq_adcch_res[2]
+        vs_buck_pcc_fix_fq_adcch4_res        = rarray_vs_buck_pcc_fix_fq_adcch_res[3]
+        vs_buck_pcc_fix_fq_adcch5_res        = rarray_vs_buck_pcc_fix_fq_adcch_res[4]
+        vs_buck_pcc_fix_fq_adcch6_res        = rarray_vs_buck_pcc_fix_fq_adcch_res[5]
+        vs_buck_pcc_fix_fq_adcch7_res        = rarray_vs_buck_pcc_fix_fq_adcch_res[6]
+        
+        /*These signal are used for display in HW connectivity view*/
+        vs_buck_pcc_fix_fq_adcch1_sel        = rarray_vs_buck_pcc_fix_fq_adcch_sel[0]
+        vs_buck_pcc_fix_fq_adcch2_sel        = rarray_vs_buck_pcc_fix_fq_adcch_sel[1]
+        vs_buck_pcc_fix_fq_adcch3_sel        = rarray_vs_buck_pcc_fix_fq_adcch_sel[2]
+        vs_buck_pcc_fix_fq_adcch4_sel        = rarray_vs_buck_pcc_fix_fq_adcch_sel[3]
+        vs_buck_pcc_fix_fq_adcch5_sel        = rarray_vs_buck_pcc_fix_fq_adcch_sel[4]
+        vs_buck_pcc_fix_fq_adcch6_sel        = rarray_vs_buck_pcc_fix_fq_adcch_sel[5]
+        vs_buck_pcc_fix_fq_adcch7_sel        = rarray_vs_buck_pcc_fix_fq_adcch_sel[6]
+        
+        /*These signal are used for display in HW connectivity view*/
+        vs_buck_pcc_fix_fq_adcch1_iclass_sel = rarray_vs_buck_pcc_fix_fq_adcch_iclass_sel[0]
+        vs_buck_pcc_fix_fq_adcch2_iclass_sel = rarray_vs_buck_pcc_fix_fq_adcch_iclass_sel[1]
+        vs_buck_pcc_fix_fq_adcch3_iclass_sel = rarray_vs_buck_pcc_fix_fq_adcch_iclass_sel[2]
+        vs_buck_pcc_fix_fq_adcch4_iclass_sel = rarray_vs_buck_pcc_fix_fq_adcch_iclass_sel[3]
+        vs_buck_pcc_fix_fq_adcch5_iclass_sel = rarray_vs_buck_pcc_fix_fq_adcch_iclass_sel[4]
+        vs_buck_pcc_fix_fq_adcch6_iclass_sel = rarray_vs_buck_pcc_fix_fq_adcch_iclass_sel[5]
+        vs_buck_pcc_fix_fq_adcch7_iclass_sel = rarray_vs_buck_pcc_fix_fq_adcch_iclass_sel[6]
+        
+        /* ---------- 7 IO pad resource (channel pin) ------ */
+        /*Cant use rarray in @AddPin - DAVE MS limitation*/
+        hwres_chan_a_pin                     = MVirtualResourceGroup("Vout pin", ["port", "p", "*", "pad", "*"], MF({rarray_gcheck_measure_entity[0].value },Boolean))
+        hwres_chan_b_pin                     = MVirtualResourceGroup("Vin pin",  ["port", "p", "*", "pad", "*"], MF({rarray_gcheck_measure_entity[1].value  },Boolean))
+        hwres_chan_c_pin                     = MVirtualResourceGroup("Iout1 pin",["port", "p", "*", "pad", "*"], MF({rarray_gcheck_measure_entity[2].value},Boolean))
+        hwres_chan_d_pin                     = MVirtualResourceGroup("Iout2 pin",["port", "p", "*", "pad", "*"], MF({rarray_gcheck_measure_entity[3].value},Boolean))
+        hwres_chan_e_pin                     = MVirtualResourceGroup("Iout3 pin",["port", "p", "*", "pad", "*"], MF({rarray_gcheck_measure_entity[4].value},Boolean))
+        hwres_chan_f_pin                     = MVirtualResourceGroup("Iout4 pin",["port", "p", "*", "pad", "*"], MF({rarray_gcheck_measure_entity[5].value},Boolean))
+        hwres_chan_g_pin                     = MVirtualResourceGroup(MF({gstring_udef1_measurement.value + " pin"},String),["port", "p", "*", "pad", "*"], MF({rarray_gcheck_measure_entity[6].value},Boolean))
+        
+        /* ---------- NVIC node resource group for Vout Result Event ------ */
+        hwres_nvicnode                       = MVirtualResourceGroup("NVIC Node", ["peripheral", "cpu", "0", "nvic", "interrupt", "*"], MF({(gcombo_isr_event.value == "Vout Result Event")},Boolean))
+        
+        
+        /* ---------- Virtual signal for VADC result event. rarray_hwres_result[0] is used for output voltage measurement -------- */
+        vs_result_event_out                  = MVirtualSignal(rarray_hwres_result[0], "vout_result_event", "rev", true, false)
+        
+        /* ---------- Virtual signal for NVIC node -------- */
+        vs_nvic_signal_in                    = MVirtualSignal(hwres_nvicnode, "nvic_node", "signal_in", true, false)
+        
+        /* ---------- Virtual signal for PWM_CCU8 Phase 0 -------- */
+        vs_pwm_ccu8_pm_out                   = MVirtualSignalRA(appres_pwm_ccu8_1, "vs_ccu8_cc8_period_match_interrupt")
+        
+        /* ---------- Virtual signal for HRPWM Phase 0 -------- */
+        vs_hrpwm_pm_out                      = MVirtualSignalRA(appres_hrpwm_1, "vs_ccu8_cc8_period_match_interrupt")
+        
+
+        /* ---------- Virtual signal for GLOBAL_CCU8 Synch start output -------- */
+        vs_global_ccu8_synch_start           = MVirtualSignalRA(appres_global_ccu8, "vs_global_ccu8_gsc_enable")
+
+        
+        /*Populating the required signals from the consumed APPs.
+         * If the APP is not consumed the corresponding signal is not populated by - DAVE MS.
+         * Hence condition check for each APP consumption is not required. */
+        for(i=0; i<3; i++)
+        {
+            int index = i;
+            
+            /* ---------- Virtual 'ST' signal of HRPWM -------- */
+            rarray_vs_hrpwm_st[index]           = MVirtualSignalRA(rarray_appres_hrpwm[index], "vs_ccu8_cc8_st")
+            
+            /* ---------- Virtual 'set_0' signal of HRPWM_HRC -------- */
+            rarray_vs_hrpwm_hrc_clear_0[index]  = MVirtualSignalRA(rarray_appres_hrpwm[index], "vs_hrpwm_hrc_clear_0")
+            
+            /* ---------- Virtual 'blanking' signal for COMP_SLOPE_GEN -------- */
+            rarray_vs_csg_blanking[index]       = MVirtualSignalRA(rarray_appres_csg[index], "vs_csg_ext_switch")
+            
+            /* ---------- Virtual 'slope start' signal for COMP_SLOPE_GEN -------- */
+            rarray_vs_csg_slope_start[index]    = MVirtualSignalRA(rarray_appres_csg[index], "vs_csg_slope_start")
+            
+            /* ---------- Virtual 'comparator output' signal for COMP_SLOPE_GEN -------- */
+            rarray_vs_csg_comp_out[index]       = MVirtualSignalRA(rarray_appres_csg[index], "vs_csg_comp_out_to_hrc")
+            
+            
+            /* ---------- Virtual 'ERU_OGU pdout' signal for COMP_REF -------- */
+            rarray_vs_comp_ref_pdout[index]     = MVirtualSignalRA(rarray_appres_comp_ref[index], "vs_event_generator_pdout")
+            
+            /* ---------- Virtual 'Event 1' signal for PWM_CCU8 -------- */
+            rarray_vs_pwm_ccu8_ev1[index]       = MVirtualSignalRA(rarray_appres_pwm_ccu8[index], "vs_ccu8_cc8_gp1_unsync")
+            
+            /* ---------- Virtual 'Event 2' signal for PWM_CCU8 -------- */
+            rarray_vs_pwm_ccu8_ev2[index]       = MVirtualSignalRA(rarray_appres_pwm_ccu8[index], "vs_ccu8_cc8_gp2_unsync")
+            
+            /* ---------- Virtual signal for PWM_CCU4 output -------- */
+            rarray_vs_pwm_ccu4_output[index]    = MVirtualSignalRA(rarray_appres_pwm_ccu4[index], "vs_ccu4_cc4_channel_out_signal")
+            
+            /* ---------- Virtual signal for DIGITAL_IO input -------- */
+            rarray_vs_digital_io_input[index]   = MVirtualSignalRA(rarray_appres_digital_io[index], "vs_digital_io_pad_pin")
+        }
+        
+        /* ---------- Virtual signals for IO pad resource (channel pin) ------ */
+        @AddPin
+        vs_buck_pcc_fix_fq_adcch1_io            = MVirtualSignal(hwres_chan_a_pin, "vout_pin" , "pad", MF({gcheck_measure_vout.value},Boolean), false)
+        @AddPin
+        vs_buck_pcc_fix_fq_adcch2_io            = MVirtualSignal(hwres_chan_b_pin, "vin_pin"  , "pad", MF({gcheck_measure_vin.value },Boolean), false)
+        @AddPin
+        vs_buck_pcc_fix_fq_adcch3_io            = MVirtualSignal(hwres_chan_c_pin, "iout1_pin", "pad", MF({gcheck_measure_iout1.value},Boolean), false)
+        @AddPin
+        vs_buck_pcc_fix_fq_adcch4_io            = MVirtualSignal(hwres_chan_d_pin, "iout2_pin", "pad", MF({gcheck_measure_iout2.value},Boolean), false)
+        @AddPin
+        vs_buck_pcc_fix_fq_adcch5_io            = MVirtualSignal(hwres_chan_e_pin, "iout3_pin", "pad", MF({gcheck_measure_iout3.value},Boolean), false)
+        @AddPin
+        vs_buck_pcc_fix_fq_adcch6_io            = MVirtualSignal(hwres_chan_f_pin, "iout4_pin", "pad", MF({gcheck_measure_iout4.value},Boolean), false)
+        @AddPin
+        vs_buck_pcc_fix_fq_adcch7_io            = MVirtualSignal(hwres_chan_g_pin, MF({gstring_udef1_measurement.value+ "_pin"},String), "pad", MF({gcheck_measure_user_defined_1.value},Boolean), false)
+        
+        /* ---------------------------------------------------------- */
+        /* -------------- APP IO Signals ---------------------------- */
+        addConnectionConstraint(vs_buck_pcc_fix_fq_adcch1_io, vs_buck_pcc_fix_fq_adcch1, MF({gcheck_measure_vout.value            },Boolean))
+        addConnectionConstraint(vs_buck_pcc_fix_fq_adcch2_io, vs_buck_pcc_fix_fq_adcch2, MF({gcheck_measure_vin.value             },Boolean))
+        addConnectionConstraint(vs_buck_pcc_fix_fq_adcch3_io, vs_buck_pcc_fix_fq_adcch3, MF({gcheck_measure_iout1.value           },Boolean))
+        addConnectionConstraint(vs_buck_pcc_fix_fq_adcch4_io, vs_buck_pcc_fix_fq_adcch4, MF({gcheck_measure_iout2.value           },Boolean))
+        addConnectionConstraint(vs_buck_pcc_fix_fq_adcch5_io, vs_buck_pcc_fix_fq_adcch5, MF({gcheck_measure_iout3.value           },Boolean))
+        addConnectionConstraint(vs_buck_pcc_fix_fq_adcch6_io, vs_buck_pcc_fix_fq_adcch6, MF({gcheck_measure_iout4.value           },Boolean))
+        addConnectionConstraint(vs_buck_pcc_fix_fq_adcch7_io, vs_buck_pcc_fix_fq_adcch7, MF({gcheck_measure_user_defined_1.value  },Boolean))
+        
+        /* Connection: Scan <-> ADC channel [1-8] */
+        for(i=0; i<7; i++)
+        {
+            int index = i;
+            
+            /* Connection: ADC channel <-> Result reg */
+            addConnectionConstraint(rarray_vs_buck_pcc_fix_fq_adcch_ressel[index], rarray_vs_buck_pcc_fix_fq_adcch_res[index], MF({rarray_gcheck_measure_entity[index].value},Boolean))
+            
+            /* Connection: Scan APP <-> ADC channel */
+            addConnectionConstraint(rarray_vs_buck_pcc_fix_fq_adc_scan[index],  rarray_vs_buck_pcc_fix_fq_adcch_sel[index], MF({rarray_gcheck_measure_entity[index].value && (gcombo_adc_measurement_mode.value == "Scan")},Boolean))
+
+            /* Connection: Queue APP <-> ADC channel */
+            addConnectionConstraint(rarray_vs_buck_pcc_fix_fq_adc_queue[index], rarray_vs_buck_pcc_fix_fq_adcch_sel[index], MF({rarray_gcheck_measure_entity[index].value && (gcombo_adc_measurement_mode.value == "Queue")},Boolean))
+            
+            /*Connection: Scan APP iclass <-> ADC channel iclass */
+            addConnectionConstraint(rarray_vs_buck_pcc_fix_fq_adc_scan_iclass[index],  rarray_vs_buck_pcc_fix_fq_adcch_iclass_sel[index], MF({rarray_gcheck_measure_entity[index].value && (gcombo_adc_measurement_mode.value == "Scan")},Boolean))
+            
+            /*Connection: Queue APP iclass <-> ADC channel iclass */
+            addConnectionConstraint(rarray_vs_buck_pcc_fix_fq_adc_queue_iclass[index], rarray_vs_buck_pcc_fix_fq_adcch_iclass_sel[index], MF({rarray_gcheck_measure_entity[index].value && (gcombo_adc_measurement_mode.value == "Queue")},Boolean))
+            
+            /* Connection: PWM_CCU8 Phase 0  <-> ADC_SCAN trigger */
+            addConnectionConstraint(vs_pwm_ccu8_pm_out, rarray_vs_adc_scan_trigger_in[index],  MF({gcombo_mesurement_trigger.value == "PWM Timer (Phase 0)" && gcombo_adc_measurement_mode.value == "Scan" && rarray_gcheck_measure_entity[index].value && (!is_4x_device) && (gcombo_no_of_phases.value.toInteger() >= 1)},Boolean))
+            
+            /* Connection: HRPWM Phase 0     <-> ADC_SCAN trigger */
+            addConnectionConstraint(vs_hrpwm_pm_out, rarray_vs_adc_scan_trigger_in[index],     MF({gcombo_mesurement_trigger.value == "PWM Timer (Phase 0)" && gcombo_adc_measurement_mode.value == "Scan" && rarray_gcheck_measure_entity[index].value && (is_4x_device) && (gcombo_no_of_phases.value.toInteger() >= 1)},Boolean))
+            
+            /* Connection: PWM_CCU8 Phase 0  <-> ADC_QUEUE trigger */
+            addConnectionConstraint(vs_pwm_ccu8_pm_out, rarray_vs_adc_queue_trigger_in[index], MF({gcombo_mesurement_trigger.value == "PWM Timer (Phase 0)" && gcombo_adc_measurement_mode.value == "Queue" && rarray_gcheck_measure_entity[index].value && (!is_4x_device) && (gcombo_no_of_phases.value.toInteger() >= 1)},Boolean))
+    
+            /* Connection: HRPWM Phase 0     <-> ADC_QUEUE trigger */
+            addConnectionConstraint(vs_hrpwm_pm_out, rarray_vs_adc_queue_trigger_in[index],    MF({gcombo_mesurement_trigger.value == "PWM Timer (Phase 0)" && gcombo_adc_measurement_mode.value == "Queue" && rarray_gcheck_measure_entity[index].value && (is_4x_device) && (gcombo_no_of_phases.value.toInteger() >= 1)},Boolean))
+        }
+        
+          /* If the APP is not consumed the corresponding signal constraint is not added by - DAVE MS.
+           * Hence condition check for each APP connection constraint is not required.*/
+        for(i=0; i<3; i++)
+        {
+            int index = i;
+            
+            /* Connection: HRPWM ST <-> COMP_SLOPE_GEN Blanking */
+            addConnectionConstraint(rarray_vs_hrpwm_st[index], rarray_vs_csg_blanking[index], MF({(is_4x_device)}, Boolean))
+            
+            /* Connection: HRPWM ST <-> COMP_SLOPE_GEN Slope start */
+            addConnectionConstraint(rarray_vs_hrpwm_st[index], rarray_vs_csg_slope_start[index], MF({(is_4x_device)}, Boolean))
+            
+            /* Connection: COMP_SLOPE_GEN Comp_out <-> HRPWM Clear 0 */
+            addConnectionConstraint(rarray_vs_csg_comp_out[index], rarray_vs_hrpwm_hrc_clear_0[index], MF({(is_4x_device)}, Boolean))
+
+            
+            /* Connection: COMP_REF PDOUT output <-> PWM_CCU4 Event 1 */
+            addConnectionConstraint(rarray_vs_comp_ref_pdout[index], rarray_vs_pwm_ccu8_ev1[index], MF({(!is_4x_device)}, Boolean))
+            
+            /* Connection: GLOBAL_CCU8 sych start output <-> PWM_CCU4 Event 2 */
+            addConnectionConstraint(vs_global_ccu8_synch_start, rarray_vs_pwm_ccu8_ev2[index], MF({(!is_4x_device)}, Boolean))
+            
+            /* Connection: PWM_CCU4 output <-> DIGITAL_IO */
+            addConnectionConstraint(rarray_vs_pwm_ccu4_output[index], rarray_vs_digital_io_input[index], MF({(!is_4x_device) && (gcheck_slope_compensation.value && gcheck_blanking.value) && (gcombo_no_of_phases.value.toInteger() >= 1)}, Boolean))
+        }
+        
+        /* Connection: VADC result event <-> nvic node */
+        addConnectionConstraint(vs_result_event_out, vs_nvic_signal_in, MF({ (gcombo_isr_event.value == "Vout Result Event") },Boolean))
+        
+        /* ---------------------------------------------------------- ---------------------------------------------------------------*/
+        /* ---------- Target Specific User Variable Initialization ----------------------------------------------------------------- */
+        /* ---------------------------------------------------------- ---------------------------------------------------------------*/
+        
+        /***********************************************************************************************************************
+         * Tab: Buck converter configurations -
+         **********************************************************************************************************************/
+          
+        gcombo_no_of_phases.options           = MF({
+                                                List l = ["1", "2", "3"];
+                                                if (!is_4x_device) {l.remove(2)}
+                                                return l;
+                                                },List);
+    
+        gimage_buck_topology.path             = MF({
+                                                if((is_4x_device) && (gcombo_no_of_phases.value == "1") && (!gcheck_synch_conv.value))
+                                                {"Uimodel/buck_pcc_single_phase_4x.png"}
+                                                else if((is_4x_device) && (gcombo_no_of_phases.value == "1") && (gcheck_synch_conv.value))
+                                                {"Uimodel/buck_pcc_single_phase_synch_4x.png"}
+                                                else if((is_4x_device) && (gcombo_no_of_phases.value != "1") && (!gcheck_synch_conv.value))
+                                                {"Uimodel/buck_pcc_n_phase_4x.png"}
+                                                else if((is_4x_device) && (gcombo_no_of_phases.value != "1") && (gcheck_synch_conv.value))
+                                                {"Uimodel/buck_pcc_n_phase_synch_4x.png"}
+                                                else if((!is_4x_device) && (gcombo_no_of_phases.value == "1") && (!gcheck_synch_conv.value))
+                                                {"Uimodel/buck_pcc_single_phase_1x.png"}
+                                                else if((!is_4x_device) && (gcombo_no_of_phases.value == "1") && (gcheck_synch_conv.value))
+                                                {"Uimodel/buck_pcc_single_phase_synch_1x.png"}
+                                                else if((!is_4x_device) && (gcombo_no_of_phases.value != "1") && (!gcheck_synch_conv.value))
+                                                {"Uimodel/buck_pcc_n_phase_1x.png"}
+                                                else if((!is_4x_device) && (gcombo_no_of_phases.value != "1") && (gcheck_synch_conv.value))
+                                                {"Uimodel/buck_pcc_n_phase_synch_1x.png"}
+                                                }, String);
+                
+        gfloat_vout_ref.maxValue            = MF({
+                                                Float max_val;
+                                                max_val = gfloat_vin.value
+                                                return(max_val);
+                                                }, Float)
+        
+        /***********************************************************************************************************************
+         * Tab: PWM configurations
+         **********************************************************************************************************************/
+        gfloat_pwm_res.minValue             = MF({
+                                                if(is_4x_device)
+                                                {(Float) 9} /*In HRPWM APP prescaler is set to 0, hence gfloat_res variable not available */
+                                                else
+                                                {rarray_appres_pwm_ccu8[0].getVal(["gfloat_res", "minValue"])}
+                                                }, Float)
+
+        gfloat_pwm_res.maxValue             = MF({
+                                                if(is_4x_device)
+                                                {(Float) 20000} /*In HRPWM APP prescaler is set to 0, hence gfloat_res variable not available */
+                                                else
+                                                {rarray_appres_pwm_ccu8[0].getVal(["gfloat_res", "maxValue"])}
+                                                }, Float)
+        
+        gfloat_dt_rising.minValue           = MF({
+                                                Double min_val = 1000;
+                                                if(is_4x_device)
+                                                {min_val = rarray_appres_hrpwm[0].getVal(["gfloat_hr_dt_rise", "minValue"])}
+                                                else
+                                                {min_val = rarray_appres_pwm_ccu8[0].getVal(["gfloat_ch1_dt_rise", "minValue"])}
+                                                return(min_val);
+                                                }, Double)
+
+        gfloat_dt_rising.maxValue           = MF({
+                                                Double max_val = 1000;
+                                                if(is_4x_device)
+                                                {max_val = rarray_appres_hrpwm[0].getVal(["gfloat_hr_dt_rise", "maxValue"])}
+                                                else
+                                                {max_val = rarray_appres_pwm_ccu8[0].getVal(["gfloat_ch1_dt_rise", "maxValue"])}
+                                                return(max_val);
+                                                }, Double)
+        
+        gfloat_dt_falling.minValue          = MF({
+                                                Double min_val = 1000;
+                                                if(is_4x_device)
+                                                {min_val = rarray_appres_hrpwm[0].getVal(["gfloat_hr_dt_fall", "minValue"])}
+                                                else
+                                                {min_val = rarray_appres_pwm_ccu8[0].getVal(["gfloat_ch1_dt_fall", "minValue"])}
+                                                return(min_val);
+                                                }, Double)
+        
+        gfloat_dt_falling.maxValue          = MF({
+                                                Double max_val = 1000;
+                                                if(is_4x_device)
+                                                {max_val = rarray_appres_hrpwm[0].getVal(["gfloat_hr_dt_fall", "maxValue"])}
+                                                else
+                                                {max_val = rarray_appres_pwm_ccu8[0].getVal(["gfloat_ch1_dt_fall", "maxValue"])}
+                                                return(max_val);
+                                                }, Double)
+ 
+        /*This is the timer phase shift added when multi-phase switching is used*/
+        ginteger_phase_shift.value          = MF({
+                                                Integer max_val = 360;
+                                                if(gcombo_no_of_phases.value == "1") {max_val = 0}
+                                                else if (gcombo_no_of_phases.value == "2") {max_val = 180}
+                                                else if (gcombo_no_of_phases.value == "3") {max_val = 120}
+                                                else if (gcombo_no_of_phases.value == "4") {max_val = 90}
+                                                return(max_val);
+                                                }, Integer)
+        
+        /***********************************************************************************************************************
+         * Push values to HRPWM App for XMC4x family
+         **********************************************************************************************************************/
+        /* If the APP is not consumed the corresponding signal is not updated by - DAVE MS.
+         * Hence condition check for each APP signal update is not required.*/
+        for(i=0; i<3; i++)
+        {
+            int index = i;
+            
+            /*Push to values to HRPWM APP based on the selection in BUCK APP*/
+
+            /*update frequency*/
+            rarray_appres_hrpwm[index].setVal(["ginteger_freq", "value"], MF({ginteger_pwm_freq.value * 1000}, Integer))
+            
+            /*update CCU8 compare1 value*/
+            rarray_appres_hrpwm[index].setVal(["ginteger_cmp_ch1", "value"],
+            MF({
+                Integer num_of_phases = Integer.parseInt(gcombo_no_of_phases.value)
+                Integer period_value
+                Integer ccu8_compare1_value
+                    period_value = rarray_appres_hrpwm[0].getVal(["ginteger_period", "value"])
+                    /*Note: HRPWM OUT SET is on CCU8-st falling edge and CLEAR is on CCU8-st rising edge*/
+                    ccu8_compare1_value = (Integer) ((period_value + 1) * (gfloat_max_dc.value / 100))
+                return (ccu8_compare1_value);
+            }, Integer))
+            
+            
+            /*Set HRPWM compare 2 value to '0'*/
+            rarray_appres_hrpwm[index].setVal(["ginteger_hr_cmp2", "value"],
+            MF({
+                Integer cmp_val = 0
+                cmp_val = 0
+                return (cmp_val);
+            }, Integer))
+            
+            //enable period match interrupt
+            rarray_appres_hrpwm[index].setVal(["gcheck_int_per_match", "value"], MF({true}, Boolean))
+            
+            //select event0 function as external start
+            rarray_appres_hrpwm[index].setVal(["gcombo_e0_fn", "value"], MF({"External Start"}, String))
+            
+            //select event0 low pass filter
+            rarray_appres_hrpwm[index].setVal(["gcombo_e0_filter", "value"], MF({"No Filter"}, String))
+            
+            //enable synchronous start
+            rarray_appres_hrpwm[index].setVal(["gcheck_sync_start", "value"], MF({true}, Boolean))
+            
+            //select active edge action for external start function
+            rarray_appres_hrpwm[index].setVal(["gcombo_ext_start_action", "value"], MF({"Start Timer"}, String))
+            
+            //select e0 trigger edge as active
+            rarray_appres_hrpwm[index].setVal(["gcombo_e0_trigger", "value"], MF({"Rising"}, String))
+            
+            //enable HRC direct output
+            rarray_appres_hrpwm[index].setVal(["gcheck_hr_out0_enable", "value"], MF({true}, Boolean))
+            
+            //enable HRC indirect output for synchronous conversion
+            rarray_appres_hrpwm[index].setVal(["gcheck_hr_out1_enable", "value"], MF({gcheck_synch_conv.value}, Boolean))
+            
+            //enable dead time
+            rarray_appres_hrpwm[index].setVal(["gcheck_hr_dt_enable", "value"], MF({true}, Boolean))
+            
+            //update rising dead time
+            rarray_appres_hrpwm[index].setVal(["gfloat_hr_dt_rise", "value"], MF({gfloat_dt_rising.value}, Float))
+            
+            //update falling dead time
+            rarray_appres_hrpwm[index].setVal(["gfloat_hr_dt_fall", "value"], MF({gfloat_dt_falling.value}, Float))
+            
+            //select passive level for HRC direct output
+            rarray_appres_hrpwm[index].setVal(["gcombo_hr_out0_pass_level", "value"],
+            MF({
+                if(gcombo_passive_lvl.value == "Low")
+                {"Low"}
+                else
+                {"High"}
+            }, String))
+            
+            //select passive level for HRC inverted output
+            rarray_appres_hrpwm[index].setVal(["gcombo_hr_out1_pass_level", "value"],
+            MF({
+                if(gcombo_passive_lvl.value == "Low")
+                {"Low"}
+                else
+                {"High"}
+            }, String))
+            
+            //enable high resolution path
+            rarray_appres_hrpwm[index].setVal(["gcheck_hr_enable", "value"],
+            MF({
+                Integer num_of_phases = Integer.parseInt(gcombo_no_of_phases.value)
+                if(index < num_of_phases)
+                {true}
+                else
+                {true}
+            }, Boolean))
+            
+            //signal selector configuration for HR path
+            rarray_appres_hrpwm[index].setVal(["gcombo_hr_conn", "value"], MF({"Set0 <-> CCU8;       Clear0 <-> Manually"}, String))
+            
+            //select rising edge of HR path input as Set0
+            rarray_appres_hrpwm[index].setVal(["gcombo_hr_set0", "value"], MF({"Falling"}, String))
+            
+            //select falling edge of HR path input as Clear0
+            rarray_appres_hrpwm[index].setVal(["gcombo_hr_clear0", "value"], MF({"Rising"}, String))
+            
+            //enable low resolution path
+            rarray_appres_hrpwm[index].setVal(["gcheck_lr_enable", "value"],
+            MF({
+                Integer num_of_phases = Integer.parseInt(gcombo_no_of_phases.value)
+                if(index < num_of_phases)
+                {true}
+                else
+                {true}
+            }, Boolean))
+            
+            //signal selector configuration for LR path
+            rarray_appres_hrpwm[index].setVal(["gcombo_lr_conn", "value"], MF({"Set1 <-> Manually; Clear1 <-> CCU8"}, String))
+            
+            //select rising edge of LR path input as Set1
+            rarray_appres_hrpwm[index].setVal(["gcombo_lr_set1", "value"], MF({"Inactive"}, String))
+            
+            //select falling edge of LR path input as Clear1
+            rarray_appres_hrpwm[index].setVal(["gcombo_lr_clear1", "value"], MF({"Rising"}, String))                       
+        }
+        
+       /***********************************************************************************************************************
+        * Push values to PWM CCU8 App in 1X Device
+        **********************************************************************************************************************/
+        /* If the APP is not consumed the corresponding signal is not updated by - DAVE MS.
+         * Hence condition check for each APP signal update is not required.*/
+        for(i=0; i<3; i++)
+        {
+            int index = i;
+                         
+            /*Push to PWM_CCU8 UI*/
+            
+            //update frequency
+            rarray_appres_pwm_ccu8[index].setVal(["ginteger_freq", "value"], MF({ginteger_pwm_freq.value * 1000}, Integer))
+                
+            //update resolution
+            rarray_appres_pwm_ccu8[index].setVal(["gfloat_res", "value"], MF({gfloat_pwm_res.value}, Float))
+            
+            //update channel 1 duty cycle
+            rarray_appres_pwm_ccu8[index].setVal(["gfloat_sym_duty_ch1", "value"], MF({100 - gfloat_max_dc.value}, Float))
+            
+            //Select Edge aligned mode
+            rarray_appres_pwm_ccu8[index].setVal(["gcombo_counting_mode", "value"], MF({"Edge Aligned"}, String))
+            //Select Symmetric mode
+            rarray_appres_pwm_ccu8[index].setVal(["gcombo_compare_mode", "value"], MF({"Symmetric"}, String))
+            //Disable Initialize during startup
+            rarray_appres_pwm_ccu8[index].setVal(["gcheck_init_start", "value"], MF({false}, Boolean))
+            //Disable single shot mode
+            rarray_appres_pwm_ccu8[index].setVal(["gcheck_single_shot", "value"], MF({false}, Boolean))
+            //Select shadow transfer mode to Period match
+            rarray_appres_pwm_ccu8[index].setVal(["gcombo_shadow_txfr_mode", "value"], MF({"Period Match"}, String))
+            //Select ST1 as status bit
+            rarray_appres_pwm_ccu8[index].setVal(["gcombo_status_bit", "value"], MF({"ST1"}, String))
+
+            //Disable Multi channel1
+            rarray_appres_pwm_ccu8[index].setVal(["gcheck_mcm_ch1_enable", "value"], MF({false}, Boolean))
+            //Disable Multi channel2
+            rarray_appres_pwm_ccu8[index].setVal(["gcheck_mcm_ch2_enable", "value"], MF({false}, Boolean))
+            
+            //enable period match interrupt
+            rarray_appres_pwm_ccu8[index].setVal(["gcheck_int_per_match", "value"], MF({true}, Boolean))
+            
+            //select event0 function as external start
+            rarray_appres_pwm_ccu8[index].setVal(["gcombo_e0_fn", "value"], MF({"External Start"}, String))
+            
+            //select event0 low pass filter
+            rarray_appres_pwm_ccu8[index].setVal(["gcombo_e0_filter", "value"], MF({"No Filter"}, String))
+            
+            //enable synchronous start
+            rarray_appres_pwm_ccu8[index].setVal(["gcheck_sync_start", "value"], MF({true}, Boolean))
+            
+            //select active edge action for external start function
+            rarray_appres_pwm_ccu8[index].setVal(["gcombo_ext_start_action", "value"], MF({"Start Timer"}, String))
+            
+            //select e0 trigger edge as active
+            rarray_appres_pwm_ccu8[index].setVal(["gcombo_e0_trigger", "value"], MF({"Rising"}, String))
+            
+            //select event1 function as external start
+            rarray_appres_pwm_ccu8[index].setVal(["gcombo_e1_fn", "value"], MF({"External Override (Edge)"}, String))
+            
+            //select e1 trigger edge
+            rarray_appres_pwm_ccu8[index].setVal(["gcombo_e1_trigger", "value"], MF({"Rising"}, String))
+            
+            //select event1 low pass filter
+            rarray_appres_pwm_ccu8[index].setVal(["gcombo_e1_filter", "value"], MF({"No Filter"}, String))
+
+            //select event2 function as external start
+            rarray_appres_pwm_ccu8[index].setVal(["gcombo_e2_fn", "value"], MF({"External Override (Level)"}, String))
+            
+            //select e2 trigger edge
+            rarray_appres_pwm_ccu8[index].setVal(["gcombo_e2_trigger", "value"], MF({"No Trigger"}, String))
+            
+            //select event2 low pass filter
+            rarray_appres_pwm_ccu8[index].setVal(["gcombo_e2_filter", "value"], MF({"No Filter"}, String))
+            
+            //update external override level
+            rarray_appres_pwm_ccu8[index].setVal(["gcombo_ext_e2_override_level", "value"], MF({"Inversion"}, String))
+            
+            //update passive state
+            rarray_appres_pwm_ccu8[index].setVal(["gcombo_ch1_out0_state", "value"], MF({"After Compare Match"}, String))
+            
+            rarray_appres_pwm_ccu8[index].setVal(["gcombo_ch1_out1_state", "value"], MF({"Before Compare Match"}, String))
+            
+            //update passive level
+            rarray_appres_pwm_ccu8[index].setVal(["gcombo_ch1_out0_pass_level", "value"], MF({gcombo_passive_lvl.value}, String))
+            rarray_appres_pwm_ccu8[index].setVal(["gcombo_ch1_out1_pass_level", "value"], MF({gcombo_passive_lvl.value}, String))
+            
+            //enable channel 1 direct output
+            rarray_appres_pwm_ccu8[index].setVal(["gcheck_ch1_out0_enable", "value"], MF({true}, Boolean))
+            
+            //enable channel 1 inverted output
+            rarray_appres_pwm_ccu8[index].setVal(["gcheck_ch1_out1_enable", "value"], MF({gcheck_synch_conv.value}, Boolean))
+            
+            //enable dead time
+            rarray_appres_pwm_ccu8[index].setVal(["gcheck_ch1_dt_enable", "value"], MF({true}, Boolean))
+            
+            //update rising dead time
+            rarray_appres_pwm_ccu8[index].setVal(["gfloat_ch1_dt_rise", "value"], MF({gfloat_dt_rising.value}, Float))
+            
+            //update falling dead time
+            rarray_appres_pwm_ccu8[index].setVal(["gfloat_ch1_dt_fall", "value"], MF({gfloat_dt_falling.value}, Float))            
+        }
+
+        /***********************************************************************************************************************
+         * Tab: Comparator Configurations
+         **********************************************************************************************************************/
+        gfloat_blanking_time.maxValue       = MF({if(is_4x_device) {rarray_appres_csg[0].getVal(["gfloat_blanking_time", "maxValue"])} else {(Float) 2000.0} }, Float)
+
+        gfloat_dac_dsv1.maxValue            = MF({if(is_4x_device) {rarray_appres_csg[0].getVal(["gfloat_dac_dsv1", "maxValue"])}      else {(Float) 3300}   }, Float)
+
+        gfloat_dac_dsv1.minValue            = MF({if(is_4x_device) {rarray_appres_csg[0].getVal(["gfloat_dac_dsv1", "minValue"])}      else {(Float) 0}      }, Float)
+        
+        gfloat_dac_dsv2.maxValue            = MF({if(is_4x_device) {rarray_appres_csg[0].getVal(["gfloat_dac_dsv2", "maxValue"])}      else {(Float) 3300}   }, Float)
+
+        gfloat_dac_dsv2.minValue            = MF({if(is_4x_device) {rarray_appres_csg[0].getVal(["gfloat_dac_dsv2", "minValue"])}      else {(Float) 0}      }, Float)
+
+        gfloat_slope_value.maxValue         = MF({if(is_4x_device) {rarray_appres_csg[0].getVal(["gfloat_slope_value", "maxValue"])}   else {(Float) 500}    }, Float)
+
+        gfloat_slope_value.minValue         = MF({if(is_4x_device) {rarray_appres_csg[0].getVal(["gfloat_slope_value", "minValue"])}   else {(Float) 0}      }, Float)
+
+        gfloat_blanking_time.enabled        = MF({gcheck_blanking.value}, Boolean)
+        
+        gcombo_comp_filtering.enabled       = MF({gcheck_filter_cmp_out.value && is_4x_device}, Boolean)
+        
+        gfloat_dac_dsv1.enabled             = MF({gcheck_slope_compensation.value && is_4x_device}, Boolean)
+        
+        gfloat_dac_dsv2.enabled             = MF({gcheck_slope_compensation.value && is_4x_device}, Boolean)
+        
+        gfloat_slope_value.enabled          = MF({gcheck_slope_compensation.value && is_4x_device}, Boolean)
+        
+        if (is_4x_device)
+        {
+            gcheck_blanking.value           = true
+            gcheck_slope_compensation.value = true
+            glabel_comp_filtering.visible   = true
+            gcombo_comp_filtering.visible   = true
+            gimage_slope_comparator.path    = "Uimodel/slope_and_comparator_4x.png"
+        }
+        else
+        {
+            gcheck_blanking.value           = false
+            gcheck_slope_compensation.value = false
+            glabel_comp_filtering.visible   = false
+            gcombo_comp_filtering.visible   = false
+            gimage_slope_comparator.path    = "Uimodel/slope_and_comparator_1x.png"
+        }                                                 
+                                          
+        /***********************************************************************************************************************
+         * Push values to COMP_SLOPE_GEN & COMP_REF App
+         **********************************************************************************************************************/
+        /* If the APP is not consumed the corresponding signal is not updated by - DAVE MS.
+         * Hence condition check for each APP signal update is not required.*/
+        for(i=0; i<3; i++)
+        {
+            int index = i;
+
+            /*Push to COMP_SLOPE_GEN UI*/           
+            
+            /*update blanking mode*/
+            rarray_appres_csg[index].setVal(["gcombo_blanking_config", "value"],
+            MF({
+                if (gcheck_blanking.value)
+                {"Start Upon High To Low Transition Of External Signal"}
+                else
+                {"Disabled"}
+            }, String))
+            
+            /*update blanking time*/
+            rarray_appres_csg[index].setVal(["gfloat_blanking_time", "value"], MF({gfloat_blanking_time.value}, Float))
+            
+            /*update filter comparator output*/
+            rarray_appres_csg[index].setVal(["gcombo_csg_comp_filtering", "value"],
+            MF({
+                if (!gcheck_filter_cmp_out.value)
+                {"No Filtering"}
+                else
+                {gcombo_comp_filtering.value}
+            }, String))
+            
+            /*update start value of slope*/
+            rarray_appres_csg[index].setVal(["gfloat_dac_dsv1", "value"], MF({gfloat_dac_dsv1.value}, Float))
+            
+            /*update stop value of slope*/
+            rarray_appres_csg[index].setVal(["gfloat_dac_dsv2", "value"], MF({gfloat_dac_dsv2.value}, Float))
+            
+            /*update slope value*/
+            rarray_appres_csg[index].setVal(["gfloat_slope_value", "value"], MF({gfloat_slope_value.value}, Float))
+            
+            /*update dac mode*/
+            rarray_appres_csg[index].setVal(["gcombo_dac_mode", "value"], MF({"Decrementing Slope"}, String))
+            
+            /*dummy push set dac to restart slope on rising edge of ext signal*/
+            rarray_appres_csg[index].setVal(["gcombo_restart_slope", "value"], MF({"Upon Falling Edge Of External Signal"}, String))
+            /*set dac not to run at init*/
+            rarray_appres_csg[index].setVal(["gcheck_dac_run_at_init", "value"], MF({false}, Boolean))
+            /*set comparator output not to invert*/
+            rarray_appres_csg[index].setVal(["gcheck_csg_comp_inv_enable", "value"], MF({false}, Boolean))
+            
+
+            /*Push to COMP_REF UI*/
+            
+            /*Enable ERU*/
+            rarray_appres_comp_ref[index].setVal(["gcheck_enable_eru", "value"], MF({true}, Boolean))
+            
+            /*Update comparator filtering*/
+            rarray_appres_comp_ref[index].setVal(["gcheck_enable_filter", "value"], MF({gcheck_filter_cmp_out.value}, Boolean))
+            
+            /*Select CCU4 as the reference*/
+            rarray_appres_comp_ref[index].setVal(["gcombo_ref_source", "value"], MF({"CCU4"}, String))        
+        }
+        
+        /***********************************************************************************************************************
+         * Push values to PWM_CCU4 & DIGITAL_IO App
+         **********************************************************************************************************************/
+        /* If the APP is not consumed the corresponding signal is not updated by - DAVE MS.
+         * Hence condition check for each APP signal update is not required.*/
+        for(i=0; i<3; i++)
+        {
+            int index = i;
+            
+            /*update frequency*/
+            rarray_appres_pwm_ccu4[index].setVal(["ginteger_freq", "value"], MF({ginteger_pwm_freq.value * 1000}, Integer))
+            
+            /*updated duty cycle based on blanking value */
+            rarray_appres_pwm_ccu4[index].setVal(["gfloat_duty_cycle", "value"], 
+                MF({
+                    100 - ((gfloat_blanking_time.value/1000000000) * (ginteger_pwm_freq.value * 1000) * 100)
+                    }, Float))            
+            
+            /*select event0 function as external start*/
+            rarray_appres_pwm_ccu4[index].setVal(["gcombo_e0_fn", "value"], MF({"External Start"}, String))
+            
+            /*select e0 trigger edge as active*/
+            rarray_appres_pwm_ccu4[index].setVal(["gcombo_e0_trigger", "value"], MF({"Rising"}, String))
+            
+            /*select event0 low pass filter*/
+            rarray_appres_pwm_ccu4[index].setVal(["gcombo_e0_filter", "value"], MF({"No Filter"}, String))
+
+            /*enable synchronous start*/
+            rarray_appres_pwm_ccu4[index].setVal(["gcheck_sync_start", "value"], MF({true}, Boolean))
+
+            /*select active edge action for external start function*/
+            rarray_appres_pwm_ccu4[index].setVal(["gcombo_ext_start_action", "value"], MF({"Start Timer"}, String))
+
+            /*enable output*/
+            rarray_appres_pwm_ccu4[index].setVal(["gcheck_ch1_out0_enable", "value"], MF({true}, Boolean))
+            
+            /*push pin out as open drain*/
+            rarray_appres_pwm_ccu4[index].setVal(["gcombo_ch1_out0_char", "value"], MF({"Open Drain"}, String))            
+            
+            /*disable all widgets in 'General Settings' tab*/
+            rarray_appres_pwm_ccu4[index].setVal(["gcheck_tab_general_enable", "value"],MF({false}, Boolean))
+            
+            //set pin direction as output
+            rarray_appres_digital_io[index].setVal(["gcombo_io_function", "value"], MF({"Input/Output"}, String))
+            
+            //set pin output as open drain
+            rarray_appres_digital_io[index].setVal(["gcombo_output_mode", "value"], MF({"Open Drain"}, String))
+        }
+        
+        /***********************************************************************************************************************
+         * Tab: ADC measurement configurations
+         **********************************************************************************************************************/
+        gcheck_measure_iout4.visible        = MF({false}, Boolean)
+        gstring_iout4_measurement.visible   = MF({false}, Boolean)
+        gcombo_iout4_q_pos.visible          = MF({false}, Boolean)
+        gfloat_iout4_gain.visible           = MF({false}, Boolean)
+        
+        for(i=0; i<7; i++)
+        {
+            int index = i;
+            
+            if((index == 0) || (index == 1) || (index == 2) || (index == 6)) //for vout, vin, iout1 and user_defined
+            {
+                rarray_gstring_measure_entity[index].enabled = MF({
+                    if (rarray_gcheck_measure_entity[index].value)
+                    {true}
+                    else
+                    {false}
+                    }, Boolean)
+                
+                rarray_gcombo_q_position[index].enabled      = MF({
+                    if ((rarray_gcheck_measure_entity[index].value) && (gcombo_adc_measurement_mode.value == "Queue"))
+                    {true}
+                    else
+                    {false}
+                    }, Boolean)
+                
+                if (index != 6) //divider gain is not applicable for 'User_Defined' measurement
+                {
+                rarray_gfloat_divider_gain[index].enabled    = MF({
+                    if (rarray_gcheck_measure_entity[index].value)
+                    {true}
+                    else
+                    {false}
+                    }, Boolean)
+                }
+            }
+            else //for iout2, iout3, iout4
+            {
+                rarray_gcheck_measure_entity[index].enabled  = MF({
+                    Integer num_of_phases = Integer.parseInt(gcombo_no_of_phases.value)
+                    if (num_of_phases > (index-2))
+                    {true}
+                    else
+                    {false}
+                    }, Boolean)
+                rarray_gstring_measure_entity[index].enabled = MF({
+                    Integer num_of_phases = Integer.parseInt(gcombo_no_of_phases.value)
+                    if ((num_of_phases > (index-2)) && (rarray_gcheck_measure_entity[index].value))
+                    {true}
+                    else
+                    {false}
+                    }, Boolean)
+                rarray_gcombo_q_position[index].enabled      = MF({
+                    Integer num_of_phases = Integer.parseInt(gcombo_no_of_phases.value)
+                    if ((num_of_phases > (index-2)) && (rarray_gcheck_measure_entity[index].value) && (gcombo_adc_measurement_mode.value == "Queue"))
+                    {true}
+                    else
+                    {false}
+                    }, Boolean)
+                rarray_gfloat_divider_gain[index].enabled    = MF({
+                    Integer num_of_phases = Integer.parseInt(gcombo_no_of_phases.value)
+                    if ((num_of_phases > (index-2)) && (rarray_gcheck_measure_entity[index].value))
+                    {true}
+                    else
+                    {false}
+                    }, Boolean)
+            }
+        }
+            
+        /*Display only valid queue positions*/
+        gcombo_vout_q_pos.options                     = MF({
+                                                           List l = ["0", "1", "2", "3", "4", "5", "6", "7"];
+                                                        String a = rarray_hwres_adcchan[0].getSolverUri()[6]
+                                                                                           
+                                                        if (gcheck_measure_vin.value)
+                                                        {
+                                                          String b = rarray_hwres_adcchan[1].getSolverUri()[6]
+                                                          if (a == b) {l.remove(gcombo_vin_q_pos.value)}
+                                                        }
+                                                        
+                                                        if (gcheck_measure_iout1.value)
+                                                        {
+                                                          String c = rarray_hwres_adcchan[2].getSolverUri()[6]
+                                                          if (a == c) {l.remove(gcombo_iout1_q_pos.value)}
+                                                        }
+                                                        
+                                                        if (gcheck_measure_iout2.value)
+                                                        {
+                                                          String d = rarray_hwres_adcchan[3].getSolverUri()[6]
+                                                          if (a == d) {l.remove(gcombo_iout2_q_pos.value)}
+                                                        }
+                                                        
+                                                        if (gcheck_measure_iout3.value)
+                                                        {
+                                                          String e = rarray_hwres_adcchan[4].getSolverUri()[6]
+                                                          if (a == e) {l.remove(gcombo_iout3_q_pos.value)}
+                                                        }
+                                                        
+                                                        if (gcheck_measure_iout4.value)
+                                                        {
+                                                          String f = rarray_hwres_adcchan[5].getSolverUri()[6]
+                                                          if (a == f) {l.remove(gcombo_iout4_q_pos.value)}
+                                                        }
+                                                        
+                                                        if (gcheck_measure_user_defined_1.value)
+                                                        {
+                                                          String g = rarray_hwres_adcchan[6].getSolverUri()[6]
+                                                          if (a == g) {l.remove(gcombo_adc_q_pos_user_defined_1.value)}
+                                                        }
+                                                        return l; },List);
+    
+        gcombo_vin_q_pos.options                     = MF({
+                                                        List l = ["0", "1", "2", "3", "4", "5", "6", "7"];
+
+                                                        if (gcheck_measure_vin.value)
+                                                        {
+                                                            String a = rarray_hwres_adcchan[0].getSolverUri()[6]
+                                                            String b = rarray_hwres_adcchan[1].getSolverUri()[6]
+                                                            if (b == a) {l.remove(gcombo_vout_q_pos.value)}
+
+                                                            if (gcheck_measure_iout1.value)
+                                                            {
+                                                              String c = rarray_hwres_adcchan[2].getSolverUri()[6]
+                                                              if (b == c) {l.remove(gcombo_iout1_q_pos.value)}
+                                                            }
+
+                                                            if (gcheck_measure_iout2.value)
+                                                            {
+                                                              String d = rarray_hwres_adcchan[3].getSolverUri()[6]
+                                                              if (b == d) {l.remove(gcombo_iout2_q_pos.value)}
+                                                            }
+
+                                                            if (gcheck_measure_iout3.value)
+                                                            {
+                                                              String e = rarray_hwres_adcchan[4].getSolverUri()[6]
+                                                              if (b == e) {l.remove(gcombo_iout3_q_pos.value)}
+                                                            }
+
+                                                            if (gcheck_measure_iout4.value)
+                                                            {
+                                                              String f = rarray_hwres_adcchan[5].getSolverUri()[6]
+                                                              if (b == f) {l.remove(gcombo_iout4_q_pos.value)}
+                                                            }
+
+                                                            if (gcheck_measure_user_defined_1.value)
+                                                            {
+                                                              String g = rarray_hwres_adcchan[6].getSolverUri()[6]
+                                                              if (b == g) {l.remove(gcombo_adc_q_pos_user_defined_1.value)}
+                                                            }
+                                                        }
+                                                        return l; },List);
+                                                        
+        gcombo_iout1_q_pos.options                     = MF({
+                                                        List l = ["0", "1", "2", "3", "4", "5", "6", "7"];
+
+                                                        if (gcheck_measure_iout1.value)
+                                                        {
+                                                            String a = rarray_hwres_adcchan[0].getSolverUri()[6]
+                                                            String c = rarray_hwres_adcchan[2].getSolverUri()[6]
+                                                            if (c == a) {l.remove(gcombo_vout_q_pos.value)}
+
+                                                            if (gcheck_measure_vin.value)
+                                                            {
+                                                              String b = rarray_hwres_adcchan[1].getSolverUri()[6]
+                                                              if (c == b) {l.remove(gcombo_vin_q_pos.value)}
+                                                            }
+
+                                                            if (gcheck_measure_iout2.value)
+                                                            {
+                                                              String d = rarray_hwres_adcchan[3].getSolverUri()[6]
+                                                              if (c == d) {l.remove(gcombo_iout2_q_pos.value)}
+                                                            }
+
+                                                            if (gcheck_measure_iout3.value)
+                                                            {
+                                                              String e = rarray_hwres_adcchan[4].getSolverUri()[6]
+                                                              if (c == e) {l.remove(gcombo_iout3_q_pos.value)}
+                                                            }
+
+                                                            if (gcheck_measure_iout4.value)
+                                                            {
+                                                              String f = rarray_hwres_adcchan[5].getSolverUri()[6]
+                                                              if (c == f) {l.remove(gcombo_iout4_q_pos.value)}
+                                                            }
+
+                                                            if (gcheck_measure_user_defined_1.value)
+                                                            {
+                                                              String g = rarray_hwres_adcchan[6].getSolverUri()[6]
+                                                              if (c == g) {l.remove(gcombo_adc_q_pos_user_defined_1.value)}
+                                                            }
+                                                        }
+                                                        return l; },List);
+    
+        gcombo_iout2_q_pos.options                     = MF({
+                                                        List l = ["0", "1", "2", "3", "4", "5", "6", "7"];
+                                                        if (gcheck_measure_iout2.value)
+                                                        {
+                                                            String a = rarray_hwres_adcchan[0].getSolverUri()[6]
+                                                            String d = rarray_hwres_adcchan[3].getSolverUri()[6]
+                                                            if (d == a) {l.remove(gcombo_vout_q_pos.value)}
+
+                                                            if (gcheck_measure_vin.value)
+                                                            {
+                                                              String b = rarray_hwres_adcchan[1].getSolverUri()[6]
+                                                              if (d == b) {l.remove(gcombo_vin_q_pos.value)}
+                                                            }
+
+                                                            if (gcheck_measure_iout1.value)
+                                                            {
+                                                              String c = rarray_hwres_adcchan[2].getSolverUri()[6]
+                                                              if (d == c) {l.remove(gcombo_iout1_q_pos.value)}
+                                                            }
+
+                                                            if (gcheck_measure_iout3.value)
+                                                            {
+                                                              String e = rarray_hwres_adcchan[4].getSolverUri()[6]
+                                                              if (d == e) {l.remove(gcombo_iout3_q_pos.value)}
+                                                            }
+
+                                                            if (gcheck_measure_iout4.value)
+                                                            {
+                                                              String f = rarray_hwres_adcchan[5].getSolverUri()[6]
+                                                              if (d == f) {l.remove(gcombo_iout4_q_pos.value)}
+                                                            }
+
+                                                            if (gcheck_measure_user_defined_1.value)
+                                                            {
+                                                              String g = rarray_hwres_adcchan[6].getSolverUri()[6]
+                                                              if (d == g) {l.remove(gcombo_adc_q_pos_user_defined_1.value)}
+                                                            }
+                                                        }
+                                                        return l; },List);
+        
+        gcombo_iout3_q_pos.options                     = MF({
+                                                        List l = ["0", "1", "2", "3", "4", "5", "6", "7"];
+                                                        if (gcheck_measure_iout3.value)
+                                                        {
+                                                            String a = rarray_hwres_adcchan[0].getSolverUri()[6]
+                                                            String e = rarray_hwres_adcchan[4].getSolverUri()[6]
+                                                            if (e == a) {l.remove(gcombo_vout_q_pos.value)}
+
+                                                            if (gcheck_measure_vin.value)
+                                                            {
+                                                              String b = rarray_hwres_adcchan[1].getSolverUri()[6]
+                                                              if (e == b) {l.remove(gcombo_vin_q_pos.value)}
+                                                            }
+
+                                                            if (gcheck_measure_iout1.value)
+                                                            {
+                                                              String c = rarray_hwres_adcchan[2].getSolverUri()[6]
+                                                              if (e == c) {l.remove(gcombo_iout1_q_pos.value)}
+                                                            }
+
+                                                            if (gcheck_measure_iout2.value)
+                                                            {
+                                                              String d = rarray_hwres_adcchan[3].getSolverUri()[6]
+                                                              if (e == d) {l.remove(gcombo_iout2_q_pos.value)}
+                                                            }
+
+                                                            if (gcheck_measure_iout4.value)
+                                                            {
+                                                              String f = rarray_hwres_adcchan[5].getSolverUri()[6]
+                                                              if (e == f) {l.remove(gcombo_iout4_q_pos.value)}
+                                                            }
+
+                                                            if (gcheck_measure_user_defined_1.value)
+                                                            {
+                                                              String g = rarray_hwres_adcchan[6].getSolverUri()[6]
+                                                              if (e == g) {l.remove(gcombo_adc_q_pos_user_defined_1.value)}
+                                                            }
+                                                        }
+                                                        return l; },List);
+                                                    
+        gcombo_adc_q_pos_user_defined_1.options        = MF({
+                                                        List l = ["0", "1", "2", "3", "4", "5", "6", "7"];
+                                                        if (gcheck_measure_user_defined_1.value)
+                                                        {
+                                                            String a = rarray_hwres_adcchan[0].getSolverUri()[6]
+                                                            String g = rarray_hwres_adcchan[6].getSolverUri()[6]
+                                                            if (g == a) {l.remove(gcombo_vout_q_pos.value)}
+
+                                                            if (gcheck_measure_vin.value)
+                                                            {
+                                                              String b = rarray_hwres_adcchan[1].getSolverUri()[6]
+                                                              if (g == b) {l.remove(gcombo_vin_q_pos.value)}
+                                                            }
+
+                                                            if (gcheck_measure_iout1.value)
+                                                            {
+                                                              String c = rarray_hwres_adcchan[2].getSolverUri()[6]
+                                                              if (g == c) {l.remove(gcombo_iout1_q_pos.value)}
+                                                            }
+
+                                                            if (gcheck_measure_iout2.value)
+                                                            {
+                                                              String d = rarray_hwres_adcchan[3].getSolverUri()[6]
+                                                              if (g == d) {l.remove(gcombo_iout2_q_pos.value)}
+                                                            }
+
+                                                            if (gcheck_measure_iout3.value)
+                                                            {
+                                                              String e = rarray_hwres_adcchan[4].getSolverUri()[6]
+                                                              if (g == e) {l.remove(gcombo_iout3_q_pos.value)}
+                                                            }
+
+                                                            if (gcheck_measure_iout4.value)
+                                                            {
+                                                              String f = rarray_hwres_adcchan[5].getSolverUri()[6]
+                                                              if (g == f) {l.remove(gcombo_iout4_q_pos.value)}
+                                                            }
+                                                        }
+                                                        return l; },List);
+                                                    
+        /*String for validating the string entered as callback function name*/
+        gmessage_measurements.visible                     = MF({
+                                                            String fn_regexp = ~/^[^\d\W]\w*\Z/
+                                                            Matcher matcher_tx_vout  = (gstring_vout_measurement.value  =~ fn_regexp)
+                                                            Matcher matcher_tx_vin   = (gstring_vin_measurement.value   =~ fn_regexp)
+                                                            Matcher matcher_tx_iout1 = (gstring_iout1_measurement.value =~ fn_regexp)
+                                                            Matcher matcher_tx_iout2 = (gstring_iout2_measurement.value =~ fn_regexp)
+                                                            Matcher matcher_tx_iout3 = (gstring_iout3_measurement.value =~ fn_regexp)                                                            
+                                                            Matcher matcher_tx_udef1 = (gstring_udef1_measurement.value =~ fn_regexp)
+                                                            Boolean ExpressionMatch_tx = (!matcher_tx_vout.matches()) || (!matcher_tx_vin.matches()) || (!matcher_tx_iout1.matches()) || (!matcher_tx_iout2.matches()) || (!matcher_tx_iout3.matches()) || (!matcher_tx_udef1.matches())
+                                                            /*if(gstring_int_handler_cntrl_loop.visible && gstring_int_handler_cntrl_loop.enabled){return ExpressionMatch_tx} else{ return false}*/
+                                                            return ExpressionMatch_tx;
+                                                            },Boolean)
+        /***********************************************************************************************************************
+         * Tab: Controller configurations
+         **********************************************************************************************************************/
+        gimage_filter.path                  = MF({
+                                                /*/if(gcombo_controller_type.value == "PI")
+                                                {"Uimodel/filter_pi.png"}
+                                                else */ 
+                                                if(gcombo_controller_type.value == "Type II (2P2Z)")
+                                                {"Uimodel/filter_2p2z.png"}
+                                                else
+                                                {"Uimodel/filter_3p3z.png"}
+                                                }, String)
+                     
+        /* Show only for Type3 filter */
+        glabel_a3.visible                   = MF({ if(gcombo_controller_type.value == "Type III (3P3Z)") {true} else {false} }, Boolean)
+        gfloat_a3.visible                   = MF({ if(gcombo_controller_type.value == "Type III (3P3Z)") {true} else {false} }, Boolean)
+        glabel_b3.visible                   = MF({ if(gcombo_controller_type.value == "Type III (3P3Z)") {true} else {false} }, Boolean)
+        gfloat_b3.visible                   = MF({ if(gcombo_controller_type.value == "Type III (3P3Z)") {true} else {false} }, Boolean)
+                
+        if (is_4x_device)
+        {
+            /* PWM Settings */
+      
+            /* Comparator Configuration */
+      
+            /* Overload Protection */
+            
+            glabel_note_fixed_pt_calc.text  = "Note: Control loop will be calculated in float."
+            
+            /* Show only for XMC1x */
+            ggroup_filter_var_format.visible    = false;
+        }
+        else //for XMC1x
+        {
+            /* PWM settings */
+            ginteger_pwm_freq.value         = 100
+            
+            /* Comparator Configuration */
+            gfloat_blanking_time.value      = 500
+            
+            /* Overload protection */
+            
+            gfloat_b0.value                 = 2.345604
+            gfloat_b1.value                 = 0.003702
+            gfloat_b2.value                 = -2.341901
+            gfloat_b3.value                 = 0            
+            gfloat_a1.value                 = 1.557522
+            gfloat_a2.value                 = -0.557522
+            gfloat_a3.value                 = 0
+            
+            gfloat_b0.minValue              = -32.0
+            gfloat_b1.minValue              = -32.0
+            gfloat_b2.minValue              = -32.0
+            gfloat_b3.minValue              = -32.0
+            gfloat_a1.minValue              = -32.0
+            gfloat_a2.minValue              = -32.0
+            gfloat_a3.minValue              = -32.0
+            
+            gfloat_b0.maxValue              = 31.0
+            gfloat_b1.maxValue              = 31.0
+            gfloat_b2.maxValue              = 31.0
+            gfloat_b3.maxValue              = 31.0
+            gfloat_a1.maxValue              = 31.0
+            gfloat_a2.maxValue              = 31.0
+            gfloat_a3.maxValue              = 31.0
+            
+        }
+        
+        /* K */
+        gfloat_k_gain.value               = MF({
+                                                float value = 0;
+                                                /*float dac_ref_voltage  = 3.3;*/                                              
+                                                 
+                                                if (is_4x_device)
+                                                {                      
+                                                    /*Integer no_of_dac_bits = 10;*/
+                                                    /*value = (gfloat_adc_ref_voltage.value * ((2.power(no_of_dac_bits))-1)) / (gfloat_vout_gain.value * ((2.power(ginteger_adc_num_bits.value))-1) * dac_ref_voltage);*/
+                                                    /*simplifying the above equation*/
+                                                    value = (3.3 * (1023)) / (gfloat_vout_gain.value * (4095) * 3.3);
+                                                }
+                                                else
+                                                {
+                                                    /*Integer no_of_dac_bits = 7.8;*/
+                                                    /*value = (gfloat_adc_ref_voltage.value * ((2.power(no_of_dac_bits))-1)) / (gfloat_vout_gain.value * ((2.power(ginteger_adc_num_bits.value))-1) * dac_ref_voltage);*/                                                    
+                                                    /*simplifying the above equation*/
+                                                    value = (3.3 * ((appres_global_ccu8.getVal(["gfloat_clkFreq", "value"]) * 1000) / (appres_comp_ref_1.getVal(["ginteger_pwm_freq", "value"])))) / (gfloat_vout_gain.value * (4095) * 3.3);
+                                                }
+                                                return (value);
+                                                },Float)
+        
+        /* set default UI vale */
+        gfloat_max_out.value              = MF({
+                                                float value = 0;
+                                                
+                                                /*if ((is_4x_device == false) && (gcombo_controller_type.value != "PI"))*/ /* Execute only for XMC1x family and if compensator is Type II or Type III */
+                                                if (!is_4x_device)
+                                                {
+                                                    /* Float value = (gfloat_max_out_voltage.value/gfloat_max_out_voltage.maxValue) * ((appres_global_ccu8.getVal(["gfloat_clkFreq", "value"]) * 1000000) / (appres_comp_ref_1.getVal(["ginteger_pwm_freq", "value"]) * 1000)) */
+                                                    /* By optimizing the above code */
+                                                    value = (gfloat_max_out_voltage.value/gfloat_max_out_voltage.maxValue) * ((appres_global_ccu8.getVal(["gfloat_clkFreq", "value"]) * 1000) / (appres_comp_ref_1.getVal(["ginteger_pwm_freq", "value"])))
+                                                }
+                                                return (value);
+                                                },Float);
+
+        gfloat_min_out.value              = MF({
+                                                float value = 0;
+                                                
+                                                /*if ((is_4x_device == false) && (gcombo_controller_type.value != "PI"))*/ /* Execute only for XMC1x family and if compensator is Type II or Type III */
+                                                if (!is_4x_device)
+                                                {
+                                                    /* Float value = (gfloat_min_out_voltage.value/gfloat_max_out_voltage.maxValue) * ((appres_global_ccu8.getVal(["gfloat_clkFreq", "value"]) * 1000000) / (appres_comp_ref_1.getVal(["ginteger_pwm_freq", "value"]) * 1000)) */
+                                                    /* By optimizing the above code */
+                                                    value = (gfloat_min_out_voltage.value/gfloat_max_out_voltage.maxValue) * ((appres_global_ccu8.getVal(["gfloat_clkFreq", "value"]) * 1000) / (appres_comp_ref_1.getVal(["ginteger_pwm_freq", "value"])))
+                                                }
+                                                return (value);
+                                                },Float);
+        
+        /* Calculation of number of integer bits for B coefficient of Type II / Type III compensator */
+        /* Biggest abs BxK coeff B_iq -> IQ int */
+        ginteger_b_coeffs_int_bits.value  = MF({
+                                                float max_b = 0;
+                                                Integer value = 0;
+                                                
+                                                /*if ((is_4x_device == false) && (gcombo_controller_type.value != "PI"))*/ /* Execute only for XMC1x family and if compensator is Type II or Type III */
+                                                if (!is_4x_device)
+                                                {
+                                                    value = Math.ceil((Math.log(gfloat_bxk_max_abs.value)/Math.log(2)))
+                                                }
+                                                return (value);
+                                                }, Integer)
+        
+        /* Calculation of number of fractional bits for B coefficient of Type II / Type III compensator */
+        /* Biggest abs BxK coeff B_iq -> IQ frac */
+        ginteger_b_coeffs_fract_bits.value = MF({
+                                                Integer value = 0;
+                                                
+                                                /*if ((is_4x_device == false) && (gcombo_controller_type.value != "PI"))*/ /* Execute only for XMC1x family and if compensator is Type II or Type III */
+                                                if (!is_4x_device)
+                                                {
+                                                    value = 32 - 1 - Math.ceil((Math.log(gfloat_wcase_bke.value + gfloat_wcase_au.value)/Math.log(2)))
+                                                }
+                                                return (value);
+                                                }, Integer)
+        
+        /* Calculation of number of integer bits for A coefficient of Type II / Type III compensator */
+        /* Biggest abs A coeff A_iq -> IQ int */
+        ginteger_a_coeffs_int_bits.value  = MF({
+                                                float max_a = 0;
+                                                Integer value = 0;
+                                                
+                                                /*if ((is_4x_device == false) && (gcombo_controller_type.value != "PI"))*/ /* Execute only for XMC1x family and if compensator is Type II or Type III */
+                                                if (!is_4x_device)
+                                                {
+                                                    value = Math.ceil((Math.log(gfloat_a_max_abs.value)/Math.log(2)))
+                                                }
+                                                return (value);
+                                                }, Integer)
+        
+        /* Calculation of number of fractional bits for A coefficient of Type II / Type III compensator */
+        ginteger_a_coeffs_fract_bits.maxValue = MF({
+                                                Integer value = 31;
+                                                
+                                                /*if ((is_4x_device == false) && (gcombo_controller_type.value != "PI"))*/ /* Execute only for XMC1x family and if compensator is Type II or Type III */
+                                                if (!is_4x_device)
+                                                {
+                                                    value = 32 - 1 - Math.ceil((Math.log(gfloat_wcase_au.value)/Math.log(2)))
+                                                }
+                                                return (value);
+                                                }, Integer)
+        
+        /* Calculation of number of integer bits for Output coefficient of Type II / Type III compensator */
+        /* Biggest U i.e. PWM limit   U_iq -> IQ int */
+        ginteger_comp_output_int_bits.value   = MF({
+                                                float max_a = 0;
+                                                Integer value = 0;
+                                                
+                                                /*if ((is_4x_device == false) && (gcombo_controller_type.value != "PI"))*/ /* Execute only for XMC1x family and if compensator is Type II or Type III */
+                                                if (!is_4x_device)
+                                                {
+                                                    value = Math.ceil((Math.log(gfloat_max_out.value)/Math.log(2)))
+                                                }
+                                                return (value);
+                                                }, Integer)
+        
+        /* Calculation of number of fractional bits for Output coefficient of Type II / Type III compensator */
+        /* Biggest U i.e. PWM limit   U_iq -> IQ frac */
+        ginteger_comp_output_fract_bits.value = MF({
+                                                    Integer value = 0;
+                                                    /*if ((is_4x_device == false) && (gcombo_controller_type.value != "PI"))*/ /* Execute only for XMC1x family and if compensator is Type II or Type III */
+                                                    if (!is_4x_device)
+                                                    {
+                                                        value = (32 - 1 - Math.ceil((Math.log(gfloat_wcase_au.value)/Math.log(2)))) - ginteger_a_coeffs_fract_bits.value
+                                                    }
+                                                    return(value);
+                                                    }, Integer)
+        
+        //
+        /* Biggest abs BxK coeff B_iq -> max value */
+        gfloat_bxk_max_abs.value          = MF({
+                                                float max_abs_bxk = 0;
+                                                /*if ((is_4x_device == false) && (gcombo_controller_type.value != "PI"))*/ /* Execute only for XMC1x family and if compensator is Type II or Type III */
+                                                if (!is_4x_device)
+                                                {
+                                                    if(gcombo_controller_type.value == "Type II (2P2Z)")
+                                                        {max_abs_bxk = Math.max(Math.max(Math.abs(gfloat_b0.value), Math.abs(gfloat_b1.value)), Math.abs(gfloat_b2.value))}
+                                                    else /*if(gcombo_controller_type.value == "Type III (3P3Z)")*/
+                                                        {max_abs_bxk = Math.max(Math.max(Math.abs(gfloat_b0.value), Math.abs(gfloat_b1.value)), Math.max(Math.abs(gfloat_b2.value), Math.abs(gfloat_b3.value)))}
+                                                        
+                                                    max_abs_bxk =    max_abs_bxk*gfloat_k_gain.value;
+                                                }
+                                                return (max_abs_bxk);
+                                                }, Float)
+        
+        /* Biggest abs A coeff A_iq -> max value */
+        gfloat_a_max_abs.value            = MF({
+                                                float max_abs_a = 0;
+                                                /*if ((is_4x_device == false) && (gcombo_controller_type.value != "PI"))*/ /* Execute only for XMC1x family and if compensator is Type II or Type III */
+                                                if (!is_4x_device)
+                                                {
+                                                    if(gcombo_controller_type.value == "Type II (2P2Z)")
+                                                        {max_abs_a = Math.max(Math.abs(gfloat_a1.value), Math.abs(gfloat_a2.value))}
+                                                    else /*if(gcombo_controller_type.value == "Type III (3P3Z)")*/
+                                                        {max_abs_a = Math.max(Math.max(Math.abs(gfloat_a1.value), Math.abs(gfloat_a2.value)), Math.abs(gfloat_a3.value))}
+                                                }
+                                                return (max_abs_a);
+                                                }, Float)
+        
+        /* worst case of B[]KE[] */
+        gfloat_wcase_bke.value            = MF({
+                                                float value   = 0;
+                                                /*if ((is_4x_device == false) && (gcombo_controller_type.value != "PI"))*/ /* Execute only for XMC1x family and if compensator is Type II or Type III */
+                                                if (!is_4x_device)
+                                                {
+                                                    float is_b3_valid = 1; /* valid for typeIII */
+                                                    if (gcombo_controller_type.value == "Type II (2P2Z)") {is_b3_valid = 0} /* invalid for typeII */
+                                                                                                    
+                                                    float B0_k = gfloat_b0.value * gfloat_k_gain.value
+                                                    float B1_k = gfloat_b1.value * gfloat_k_gain.value
+                                                    float B2_k = gfloat_b2.value * gfloat_k_gain.value
+                                                    float B3_k = gfloat_b3.value * gfloat_k_gain.value
+                                                    
+                                                    float B0_k_min_e = B0_k * ginteger_min_error.value
+                                                    float B0_k_max_e = B0_k * ginteger_max_error.value
+                                                    float B1_k_min_e = B1_k * ginteger_min_error.value
+                                                    float B1_k_max_e = B1_k * ginteger_max_error.value
+                                                    float B2_k_min_e = B2_k * ginteger_min_error.value
+                                                    float B2_k_max_e = B2_k * ginteger_max_error.value
+                                                    float B3_k_min_e = B3_k * ginteger_min_error.value * is_b3_valid /* make coeff B3 valid only for typeIII */
+                                                    float B3_k_max_e = B3_k * ginteger_max_error.value * is_b3_valid /* make coeff B3 valid only for typeIII */
+                                                    
+                                                    float min_sum = Math.min(B0_k_min_e, B0_k_max_e)+Math.min(B1_k_min_e, B1_k_max_e)+Math.min(B2_k_min_e, B2_k_max_e)+Math.min(B3_k_min_e, B3_k_max_e)
+                                                    float max_sum = Math.max(B0_k_min_e, B0_k_max_e)+Math.max(B1_k_min_e, B1_k_max_e)+Math.max(B2_k_min_e, B2_k_max_e)+Math.max(B3_k_min_e, B3_k_max_e)
+                                                    value = Math.max(Math.abs(min_sum), Math.abs(max_sum))
+                                                }
+                                                return (value);
+                                                }, Float)
+        
+        /* worst case of A[]U[] */
+        gfloat_wcase_au.value             = MF({
+                                                float value   = 0;
+                                                /*if ((is_4x_device == false) && (gcombo_controller_type.value != "PI"))*/ /* Execute only for XMC1x family and if compensator is Type II or Type III */
+                                                if (!is_4x_device)
+                                                {
+                                                    float is_a3_valid = 1; /* valid for typeIII */
+                                                    if (gcombo_controller_type.value == "Type II (2P2Z)") {is_a3_valid = 0} /* invalid for typeII */
+                                                    
+                                                    float A1_min_e = gfloat_a1.value * gfloat_max_out.value * -1
+                                                    float A1_max_e = gfloat_a1.value * gfloat_max_out.value
+                                                    float A2_min_e = gfloat_a2.value * gfloat_max_out.value * -1
+                                                    float A2_max_e = gfloat_a2.value * gfloat_max_out.value
+                                                    float A3_min_e = gfloat_a3.value * gfloat_max_out.value * -1 * is_a3_valid /* make coeff A3 valid only for typeIII */
+                                                    float A3_max_e = gfloat_a3.value * gfloat_max_out.value      * is_a3_valid /* make coeff A3 valid only for typeIII */
+                                                    
+                                                    float min_sum = Math.min(A1_min_e, A1_max_e)+Math.min(A2_min_e, A2_max_e)+Math.min(A3_min_e, A3_max_e)
+                                                    float max_sum = Math.max(A1_min_e, A1_max_e)+Math.max(A2_min_e, A2_max_e)+Math.max(A3_min_e, A3_max_e)
+                                                    value = Math.max(Math.abs(min_sum), Math.abs(max_sum))
+                                                }
+                                                return (value);
+                                                }, Float)
+        
+        /* REF */
+        ginteger_ref.value                = MF({
+                                                Integer value = 0;
+                                                /*if ((is_4x_device == false) && (gcombo_controller_type.value != "PI"))*/ /* Execute only for XMC1x family and if compensator is Type II or Type III */
+                                                if (!is_4x_device)
+                                                {
+                                                    value = gfloat_vout_ref.value * gfloat_vout_gain.value * (4095)/(3.3)
+                                                }
+                                                return (value);
+                                                }, Integer)
+        
+        /* MAX E */
+        ginteger_max_error.value          = MF({
+                                                Integer value = 0;
+                                                /*if ((is_4x_device == false) && (gcombo_controller_type.value != "PI"))*/ /* Execute only for XMC1x family and if compensator is Type II or Type III */
+                                                if (!is_4x_device)
+                                                {
+                                                    value = ginteger_ref.value
+                                                }
+                                                return (value);
+                                                }, Integer)
+        
+        /* MIN E */
+        ginteger_min_error.value          = MF({
+                                                Integer value = 0;
+                                                /*if ((is_4x_device == false) && (gcombo_controller_type.value != "PI"))*/ /* Execute only for XMC1x family and if compensator is Type II or Type III */
+                                                if (!is_4x_device)
+                                                {
+                                                    value = ginteger_ref.value - (4095)
+                                                }
+                                                return (value);
+                                                }, Integer)
+        
+        gfloat_min_out_voltage.maxValue   = MF({gfloat_max_out_voltage.value},Float);
+
+        /***********************************************************************************************************************
+         * Tab: Control configurations (Soft start)
+         **********************************************************************************************************************/
+        ggroup_user_code.visible            = MF({gcheck_user_code.value}, Boolean)
+        ginteger_soft_start_val.enabled     = MF({gcheck_soft_start.value}, Boolean)
+        
+        /*1000000 is applied in UI itself*/
+        /*ginteger_soft_start_val.maxValue = MF({return 1000000;}, Integer) //Max = 1,000,000 micro sec = 1,000 milli sec = 1 sec */
+               
+        ginteger_soft_start_val.minValue    = MF({
+                                                Integer value = 0;
+                                                if (gcheck_soft_start.value)
+                                                {value = appres_systimer.getVal(["ginteger_systickinterval", "value"])}
+                                                else
+                                                {value = 1500}
+                                                return (value);
+                                                }, Integer)
+
+        /*String for validating the string entered as callback function name*/
+        gmessage_user_callback.visible         = MF({
+                                                String fn_regexp = ~/^[^\d\W]\w*\Z/
+                                                Matcher matcher_tx = (gstring_user_code.value =~ fn_regexp)
+                                                Boolean ExpressionMatch_tx = !matcher_tx.matches()
+                                                if(ggroup_user_code.visible){ return ExpressionMatch_tx} else{ return false}
+                                                },Boolean)
+        
+        /***********************************************************************************************************************
+         * Tab: Overload protections
+         **********************************************************************************************************************/
+        glabel_overload_protect_iout4.visible       = MF({false}, Boolean)
+        gcheck_sw_protection_iout4.visible          = MF({false}, Boolean)
+        gfloat_high_limit_iout4.visible             = MF({false}, Boolean)
+        gfloat_low_limit_iout4.visible              = MF({false}, Boolean)
+        gcombo_protection_reaction_iout4.visible    = MF({false}, Boolean)
+        
+        
+        glabel_overload_protect_vout.text   = MF({gstring_vout_measurement.value + " [V]"}, String)
+        glabel_overload_protect_vin.text    = MF({gstring_vin_measurement.value + " [V]"}, String)
+        glabel_overload_protect_iout1.text  = MF({gstring_iout1_measurement.value + " [A]"}, String)
+        glabel_overload_protect_iout2.text  = MF({gstring_iout2_measurement.value + " [A]"}, String)
+        glabel_overload_protect_iout3.text  = MF({gstring_iout3_measurement.value + " [A]"}, String)
+        glabel_overload_protect_iout4.text  = MF({gstring_iout4_measurement.value + " [A]"}, String)
+        
+        gcheck_sw_protection_vout.enabled   = MF({(gcheck_measure_vout.value)},Boolean)
+        gcheck_sw_protection_vin.enabled    = MF({(gcheck_measure_vin.value)},Boolean)
+        gcheck_sw_protection_iout1.enabled  = MF({(gcheck_measure_iout1.value)},Boolean)
+        gcheck_sw_protection_iout2.enabled  = MF({(gcheck_measure_iout2.value)},Boolean)
+        gcheck_sw_protection_iout3.enabled  = MF({(gcheck_measure_iout3.value)},Boolean)
+        gcheck_sw_protection_iout4.enabled  = MF({(gcheck_measure_iout4.value)},Boolean)
+        
+        gfloat_high_limit_vout.enabled      = MF({(gcheck_measure_vout.value)},Boolean)
+        gfloat_high_limit_vin.enabled       = MF({(gcheck_measure_vin.value)},Boolean)
+        gfloat_high_limit_iout1.enabled     = MF({(gcheck_measure_iout1.value)},Boolean)
+        gfloat_high_limit_iout2.enabled     = MF({(gcheck_measure_iout2.value)},Boolean)
+        gfloat_high_limit_iout3.enabled     = MF({(gcheck_measure_iout3.value)},Boolean)
+        gfloat_high_limit_iout4.enabled     = MF({(gcheck_measure_iout4.value)},Boolean)
+        
+        gfloat_low_limit_vout.enabled       = MF({(gcheck_measure_vout.value)},Boolean)
+        gfloat_low_limit_vin.enabled        = MF({(gcheck_measure_vin.value)},Boolean)
+        gfloat_low_limit_iout1.enabled      = MF({(gcheck_measure_iout1.value)},Boolean)
+        gfloat_low_limit_iout2.enabled      = MF({(gcheck_measure_iout2.value)},Boolean)
+        gfloat_low_limit_iout3.enabled      = MF({(gcheck_measure_iout3.value)},Boolean)
+        gfloat_low_limit_iout4.enabled      = MF({(gcheck_measure_iout4.value)},Boolean)
+        
+        gcombo_protection_reaction_vout.enabled     = MF({(gcheck_measure_vout.value)},Boolean)
+        gcombo_protection_reaction_vin.enabled      = MF({(gcheck_measure_vin.value)},Boolean)
+        gcombo_protection_reaction_iout1.enabled    = MF({(gcheck_measure_iout1.value)},Boolean)
+        gcombo_protection_reaction_iout2.enabled    = MF({(gcheck_measure_iout2.value)},Boolean)
+        gcombo_protection_reaction_iout3.enabled    = MF({(gcheck_measure_iout3.value)},Boolean)
+        gcombo_protection_reaction_iout4.enabled    = MF({(gcheck_measure_iout4.value)},Boolean)
+        
+        float ref_value = 3.3
+        
+        gfloat_high_limit_vout.minValue     = MF({gfloat_low_limit_vout.value},Float)
+        gfloat_high_limit_vin.minValue      = MF({gfloat_low_limit_vin.value},Float)
+        gfloat_high_limit_iout1.minValue    = MF({gfloat_low_limit_iout1.value},Float)
+        gfloat_high_limit_iout2.minValue    = MF({gfloat_low_limit_iout2.value},Float)
+        gfloat_high_limit_iout3.minValue    = MF({gfloat_low_limit_iout3.value},Float)
+        gfloat_high_limit_iout4.minValue    = MF({gfloat_low_limit_iout4.value},Float)
+        
+        gfloat_high_limit_vout.maxValue     = MF({ref_value/gfloat_vout_gain.value},Float)
+        gfloat_high_limit_vin.maxValue      = MF({ref_value/gfloat_vin_gain.value},Float)
+        gfloat_high_limit_iout1.maxValue    = MF({ref_value/gfloat_iout1_gain.value},Float)
+        gfloat_high_limit_iout2.maxValue    = MF({ref_value/gfloat_iout2_gain.value},Float)
+        gfloat_high_limit_iout3.maxValue    = MF({ref_value/gfloat_iout3_gain.value},Float)
+        gfloat_high_limit_iout4.maxValue    = MF({ref_value/gfloat_iout4_gain.value},Float)
+        
+        gfloat_low_limit_vout.maxValue      = MF({ref_value/gfloat_vout_gain.value},Float)
+        gfloat_low_limit_vin.maxValue       = MF({ref_value/gfloat_vin_gain.value},Float)
+        gfloat_low_limit_iout1.maxValue     = MF({ref_value/gfloat_iout1_gain.value},Float)
+        gfloat_low_limit_iout2.maxValue     = MF({ref_value/gfloat_iout2_gain.value},Float)
+        gfloat_low_limit_iout3.maxValue     = MF({ref_value/gfloat_iout3_gain.value},Float)
+        gfloat_low_limit_iout4.maxValue     = MF({ref_value/gfloat_iout4_gain.value},Float)
+        
+        /***********************************************************************************************************************
+         * Tab: Interrupt Configurations
+         **********************************************************************************************************************/
+        ginterruptprio_cntrl_loop.enabled               = MF({gcombo_isr_event.value == "Vout Result Event"},Boolean)
+        
+        /* disable sub priority for XMC13 device */
+        ginterruptprio_cntrl_loop.subPriorityVisible    = is_4x_device ; //MF({(is_4x_device)},Boolean);
+        
+        ginterruptprio_cntrl_loop.priorityValue         = MF({
+                                                            Integer priority = 1
+                                                            if (!is_4x_device)
+                                                            {priority = 1}
+                                                            return priority
+                                                            },Integer);
+    
+        ginterruptprio_cntrl_loop.maxPriority           = MF({
+                                                            Integer priority = 63
+                                                            if ((is_4x_device) && (gcombo_isr_event.value == "Vout Result Event")) // (true) && (true)
+                                                            {
+                                                                priority = appres_cpu_4x.getVal(["gint_maxInterruptPreemptPriority", "value"]).toInteger()
+                                                            }
+                                                            else if ((is_4x_device) && (gcombo_isr_event.value != "Vout Result Event")) // (true) && (false)
+                                                            {
+                                                                priority = 63;
+                                                            }
+                                                            else if ((!is_4x_device) && (gcombo_isr_event.value == "Vout Result Event")) // (false) && (true)
+                                                            {
+                                                                priority = appres_cpu_1x.getVal(["gint_maxInterruptPreemptPriority", "value"]).toInteger()
+                                                            }
+                                                            else /* if ((!is_4x_device) && (gcombo_isr_event.value != "Vout Result Event")) // (false) && (false)*/
+                                                            {
+                                                                priority = 3;
+                                                            }
+                                                            return priority
+                                                            }, Integer)
+            
+        ginterruptprio_cntrl_loop.maxSubPriority        =  MF({
+                                                             Integer subpriority = 0
+                                                             if ((is_4x_device) && (gcombo_isr_event.value == "Vout Result Event"))
+                                                             {
+                                                                 subpriority = appres_cpu_4x.getVal(["gint_maxInterruptSubPriority", "value"]).toInteger()
+                                                             }
+                                                             return subpriority
+                                                             }, Integer)
+        
+        /*String for validating the string entered as callback function name*/
+        gmessage_cntrl_loop_isr.visible                 = MF({
+                                                            String fn_regexp = ~/^[^\d\W]\w*\Z/
+                                                            Matcher matcher_tx = (gstring_int_handler_cntrl_loop.value =~ fn_regexp)
+                                                            Boolean ExpressionMatch_tx = !matcher_tx.matches()
+                                                            if(gstring_int_handler_cntrl_loop.visible && gstring_int_handler_cntrl_loop.enabled){return ExpressionMatch_tx} else{ return false}
+                                                            },Boolean)
+        
+        /* ---------------------------------------------------------- */
+        /* ---------------- APP IO Connections ---------------------- */
+        /* ---------------------------------------------------------- */
+        
+        /* -------------------------------------------------------- */
+        /* ------------ APP Configuration ------------------------- */
+        /* -------------------------------------------------------- */
+    }
+    
+    // File Generation
+    def generateFiles(){
+        copy("buck_pcc_fix_fq.c", "buck_pcc_fix_fq.c")
+        copy("buck_pcc_fix_fq.h", "buck_pcc_fix_fq.h")
+        generate("buck_pcc_fix_fq_confc.tmpl", "buck_pcc_fix_fq_conf.c")
+        generate("buck_pcc_fix_fq_controlc.tmpl", "buck_pcc_fix_fq_control_loop.c")
+        generate("buck_pcc_fix_fq_confh.tmpl", "buck_pcc_fix_fq_conf.h")
+        generate("buck_pcc_fix_fq_externh.tmpl", "buck_pcc_fix_fq_extern.h")
+    }
+    
+    //
+    // Add main code here
+    //
+    static main(args){
+        BUCK_PCC_FIX_FQ obj  = new BUCK_PCC_FIX_FQ();
+    }
+}

@@ -1,0 +1,205 @@
+<p1:Tab  xmlns="http://www.eclipse.org/xwt/presentation" xmlns:x="http://www.eclipse.org/xwt" xmlns:p1="clr-namespace:com.ifx.davex.ui.controls.app" x:Class="e" layout="{x:Null}">
+	<p1:TabFolder bounds="5, 5, 600, 500">
+		<p1:GTab text="Comparator Output Settings" widgetName="tab_cmp_output_settings" visible="true" enabled="true" manifestObj="true">
+			<p1:GTab.control>
+				<p1:Tab>
+					<p1:Tab.layout>
+						<GridLayout/>
+					</p1:Tab.layout>
+					<p1:GGroup text="Comparator Output Setting" manifestObj="true" widgetName="ggroup_1">
+						<p1:GGroup.layoutData>
+							<GridData horizontalAlignment="FILL" grabExcessHorizontalSpace="true"/>
+						</p1:GGroup.layoutData>
+						<p1:GGroup.layout>
+							<GridLayout numColumns="2"/>
+						</p1:GGroup.layout>
+						<p1:GCheck text="Invert comparator output" manifestObj="true" widgetName="gcheck_csg_comp_inv_enable" description="Inverts the comparator output" toolTipText="Enables the inverting of comparator output">
+							<p1:GCheck.layoutData>
+								<GridData horizontalSpan="2"/>
+							</p1:GCheck.layoutData>
+						</p1:GCheck>
+						<p1:GLabel text="Filter comparator output" visible="true" manifestObj="true" widgetName="glabel_csg_comp_filtering">
+							<p1:GLabel.layoutData>
+								<GridData horizontalAlignment="RIGHT"/>
+							</p1:GLabel.layoutData>
+						</p1:GLabel>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" widgetName="gcombo_csg_comp_filtering" value="No Filtering" options="No Filtering&#13;&#10;2 Clock Cycle&#13;&#10;3 Clock Cycle&#13;&#10;4 Clock Cycle&#13;&#10;5 Clock Cycle&#13;&#10;6 Clock Cycle&#13;&#10;7 Clock Cycle&#13;&#10;8 Clock Cycle&#13;&#10;9 Clock Cycle&#13;&#10;10 Clock Cycle&#13;&#10;11 Clock Cycle&#13;&#10;12 Clock Cycle&#13;&#10;13 Clock Cycle&#13;&#10;14 Clock Cycle&#13;&#10;15 Clock Cycle&#13;&#10;16 Clock Cycle&#13;&#10;32 Clock Cycle" description="Applies filtering to comparator output" toolTipText="Select the filtering of comparator output"/>
+						<p1:GGroup text="Blanking Setting" manifestObj="true" widgetName="ggroup_2">
+							<p1:GGroup.layout>
+								<GridLayout numColumns="2"/>
+							</p1:GGroup.layout>
+							<p1:GGroup.layoutData>
+								<GridData horizontalSpan="2" horizontalAlignment="FILL" grabExcessHorizontalSpace="true"/>
+							</p1:GGroup.layoutData>
+							<p1:GLabel manifestObj="true" text="Blanking mode              " widgetName="glabel_blanking_config"/>
+							<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" options="Disabled&#13;&#10;Start Upon Low To High Transition Of Comp Output&#13;&#10;Start Upon High To Low Transition Of Comp Output&#13;&#10;Start Upon Both Transitions Of Comp Output&#13;&#10;Start Upon Low To High Transition Of External Signal&#13;&#10;Start Upon High To Low Transition Of External Signal&#13;&#10;Start Upon Both Transitions Of External Signal" value="Disabled" widgetName="gcombo_blanking_config" description="Select the blanking mode operation. Select an external signal or the comparator output itself as a trigger signal for blanking." toolTipText="Select the blanking mode">
+								<p1:GCombo.layoutData>
+									<GridData horizontalAlignment="FILL"/>
+								</p1:GCombo.layoutData>
+							</p1:GCombo>
+							<p1:GLabel manifestObj="true" text="Blanking time [nsec]:" widgetName="glabel_blanking_time"/>
+							<p1:GFloat format="*,6" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" maxValue="2125" minValue="0" widgetName="gfloat_blanking_time" x:Style="BORDER" description="Blanking duration" toolTipText="Enter the blanking time">
+								<p1:GFloat.layoutData>
+									<GridData horizontalAlignment="FILL"/>
+								</p1:GFloat.layoutData>
+							</p1:GFloat>
+						</p1:GGroup>
+					</p1:GGroup>
+					<p1:GGroup manifestObj="true" widgetName="ggroup_csg">
+						<p1:GGroup.layoutData>
+							<GridData horizontalAlignment="FILL" verticalAlignment="FILL"/>
+						</p1:GGroup.layoutData>
+						<p1:GImage visible="true" manifestObj="true" widgetName="gimage_csg" bounds="6, 12, 570, 210" path="Uimodel/csg_cmp_op_setting.png" description="Over view of comparator and slope geenrator">
+							<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" widgetName="gcombo_csg_cinx" value="CINA" options="CINA&#13;&#10;CINB" bounds="156, 46, 59, 21" description="Select the pin connection to coparator invering input."/>
+							<p1:GLabel text="Comparator inverting pin input" visible="true" widgetName="glabel_csg_cinx" bounds="156, 29, 55, 15" enabled="false" manifestObj="true"/>
+						</p1:GImage>
+					</p1:GGroup>
+				</p1:Tab>
+			</p1:GTab.control>
+		</p1:GTab>
+		<p1:GTab text="Comparator Clamping" visible="true" enabled="true" manifestObj="true" widgetName="gtab_cmp_clamping">
+			<p1:GTab.control>
+				<p1:Tab widgetName="composite_1">
+					<p1:Tab.layout>
+						<GridLayout/>
+					</p1:Tab.layout>
+					<p1:GGroup text="Clamping of Comparator Output Settings" manifestObj="true" widgetName="ggroup_3">
+						<p1:GGroup.layout>
+							<GridLayout numColumns="2"/>
+						</p1:GGroup.layout>
+						<p1:GGroup.layoutData>
+							<GridData grabExcessHorizontalSpace="true" horizontalAlignment="FILL"/>
+						</p1:GGroup.layoutData>
+						<p1:GCheck text="Enable clamping of comparator output" manifestObj="true" widgetName="gcheck_csg_comp_clamp_enable" description="Enable clamping of comparator output" toolTipText="Enable clamping of comparator output">
+							<p1:GCheck.layoutData>
+								<GridData horizontalSpan="2"/>
+							</p1:GCheck.layoutData>
+						</p1:GCheck>
+						<p1:GLabel text="Comparator output clamp level:" visible="true" manifestObj="true" widgetName="glabel_csg_clamp_level"/>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" widgetName="gcombo_csg_clamp_level" options="Low&#13;&#10;High" value="Low" description="Select the passive level of comparator output" toolTipText="Select the passive level of comparator output">
+							<p1:GCombo.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GCombo.layoutData>
+						</p1:GCombo>
+						<p1:GLabel text="Clamping state happens when external clamp level is:" visible="true" manifestObj="true" widgetName="glabel_csg_clamp_ctrl_lvl">
+							<p1:GLabel.layoutData>
+								<GridData horizontalAlignment="RIGHT"/>
+							</p1:GLabel.layoutData>
+						</p1:GLabel>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" widgetName="gcombo_csg_clamp_ctrl_lvl" options="High&#13;&#10;Low" value="High" description="Select the level for triggering the clamping of comparator output." toolTipText="Select the trigger signal level for clamping">
+							<p1:GCombo.layoutData>
+								<GridData grabExcessHorizontalSpace="true" horizontalAlignment="FILL"/>
+							</p1:GCombo.layoutData>
+						</p1:GCombo>
+						<p1:GLabel text="Clamping state enter configuration:" visible="true" manifestObj="true" widgetName="glabel_csg_clamp_enter_config"/>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" widgetName="gcombo_csg_clamp_enter_config" options="Immediately&#13;&#10;After The Comparator Output Passes To Low&#13;&#10;After The Comparator Output Passes To High" value="Immediately" description="Select the mode of entering clamp state" toolTipText="Select the mode for entering clamp state">
+							<p1:GCombo.layoutData>
+								<GridData grabExcessHorizontalSpace="true" horizontalAlignment="FILL"/>
+							</p1:GCombo.layoutData>
+						</p1:GCombo>
+						<p1:GLabel text="Clamping state exit configuration:" visible="true" manifestObj="true" widgetName="glabel_scg_clamp_exit_config"/>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" widgetName="gcombo_scg_clamp_exit_config" options="Immediately&#13;&#10;After The Comparator Output Passes To Low&#13;&#10;After The Comparator Output Passes To High" value="Immediately" description="Select the mode of exiting clamp state" toolTipText="Select the mode for exiting clamp state">
+							<p1:GCombo.layoutData>
+								<GridData grabExcessHorizontalSpace="true" horizontalAlignment="FILL"/>
+							</p1:GCombo.layoutData>
+						</p1:GCombo>
+						<p1:GLabel text="Clamping state exit SW configuration:" visible="true" manifestObj="true" widgetName="glabel_csg_clamp_exit_sw_config"/>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" widgetName="gcombo_csg_clamp_exit_sw_config" options="External Signal And SW&#13;&#10;Only SW" value="External Signal And SW" description="Select the control for exiting clamp state" toolTipText="Select the control for exiting clamped state">
+							<p1:GCombo.layoutData>
+								<GridData grabExcessHorizontalSpace="true" horizontalAlignment="FILL"/>
+							</p1:GCombo.layoutData>
+						</p1:GCombo>
+					</p1:GGroup>
+				</p1:Tab>
+			</p1:GTab.control>
+		</p1:GTab>
+		<p1:GTab text="DAC and Slope Settings" visible="true" enabled="true" manifestObj="true" widgetName="gtab_csg">
+			<p1:GTab.control>
+				<p1:Tab widgetName="composite_2">
+					<p1:Tab.layout>
+						<GridLayout/>
+					</p1:Tab.layout>
+					<p1:GGroup manifestObj="true" text="Slope Generation Settings" widgetName="ggroup_slope_gen_settings">
+						<p1:GGroup.layoutData>
+							<GridData grabExcessHorizontalSpace="true" horizontalAlignment="FILL"/>
+						</p1:GGroup.layoutData>
+						<p1:GGroup.layout>
+							<GridLayout numColumns="2"/>
+						</p1:GGroup.layout>
+						<p1:GCheck text="Run DAC at Init" manifestObj="true" widgetName="gcheck_dac_run_at_init" value="true" description="Enables the slope generation unit at init." toolTipText="Starts Slope generation after initialization">
+							<p1:GCheck.layoutData>
+								<GridData horizontalSpan="2"/>
+							</p1:GCheck.layoutData>
+						</p1:GCheck>
+						<p1:GLabel text="DAC mode:" visible="true" manifestObj="true" widgetName="glabel_dac_mode"/>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" widgetName="gcombo_dac_mode" options="Static&#13;&#10;Decrementing Slope&#13;&#10;Incrementing Slope&#13;&#10;Triangular Slope" value="Decrementing Slope" description="Select the slope generation operating mode" toolTipText="Select slope generation mode">
+							<p1:GCombo.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GCombo.layoutData>
+						</p1:GCombo>
+						<p1:GLabel manifestObj="true" text="Start value (DSV1) [mV]:" widgetName="glabel_dac_dsv1">
+							<p1:GLabel.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GLabel.layoutData>
+						</p1:GLabel>
+						<p1:GFloat format="*,6" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" maxValue="3300" minValue="0" value="3000" widgetName="gfloat_dac_dsv1" x:Style="BORDER" description="Slope start value" toolTipText="DSV1 register is calculated using the entered value">
+							<p1:GFloat.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GFloat.layoutData>
+						</p1:GFloat>
+						<p1:GLabel text="Stop value (DSV2) [mV]:" visible="true" manifestObj="true" widgetName="glabel_dac_dsv2"/>
+						<p1:GFloat x:Style="BORDER" minValue="0" maxValue="3300" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" format="*,6" manifestObj="true" widgetName="gfloat_dac_dsv2" value="0" description="Slope stop value" toolTipText="DSV2 register is calculated using the entered value">
+							<p1:GFloat.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GFloat.layoutData>
+						</p1:GFloat>
+						<p1:GLabel manifestObj="true" text="Slope value[mV/usec]:" widgetName="glabel_slope_value"/>
+						<p1:GFloat format="*,6" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" maxValue="3093" minValue="0" value="300" widgetName="gfloat_slope_value" x:Style="BORDER" description="Slope slope value" toolTipText="Prescaler, gain and pulse swallow are calculated using the entered value">
+							<p1:GFloat.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GFloat.layoutData>
+						</p1:GFloat>
+						<p1:GLabel manifestObj="true" text="Restart slope:                 " widgetName="glabel_restart_slope">
+							<p1:GLabel.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GLabel.layoutData>
+						</p1:GLabel>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" options="Upon Rising Edge Of External Signal&#13;&#10;Upon Falling Edge Of External Signal&#13;&#10;Upon Both Edges Of External Signal&#13;&#10;If DAC Value Reaches Stop Value (DSV2)" value="Upon Falling Edge Of External Signal" widgetName="gcombo_restart_slope" description="Select the mode for restarting the slope" toolTipText="Select the mode for restart of slope generation">
+							<p1:GCombo.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GCombo.layoutData>
+						</p1:GCombo>
+						<p1:GLabel text="Note: Slope value is given unsigned" visible="true" manifestObj="true" widgetName="glabel_29">
+							<p1:GLabel.layoutData>
+								<GridData horizontalSpan="2"/>
+							</p1:GLabel.layoutData>
+						</p1:GLabel>
+					</p1:GGroup>
+					<p1:GGroup manifestObj="true" widgetName="ggroup_8">
+						<p1:GImage bounds="4, 8, 571, 201" manifestObj="true" path="Uimodel/triangle.png" widgetName="gimage_peak_cur_ctrl" description="Over view of slope generation"/>
+					</p1:GGroup>
+				</p1:Tab>
+			</p1:GTab.control>
+		</p1:GTab>
+		<p1:GTab text="Comparator Event Settings" visible="true" enabled="true" manifestObj="true" widgetName="gtab_cmp_event">
+			<p1:GTab.control>
+				<p1:Tab widgetName="composite_3">
+					<p1:Tab.layout>
+						<GridLayout/>
+					</p1:Tab.layout>
+					<p1:GGroup manifestObj="true" text="Enable Comparator Events" widgetName="ggroup_4">
+						<p1:GGroup.layoutData>
+							<GridData grabExcessHorizontalSpace="true" horizontalAlignment="FILL"/>
+						</p1:GGroup.layoutData>
+						<p1:GGroup.layout>
+							<GridLayout/>
+						</p1:GGroup.layout>
+						<p1:GCheck manifestObj="true" text="Comparator output rising edge" widgetName="gcheck_cmp_event_rise" description="Enables comparator output rising edge event " toolTipText="Select the interrupt event"/>
+						<p1:GCheck manifestObj="true" text="Comparator output falling edge" widgetName="gcheck_cmp_event_fall" description="Enables comparator output falling edge event " toolTipText="Select the interrupt event"/>
+						<p1:GCheck text="Clamp state entered" manifestObj="true" widgetName="gcheck_cmp_state_enter" description="Enables comparator output clamp state event " toolTipText="Select the interrupt event"/>
+					</p1:GGroup>
+				</p1:Tab>
+			</p1:GTab.control>
+		</p1:GTab>
+	</p1:TabFolder>
+</p1:Tab>

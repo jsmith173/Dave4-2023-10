@@ -1,0 +1,22 @@
+package Model.APPS.CONTROL_LIB.v4_0_12;
+
+// Import statements
+import ifx.davex.app.manifest.*
+
+abstract class CONTROL_LIB_GUI extends AppManifest {
+
+    /* IMPORTANT NOTE: This is an auto generated file, please do not edit manually. */
+    /* User modifications in the GUI editor will be updated here automatically.     */
+    /* Manually editing the contents of this file will corrupt the APP SDK project. */
+
+	/* Begin : UI variable section */
+	 public GTab tab_control_lib;
+
+	 public CONTROL_LIB_GUI(DaveEnv daveEnv){
+
+	 tab_control_lib = GTab(widgetName:"tab_control_lib", text:"CONTROL_LIB", enabled:true, visible:true)
+
+
+	 }
+	/* End : UI variable section */
+}

@@ -1,0 +1,1424 @@
+package Model.APPS.BUCK_VC_FIX_FQ.v4_1_4.Templates;
+
+import Model.APPS.BUCK_VC_FIX_FQ.v4_1_4.BUCK_VC_FIX_FQ
+
+out.print("""
+/**
+ * @cond
+ ***********************************************************************************************************************
+ *
+ * Copyright (c) 2015-2020, Infineon Technologies AG
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification,are permitted provided that the
+ * following conditions are met:
+ *
+ *   Redistributions of source code must retain the above copyright notice, this list of conditions and the  following
+ *   disclaimer.
+ *
+ *   Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
+ *   disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *   Neither the name of the copyright holders nor the names of its contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE  FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY,OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * To improve the quality of the software, users are encouraged to share modifications, enhancements or bug fixes
+ * with Infineon Technologies AG (dave@infineon.com).
+ ***********************************************************************************************************************
+ *
+ * Change History
+ * --------------
+ *
+ * 2015-10-08:
+ *     - Initial version for DAVEv4
+ *
+ * 2015-10-16:
+ *     - Over limit & Under limit values are corrected  
+ *
+ * 2016-01-18:
+ *     - APP handle structure is modified
+ *     - Code generation for out_limit_min variable is corrected for XMC1x family
+ *
+ * @endcond
+ *
+ */
+
+/***********************************************************************************************************************
+ * HEADER FILES
+ **********************************************************************************************************************/
+#include "buck_vc_fix_fq.h"
+#include "xmc_vadc.h"
+
+/**********************************************************************************************************************
+* DATA STRUCTURES
+**********************************************************************************************************************/
+""");
+
+for (BUCK_VC_FIX_FQ appIns : appInstancesList)
+{    
+    /***********************************************************************************************************************
+     * Start of General variables initialization
+     **********************************************************************************************************************/
+    String  mc_family         = null;
+    
+    if (daveEnv.project.selectedDevice.deviceId.family == "XMC4")
+    {
+        mc_family             = "XMC4"
+    }
+    else
+    {
+        mc_family             = "XMC1"
+    }    
+    
+    String series             = daveEnv.project.selectedDevice.deviceId.series
+    
+    String appInst            = appIns.getInstanceLabel() //Get APP instance name    
+    /***********************************************************************************************************************
+     * End of General variables initialization
+     **********************************************************************************************************************/
+    
+    /***********************************************************************************************************************
+     * Start of ADC variables initialization
+     **********************************************************************************************************************/
+    List list_actualchannel         = ["0xFF","0xFF","0xFF","0xFF","0xFF","0xFF","0xFF"]
+    List list_mappedgrp             = ["NULL","NULL","NULL","NULL","NULL","NULL","NULL"]
+    List list_adc_ch_handle_arr     = ["NULL","NULL","NULL","NULL","NULL","NULL","NULL"]
+    List list_pin_handle_arr        = ["NULL","NULL","NULL","NULL","NULL","NULL","NULL"]
+    List list_scan_app_handle_arr   = ["NULL","NULL","NULL","NULL","NULL","NULL","NULL"]
+    List list_q_app_handle_arr      = ["NULL","NULL","NULL","NULL","NULL","NULL","NULL"]
+    List list_scan_entry_handle_arr = ["NULL","NULL","NULL","NULL","NULL","NULL","NULL"]
+    List list_q_entry_handle_arr    = ["NULL","NULL","NULL","NULL","NULL","NULL","NULL"]
+    List list_scan_inst             = ["NULL","NULL","NULL","NULL","NULL","NULL","NULL"]
+    List list_queue_inst            = ["NULL","NULL","NULL","NULL","NULL","NULL","NULL"]
+    List list_resreg                = ["0xFF","0xFF","0xFF","0xFF","0xFF","0xFF","0xFF"]
+    List list_iclass                = ["0xFF","0xFF","0xFF","0xFF","0xFF","0xFF","0xFF"]
+    List list_ch_resource0          = ["0xFF","0xFF","0xFF","0xFF","0xFF","0xFF","0xFF"]
+    List list_ch_resource1          = ["0xFF","0xFF","0xFF","0xFF","0xFF","0xFF","0xFF"]
+    List list_alias_ch_num          = ["NULL","NULL","NULL","NULL","NULL","NULL","NULL"]
+    List pin                        = ["-1","-1","-1","-1","-1","-1","-1"]
+    List port                       = ["NULL","NULL","NULL","NULL","NULL","NULL","NULL"]    
+    List list_adcmode               = ['BUCK_VC_FIX_FQ_ADC_MODE_SCAN', 'BUCK_VC_FIX_FQ_ADC_MODE_QUEUE']
+    List list_buck_isr              = ["NULL","NULL","NULL","NULL","NULL","NULL","NULL"]
+    List list_req_src_event         = ["NULL","NULL","NULL","NULL","NULL","NULL","NULL"]
+    List list_srid_array            = [
+                                        'XMC_VADC_SR_GROUP_SR0', 
+                                        'XMC_VADC_SR_GROUP_SR1', 
+                                        'XMC_VADC_SR_GROUP_SR2', 
+                                        'XMC_VADC_SR_GROUP_SR3', 
+                                        'XMC_VADC_SR_SHARED_SR0', 
+                                        'XMC_VADC_SR_SHARED_SR1', 
+                                        'XMC_VADC_SR_SHARED_SR2', 
+                                        'XMC_VADC_SR_SHARED_SR3'];
+    List list_chanstring            = [
+                                        "${appIns.gstring_vout_measurement.value.replaceAll("\\s","")}",
+                                        "${appIns.gstring_vin_measurement.value.replaceAll("\\s","")}",
+                                        "${appIns.gstring_iout1_measurement.value.replaceAll("\\s","")}",
+                                        "${appIns.gstring_iout2_measurement.value.replaceAll("\\s","")}",
+                                        "${appIns.gstring_iout3_measurement.value.replaceAll("\\s","")}",
+                                        "${appIns.gstring_iout4_measurement.value.replaceAll("\\s","")}",
+                                        "${appIns.gstring_udef1_measurement.value.replaceAll("\\s","")}",];
+    List list_measurements          = [
+                                        appIns.gcheck_measure_vout.value,
+                                        appIns.gcheck_measure_vin.value,
+                                        appIns.gcheck_measure_iout1.value,
+                                        appIns.gcheck_measure_iout2.value,
+                                        appIns.gcheck_measure_iout3.value,
+                                        appIns.gcheck_measure_iout4.value,
+                                        appIns.gcheck_measure_user_defined_1.value,];
+    List list_channeluri            = [
+                                        appIns.rarray_hwres_adcchan[0].getSolverUri(),
+                                        appIns.rarray_hwres_adcchan[1].getSolverUri(),
+                                        appIns.rarray_hwres_adcchan[2].getSolverUri(),
+                                        appIns.rarray_hwres_adcchan[3].getSolverUri(),
+                                        appIns.rarray_hwres_adcchan[4].getSolverUri(),
+                                        appIns.rarray_hwres_adcchan[5].getSolverUri(),
+                                        appIns.rarray_hwres_adcchan[6].getSolverUri(),]
+    List list_resulturi             = [
+                                        appIns.rarray_hwres_result[0].getSolverUri(),
+                                        appIns.rarray_hwres_result[1].getSolverUri(),
+                                        appIns.rarray_hwres_result[2].getSolverUri(),
+                                        appIns.rarray_hwres_result[3].getSolverUri(),
+                                        appIns.rarray_hwres_result[4].getSolverUri(),
+                                        appIns.rarray_hwres_result[5].getSolverUri(),
+                                        appIns.rarray_hwres_result[6].getSolverUri(),]
+    List list_iouri                 = [
+                                        appIns.hwres_chan_a_pin.getSolverUri(),
+                                        appIns.hwres_chan_b_pin.getSolverUri(),
+                                        appIns.hwres_chan_c_pin.getSolverUri(),
+                                        appIns.hwres_chan_d_pin.getSolverUri(),
+                                        appIns.hwres_chan_e_pin.getSolverUri(),
+                                        appIns.hwres_chan_f_pin.getSolverUri(),
+                                        appIns.hwres_chan_g_pin.getSolverUri(), ]
+    List list_positions             = [
+                                        appIns.gcombo_vout_q_pos.value,
+                                        appIns.gcombo_vin_q_pos.value,
+                                        appIns.gcombo_iout1_q_pos.value,
+                                        appIns.gcombo_iout2_q_pos.value,
+                                        appIns.gcombo_iout3_q_pos.value,
+                                        appIns.gcombo_iout4_q_pos.value,
+                                        appIns.gcombo_adc_q_pos_user_defined_1.value, ];
+    list_scan_inst                  = [
+                                        appIns.appres_scan_a.getInstanceLabel(),
+                                        appIns.appres_scan_b.getInstanceLabel(),
+                                        appIns.appres_scan_c.getInstanceLabel(),
+                                        appIns.appres_scan_d.getInstanceLabel(),
+                                        appIns.appres_scan_e.getInstanceLabel(),
+                                        appIns.appres_scan_f.getInstanceLabel(),
+                                        appIns.appres_scan_g.getInstanceLabel(), ]
+    list_queue_inst                 = [
+                                        appIns.appres_queue_a.getInstanceLabel(),
+                                        appIns.appres_queue_b.getInstanceLabel(),
+                                        appIns.appres_queue_c.getInstanceLabel(),
+                                        appIns.appres_queue_d.getInstanceLabel(),
+                                        appIns.appres_queue_e.getInstanceLabel(),
+                                        appIns.appres_queue_f.getInstanceLabel(),
+                                        appIns.appres_queue_g.getInstanceLabel(), ]
+    List list_HRPWM_appInst         = [
+                                        appIns.appres_hrpwm_1.getInstanceLabel(),
+                                        appIns.appres_hrpwm_2.getInstanceLabel(),
+                                        appIns.appres_hrpwm_3.getInstanceLabel(),
+                                        appIns.appres_hrpwm_4.getInstanceLabel() ]
+    List list_PWM_CCU8_appInst      = [
+                                        appIns.appres_pwm_ccu8_1.getInstanceLabel(),
+                                        appIns.appres_pwm_ccu8_2.getInstanceLabel(),
+                                        appIns.appres_pwm_ccu8_3.getInstanceLabel(),
+                                        appIns.appres_pwm_ccu8_4.getInstanceLabel() ]
+
+    Integer pos_index               = 0
+    String  adc_mode                = list_adcmode[appIns.gcombo_adc_measurement_mode.options.indexOf(appIns.gcombo_adc_measurement_mode.value)]
+    String  result_event            = null;
+    
+    for(pos_index = 0; pos_index<7; pos_index++)
+    {
+        /* Initialise the vars to NULL for each instance of APP */
+        list_actualchannel[pos_index]               = "0xFF"
+        list_mappedgrp[pos_index]                   = "NULL"
+        list_adc_ch_handle_arr[pos_index]           = "NULL"
+        list_pin_handle_arr[pos_index]              = "NULL"
+        list_scan_app_handle_arr[pos_index]         = "NULL"
+        list_q_app_handle_arr[pos_index]            = "NULL"
+        list_scan_entry_handle_arr[pos_index]       = "NULL"
+        list_q_entry_handle_arr[pos_index]          = "NULL"
+        
+        if(list_measurements[pos_index] == true)
+        {
+            list_mappedgrp[pos_index]               = "VADC_G" + list_channeluri[pos_index][6]
+            list_actualchannel[pos_index]           = list_channeluri[pos_index][8] + "U"
+            list_resreg[pos_index]                  = appIns.rarray_hwres_adcchan[pos_index].getRegValue("gchctr","gchctr_resreg") //dummy read
+            list_resreg[pos_index]                  = list_resulturi[pos_index][8] + "U"
+            list_ch_resource0[pos_index]            = appIns.rarray_hwres_adcchan[pos_index].getRegValue("","galias_alias0")
+            list_ch_resource1[pos_index]            = appIns.rarray_hwres_adcchan[pos_index].getRegValue("","galias_alias1")
+            list_iclass[pos_index]                  = appIns.rarray_hwres_adcchan[pos_index].getRegValue("","gchctr_iclsel")
+            pin[pos_index]                          = "${list_iouri[pos_index][6]}"
+            port[pos_index]                         = "PORT${list_iouri[pos_index][4]}_BASE"
+            list_req_src_event[pos_index]           = "false"
+            
+            /* CG for .channel_handle_array */
+            list_adc_ch_handle_arr[pos_index]       = "&" + appInst + "_" + list_chanstring[pos_index] + "_ChannelConfig"
+            
+            /* CG for .port_pin_handle_array */
+            list_pin_handle_arr[pos_index]          = "&" + appInst + "_" + list_chanstring[pos_index] + "_IOConfig"
+            
+            /* CG for .adc_scan_app_handle_array */
+            list_scan_app_handle_arr[pos_index]     = "&" + list_scan_inst[pos_index]
+            
+            /* CG for .adc_q_app_handle_array */
+            list_q_app_handle_arr[pos_index]        = "&" + list_queue_inst[pos_index]
+            
+            /* CG for .scan_entry_handle_array */
+            list_scan_entry_handle_arr[pos_index]   = "&" + appInst + "_" + list_scan_inst[pos_index] + "_Scan_Entry_" + list_chanstring[pos_index]
+            
+            /* CG for .q_entry_handle_array */
+            list_q_entry_handle_arr[pos_index]      = "&" + appInst + "_" + list_queue_inst[pos_index] + "_Q_Entry_" + list_chanstring[pos_index]
+              
+            String  channel_number                  = list_channeluri[pos_index][8] /* For alias configurations only */
+
+            if((channel_number == '0') && (list_ch_resource0[pos_index] != 0))
+            {
+                list_alias_ch_num[pos_index]            = "(int8_t)  " + list_ch_resource0[pos_index] + "              /* Channel is Aliased */"
+            }
+            else if (channel_number=='1'  && list_ch_resource1[pos_index] != 1)
+            {
+                list_alias_ch_num[pos_index]            = "(int8_t)  "+list_ch_resource1[pos_index] + "               /* Channel is Aliased */"
+            }
+            else
+            {
+                list_alias_ch_num[pos_index]            = "(int8_t)  -1,                                      /* ALIAS is Disabled */";
+            }
+        }
+    }
+
+    /* Control loop ISR */
+    if(appIns.gcombo_isr_event.value == "Vout Result Event")
+    {
+        list_buck_isr[0]       = "NULL"
+        list_req_src_event[0]  = "false"
+        result_event           = "true"
+    }
+    else
+    {
+        list_buck_isr[0]       = "&" + appInst + "_" + appIns.gstring_int_handler_cntrl_loop.value
+        list_req_src_event[0]  = "true"
+        result_event           = "false"
+    }
+    
+    
+    /***********************************************************************************************************************
+     * End of ADC variables initialization
+     **********************************************************************************************************************/
+    
+    out.print("""
+/******************** Start of BUCK_VC_FIX_FQ instance - ${appInst} ********************/
+    """);
+
+    /***********************************************************************************************************************
+     * Start of printing ADC variables
+     **********************************************************************************************************************/
+    if(appIns.gcombo_isr_event.value != "Vout Result Event")
+    {
+        out.print("""
+/* Control loop ISR */
+extern void ${appInst}_${appIns.gstring_int_handler_cntrl_loop.value}(void);
+        """);
+    }
+
+    /* VADC result register configuration handle */
+    out.print("""
+/* VADC result register configuration handle */
+const XMC_VADC_RESULT_CONFIG_t ${appInst}_${appIns.gstring_vout_measurement.value.replaceAll("\\s","")}_ResultConfig =
+{
+  .wait_for_read_mode            = (uint32_t) false,
+  .part_of_fifo                  = (uint32_t) false,
+  .event_gen_enable              = (uint32_t) ${result_event}
+};
+    """);
+
+    for(channel = 0; channel < 7; channel++)
+    {
+        if(list_measurements[channel] == true)
+        {
+            out.print("""
+const XMC_VADC_CHANNEL_CONFIG_t ${appInst}_${list_chanstring[channel]}_ChannelConfig =
+{
+  .input_class                   = (uint32_t) XMC_VADC_CHANNEL_CONV_GROUP_CLASS${list_iclass[channel]},    /* ICLASS ${list_iclass[channel]} selected */
+  .result_reg_number             = ${list_resreg[channel]},                          /* GxRES[${list_resreg[channel]}] selected */
+  .alias_channel                 = ${list_alias_ch_num[channel]}
+};
+            """);
+        }
+    }
+
+    /* ADC scan/queue entry configuration handle */
+    for(channel = 0; channel < 7; channel++)
+    {
+        if(list_measurements[channel] == true)
+        {
+            if (appIns.gcombo_adc_measurement_mode.value == "Scan")
+            {
+                out.print("""
+/* ADC scan entry configuration handle */
+ADC_SCAN_ENTRY_t ${appInst}_${list_scan_inst[channel]}_Scan_Entry_${list_chanstring[channel]} =
+{
+  .channel_number                = ${list_actualchannel[channel]},
+  .ch_event_notification         = false,
+  .rs_event_notification         = ${list_req_src_event[channel]},
+  .adc_event_callback            = ${list_buck_isr[channel]}
+};
+                """);
+            }
+            else
+            {
+                String trigger_needed = null
+                if (channel == 0)
+                {
+                    trigger_needed = "true"    //trigger is required only for Vout 
+                }
+                else
+                {
+                    trigger_needed = "false" //trigger is not required for Vin, iout1-4 and udef 
+                }
+            
+                out.print("""
+/* ADC queue entry configuration handle */
+ADC_QUEUE_ENTRY_t ${appInst}_${list_queue_inst[channel]}_Q_Entry_${list_chanstring[channel]} = 
+{
+  .channel_number                = ${list_actualchannel[channel]},
+  .queue_position                = ${list_positions[channel]}U,
+  .refill_needed                 = true,
+  .trigger_needed                = ${trigger_needed},
+  .ch_event_notification         = false,
+  .rs_event_notification         = ${list_req_src_event[channel]},
+  .adc_event_callback            = ${list_buck_isr[channel]}
+};
+                """);
+            }
+        }
+    }
+    
+    /*Extracting APP config structures*/
+    out.print("""
+BUCK_VC_FIX_FQ_ADCConfig_t ${appInst}_ADCConfig =
+{
+  .adc_mode                      = ${adc_mode},  
+  .result_reg_handle             = &${appInst}_${appIns.gstring_vout_measurement.value.replaceAll("\\s","")}_ResultConfig,
+  
+  .channel_handle_array          = {
+                                    ${list_adc_ch_handle_arr[0]},
+                                    ${list_adc_ch_handle_arr[1]},
+                                    ${list_adc_ch_handle_arr[2]},
+                                    ${list_adc_ch_handle_arr[3]},
+                                    ${list_adc_ch_handle_arr[4]},
+                                    ${list_adc_ch_handle_arr[5]},
+                                    ${list_adc_ch_handle_arr[6]}
+                                   },
+    """);
+
+
+    if (appIns.gcombo_adc_measurement_mode.value == "Scan")
+    {
+        out.print("""
+  .scan_entry_handle_array       = {
+                                    ${list_scan_entry_handle_arr[0]},
+                                    ${list_scan_entry_handle_arr[1]},
+                                    ${list_scan_entry_handle_arr[2]},
+                                    ${list_scan_entry_handle_arr[3]},
+                                    ${list_scan_entry_handle_arr[4]},
+                                    ${list_scan_entry_handle_arr[5]},
+                                    ${list_scan_entry_handle_arr[6]}
+                                   },
+        """);
+    }
+    else
+    {
+        out.print("""
+  .q_entry_handle_array          = {
+                                    ${list_q_entry_handle_arr[0]},
+                                    ${list_q_entry_handle_arr[1]},
+                                    ${list_q_entry_handle_arr[2]},
+                                    ${list_q_entry_handle_arr[3]},
+                                    ${list_q_entry_handle_arr[4]},
+                                    ${list_q_entry_handle_arr[5]},
+                                    ${list_q_entry_handle_arr[6]}
+                                   },
+        """);
+    }
+
+    out.print("""
+  .result_register_num_array     = {${list_resreg[0]}, ${list_resreg[1]}, ${list_resreg[2]}, ${list_resreg[3]}, ${list_resreg[4]}, ${list_resreg[5]}, ${list_resreg[6]}},
+  .channel_num_array             = {${list_actualchannel[0]}, ${list_actualchannel[1]}, ${list_actualchannel[2]}, ${list_actualchannel[3]}, ${list_actualchannel[4]}, ${list_actualchannel[5]}, ${list_actualchannel[6]}}  
+};
+    """);
+    /***********************************************************************************************************************
+     * End of printing ADC variables
+     **********************************************************************************************************************/
+    
+    /***********************************************************************************************************************
+     * Start of PWM variables initialization
+     **********************************************************************************************************************/
+    List    list_phases             = ['BUCK_VC_FIX_FQ_NUM_OF_PHASES_1', 'BUCK_VC_FIX_FQ_NUM_OF_PHASES_2', 'BUCK_VC_FIX_FQ_NUM_OF_PHASES_3', 'BUCK_VC_FIX_FQ_NUM_OF_PHASES_4'];
+    List    list_filter             = ['BUCK_VC_FIX_FQ_FILTER_TYPE_II', 'BUCK_VC_FIX_FQ_FILTER_TYPE_III']
+    String  no_of_phases            = list_phases[appIns.gcombo_no_of_phases.options.indexOf(appIns.gcombo_no_of_phases.value)]
+    String  pwm_source              = null;
+    String  phase_timer_val         = null;
+    Integer phase0_timer_val        = null;
+    Integer phase1_timer_val        = null;
+    Integer phase2_timer_val        = null;
+    Integer phase3_timer_val        = null;
+    String  pwm_ccu8                = null;
+    String  hrpwm                   = null;
+    String  output_passive_level    = null;
+    
+    if((appIns.gcheck_enable_high_res.value == true))
+    {
+        pwm_source                    = "BUCK_VC_FIX_FQ_HRPWM"
+        
+        if (appIns.gcombo_passive_lvl.value == "Low")
+        {
+            output_passive_level = "XMC_GPIO_OUTPUT_LEVEL_LOW"
+        }
+        else
+        {
+            output_passive_level = "XMC_GPIO_OUTPUT_LEVEL_HIGH"
+        }
+    
+        if (appIns.gcombo_no_of_phases.value == "1")
+        {
+            phase_timer_val           = "{0U, 0U, 0U, 0U}"
+        }
+        else if (appIns.gcombo_no_of_phases.value == "2")
+        {
+            phase1_timer_val          = appIns.appres_hrpwm_1.getVal(["ginteger_period", "value"]) /2
+            phase_timer_val           = "{0U, " + phase1_timer_val + "U, 0U, 0U}"
+        }
+        else if (appIns.gcombo_no_of_phases.value == "3")
+        {
+            phase1_timer_val          = appIns.appres_hrpwm_1.getVal(["ginteger_period", "value"]) /3
+            phase2_timer_val          = (2 * appIns.appres_hrpwm_1.getVal(["ginteger_period", "value"])) /3
+            phase_timer_val           = "{0U, " + phase1_timer_val + "U," + phase2_timer_val + "U, 0U}"
+        }
+        else if (appIns.gcombo_no_of_phases.value == "4")
+        {
+            phase0_timer_val          = 0
+            phase1_timer_val          = appIns.appres_hrpwm_1.getVal(["ginteger_period", "value"]) /4
+            phase2_timer_val          = appIns.appres_hrpwm_1.getVal(["ginteger_period", "value"]) /2
+            phase3_timer_val          = (3 * appIns.appres_hrpwm_1.getVal(["ginteger_period", "value"])) /4
+            phase_timer_val           = "{0U, " + phase1_timer_val + "U," + phase2_timer_val + "U," + phase3_timer_val + "U}"
+        }
+    }
+    else
+    {
+        pwm_source                  = "BUCK_VC_FIX_FQ_PWM_CCU8"
+    
+        if (appIns.gcombo_passive_lvl.value == "Low")
+        {
+            output_passive_level = "XMC_GPIO_OUTPUT_LEVEL_LOW"
+        }
+        else
+        {
+            output_passive_level = "XMC_GPIO_OUTPUT_LEVEL_HIGH"
+        }
+    
+        if (appIns.gcombo_no_of_phases.value == "1")
+        {
+          phase_timer_val           = "{0U, 0U, 0U, 0U}"
+        }
+        else if (appIns.gcombo_no_of_phases.value == "2")
+        {
+          phase1_timer_val          = appIns.appres_pwm_ccu8_1.getVal(["ginteger_period", "value"]) /2
+          phase_timer_val           = "{0U, " + phase1_timer_val + "U, 0U, 0U}"
+        }
+        else if (appIns.gcombo_no_of_phases.value == "3")
+        {
+          phase1_timer_val          = appIns.appres_pwm_ccu8_1.getVal(["ginteger_period", "value"]) /3
+          phase2_timer_val          = (2 * appIns.appres_pwm_ccu8_1.getVal(["ginteger_period", "value"])) /3
+          phase_timer_val           = "{0U, " + phase1_timer_val + "U," + phase2_timer_val + "U, 0U}"
+        }
+        else if (appIns.gcombo_no_of_phases.value == "4")
+        {
+          phase0_timer_val          = 0
+          phase1_timer_val          = appIns.appres_pwm_ccu8_1.getVal(["ginteger_period", "value"]) /4
+          phase2_timer_val          = appIns.appres_pwm_ccu8_1.getVal(["ginteger_period", "value"]) /2
+          phase3_timer_val          = (3 * appIns.appres_pwm_ccu8_1.getVal(["ginteger_period", "value"])) /4
+          phase_timer_val           = "{0U, " + phase1_timer_val + "U," + phase2_timer_val + "U," + phase3_timer_val + "U}"
+        }
+    }
+
+    /* APP handle pointers */
+    if(appIns.gcheck_enable_high_res.value == true)
+    {
+        if(appIns.gcombo_no_of_phases.value == "1")
+        {
+            hrpwm         = "&" + list_HRPWM_appInst[0] + ", NULL" + ", NULL" + ", NULL"
+        }
+        else if(appIns.gcombo_no_of_phases.value == "2")
+        {
+            hrpwm         = "&" + list_HRPWM_appInst[0] + ", " + "&" + list_HRPWM_appInst[1] + ", NULL" + ", NULL"
+        }
+        else if(appIns.gcombo_no_of_phases.value == "3")
+        {
+            hrpwm         = "&" + list_HRPWM_appInst[0] + ", " + "&" + list_HRPWM_appInst[1] + ", " + "&" + list_HRPWM_appInst[2] + ", NULL"
+        }
+        else if(appIns.gcombo_no_of_phases.value == "4")
+        {
+            hrpwm         = "&" + list_HRPWM_appInst[0] + ", " + "&" + list_HRPWM_appInst[1] + ", " + "&" + list_HRPWM_appInst[2] + ", " + "&" + list_HRPWM_appInst[3]
+        }
+    }
+    else
+    {
+        if(appIns.gcombo_no_of_phases.value == "1")
+        {
+            pwm_ccu8     = "&" + list_PWM_CCU8_appInst[0] + ", NULL" + ", NULL" + ", NULL"
+        }
+        else if(appIns.gcombo_no_of_phases.value == "2")
+        {
+            pwm_ccu8     = "&" + list_PWM_CCU8_appInst[0] + ", " + "&" + list_PWM_CCU8_appInst[1] + ", NULL" + ", NULL"
+        }
+        else if(appIns.gcombo_no_of_phases.value == "3")
+        {
+            pwm_ccu8     = "&" + list_PWM_CCU8_appInst[0] + ", " + "&" + list_PWM_CCU8_appInst[1] + ", " + "&" + list_PWM_CCU8_appInst[2] + ", NULL"
+        }
+        else if(appIns.gcombo_no_of_phases.value == "4")
+        {
+            pwm_ccu8     = "&" + list_PWM_CCU8_appInst[0] + ", " + "&" + list_PWM_CCU8_appInst[1] + ", " + "&" + list_PWM_CCU8_appInst[2] + ", " + "&" + list_PWM_CCU8_appInst[3]
+        }
+    }
+
+    /***********************************************************************************************************************
+     * End of PWM variables initialization
+     **********************************************************************************************************************/
+
+    /**********************************************************************************************************************
+     * Start of printing PWM variables
+     **********************************************************************************************************************/
+out.print("""
+BUCK_VC_FIX_FQ_PWMConfig_t ${appInst}_PWMConfig =
+{
+  .synch_converter               = ${appIns.gcheck_synch_conv.value.toString()},
+  .no_of_phases                  = ${no_of_phases},
+  .phase_timer_val               = ${phase_timer_val},
+  .pwm_source                    = ${pwm_source},
+  .ccu8_output_passive_level     = ${output_passive_level},
+};
+      """);
+    /**********************************************************************************************************************
+     * End of printing PWM variables
+     **********************************************************************************************************************/
+
+    /**********************************************************************************************************************
+     * Start of printing Interrupt variables
+     **********************************************************************************************************************/
+    /* Interrupt node */
+    String vout_result_ev_srline = list_srid_array[(Integer)appIns.rarray_hwres_result[0].getRegValue("","grevnp_revnp")]
+    
+    if (appIns.gcombo_isr_event.value == "Vout Result Event")
+    {
+        List mappedUri = appIns.hwres_nvicnode.getSolverUri()
+        Integer irqctrl         = 0
+        Integer Dummy_Mux_Read0 = 0
+        Dummy_Mux_Read0 = appIns.hwres_nvicnode.getRegValue("","iser_setena") //dummy read
+        
+        if ((mc_family == "XMC1") && (series == "4"))
+        {
+           irqctrl = appIns.hwres_nvicnode.getRegValue("","intcr_insel")
+        }
+        
+        if (mappedUri)
+        {
+            String nodeID = mappedUri[-1]
+            if (mc_family == "XMC4")
+            {
+                out.print("""
+BUCK_VC_FIX_FQ_IntConfig_t ${appInst}_InterruptConfig =
+{
+  .node                          = (IRQn_Type)${nodeID},
+  .priority                      = ${appIns.ginterruptprio_cntrl_loop.priorityValue}U,  
+  .subpriority                   = ${appIns.ginterruptprio_cntrl_loop.subPriorityValue}U,
+  .vout_result_ev_srline         = ${vout_result_ev_srline}
+};
+                """);
+            }
+            else /* XMC1x family */
+            {
+                if (series == "4") /* XMC14x series */
+                {
+                    out.print("""
+BUCK_VC_FIX_FQ_IntConfig_t ${appInst}_InterruptConfig =
+{
+  .node                          = (IRQn_Type)${nodeID},
+  .priority                      = ${appIns.ginterruptprio_cntrl_loop.priorityValue}U,
+  .vout_result_ev_srline         = ${vout_result_ev_srline},
+  .irqctrl                       = ${irqctrl}U
+};
+                """);
+                }
+                else /* Other than XMC14x series of XMC1x family */
+                {
+                    out.print("""
+BUCK_VC_FIX_FQ_IntConfig_t ${appInst}_InterruptConfig =
+{
+  .node                          = (IRQn_Type)${nodeID},
+  .priority                      = ${appIns.ginterruptprio_cntrl_loop.priorityValue}U,
+  .vout_result_ev_srline         = ${vout_result_ev_srline}
+};
+                """);
+                }
+            }
+        }
+    }
+    /**********************************************************************************************************************
+     * End of printing Interrupt variables
+     **********************************************************************************************************************/
+
+    /**********************************************************************************************************************/
+    /*
+     * Temporary variables used to help initialize BUCK_VC_FIX_FQ_CONFIG_t variables & Compensator variables 
+     */
+    Float   adc_ref_voltage             = 3.3;
+    
+    /* This scaling is applied to voltage, current parameters of XMC1x devices. */
+    Integer number_of_adc_bits          = 12
+    
+    Integer max_adc_value               = 2.power(number_of_adc_bits)-1
+    
+    /* This scaling is applied to coefficients of XMC1x devices. */
+    Integer scaling_factor_coeffs       = 15 
+    /*
+     * End
+     */
+    /**********************************************************************************************************************/
+    
+    /***********************************************************************************************************************
+     * Start of BUCK_VC_FIX_FQ_CONFIG_t variables initialization: The below variable declarations follows the order of variables in BUCK_VC_FIX_FQ_CONFIG_t structure.
+     **********************************************************************************************************************/   
+    String  adc_vout_enable             = appIns.gcheck_measure_vout.value.toString()
+    String  adc_vin_enable              = appIns.gcheck_measure_vin.value.toString()
+    String  adc_iout1_enable            = appIns.gcheck_measure_iout1.value.toString()
+    String  adc_iout2_enable            = appIns.gcheck_measure_iout2.value.toString()
+    String  adc_iout3_enable            = appIns.gcheck_measure_iout3.value.toString()
+    String  adc_iout4_enable            = appIns.gcheck_measure_iout4.value.toString()
+    String  adc_udef_enable             = appIns.gcheck_measure_user_defined_1.value.toString()
+    
+    String  vout_sw_protection          = appIns.gcheck_sw_protection_vout.value
+    String  vin_sw_protection           = appIns.gcheck_sw_protection_vin.value
+    String  iout1_sw_protection         = appIns.gcheck_sw_protection_iout1.value
+    String  iout2_sw_protection         = appIns.gcheck_sw_protection_iout2.value
+    String  iout3_sw_protection         = appIns.gcheck_sw_protection_iout3.value
+    String  iout4_sw_protection         = appIns.gcheck_sw_protection_iout4.value
+    
+    Integer volt_control_rate           = appIns.ginteger_volt_control_rate.value
+    String  filter                      = list_filter[appIns.gcombo_controller_type.options.indexOf(appIns.gcombo_controller_type.value)]
+    String  interrupt_event             = null;
+    
+    /*
+     * Variables for XMC4x family
+     */
+    Float  vout                         = null;
+    Float  vin                          = null;
+    Float  gain_vout                    = null;
+    Float  gain_vin                     = null;
+    Float  gain_iout1                   = null;
+    Float  gain_iout2                   = null;
+    Float  gain_iout3                   = null;
+    Float  gain_iout4                   = null;
+    
+    Float  vout_high_limit              = null;
+    Float  vout_low_limit               = null;
+    Float  vin_high_limit               = null;
+    Float  vin_low_limit                = null;
+    Float  iout1_high_limit             = null;
+    Float  iout1_low_limit              = null;
+    Float  iout2_high_limit             = null;
+    Float  iout2_low_limit              = null;
+    Float  iout3_high_limit             = null;
+    Float  iout3_low_limit              = null;
+    Float  iout4_high_limit             = null;
+    Float  iout4_low_limit              = null;
+    /*
+     * End
+     */
+    
+    /*
+     * Variables for XMC1x family
+     */
+    Integer  vout_fix                   = null;
+    Integer  vin_fix                    = null;
+    Integer  gain_vout_fix              = null;
+    Integer  gain_vin_fix               = null;
+    Integer  gain_iout1_fix             = null;
+    Integer  gain_iout2_fix             = null;
+    Integer  gain_iout3_fix             = null;
+    Integer  gain_iout4_fix             = null;
+    
+    Integer  vout_high_limit_fix        = null;
+    Integer  vout_low_limit_fix         = null;
+    Integer  vin_high_limit_fix         = null;
+    Integer  vin_low_limit_fix          = null;
+    Integer  iout1_high_limit_fix       = null;
+    Integer  iout1_low_limit_fix        = null;
+    Integer  iout2_high_limit_fix       = null;
+    Integer  iout2_low_limit_fix        = null;
+    Integer  iout3_high_limit_fix       = null;
+    Integer  iout3_low_limit_fix        = null;
+    Integer  iout4_high_limit_fix       = null;
+    Integer  iout4_low_limit_fix        = null;
+    /*
+     * End
+     */
+    
+    /*
+     * Variables for XMC4x family
+     */
+    String volt_step_increment          = null;
+    /*
+     * End
+     */
+    
+    /*
+     * Variables for XMC1x family
+     */
+    Integer  volt_step_increment_fix    = null;
+    /*
+     * End
+     */
+    
+    String systick_timer_period         = null;
+    String systimer_call_back           = null;
+    
+    if (appIns.gcombo_isr_event.value == "Vout Result Event")
+    {
+        interrupt_event                 = "BUCK_VC_FIX_FQ_INTERRUPT_VOUT_RESULT_EVENT"
+    }
+    else
+    {
+        interrupt_event                 = "BUCK_VC_FIX_FQ_INTERRUPT_REQ_SRC_EVENT"
+    }
+    
+    if (mc_family == "XMC4")
+    {
+        vout                            = appIns.gfloat_vout_ref.value        * appIns.gfloat_vout_gain.value * max_adc_value/(adc_ref_voltage)
+        vin                             = appIns.gfloat_vin.value             * appIns.gfloat_vin_gain.value  * max_adc_value/(adc_ref_voltage)
+        gain_vout                       = appIns.gfloat_vout_gain.value
+        gain_vin                        = appIns.gfloat_vin_gain.value
+        gain_iout1                      = appIns.gfloat_iout1_gain.value
+        gain_iout2                      = appIns.gfloat_iout2_gain.value
+        gain_iout3                      = appIns.gfloat_iout3_gain.value
+        gain_iout4                      = appIns.gfloat_iout4_gain.value
+        
+        vout_high_limit             = appIns.gfloat_high_limit_vout.value  * appIns.gfloat_vout_gain.value  * max_adc_value/(adc_ref_voltage)
+        vin_high_limit              = appIns.gfloat_high_limit_vin.value   * appIns.gfloat_vin_gain.value   * max_adc_value/(adc_ref_voltage)
+        iout1_high_limit            = appIns.gfloat_high_limit_iout1.value * appIns.gfloat_iout1_gain.value * max_adc_value/(adc_ref_voltage)
+        iout2_high_limit            = appIns.gfloat_high_limit_iout2.value * appIns.gfloat_iout2_gain.value * max_adc_value/(adc_ref_voltage)
+        iout3_high_limit            = appIns.gfloat_high_limit_iout3.value * appIns.gfloat_iout3_gain.value * max_adc_value/(adc_ref_voltage)
+        iout4_high_limit            = appIns.gfloat_high_limit_iout4.value * appIns.gfloat_iout4_gain.value * max_adc_value/(adc_ref_voltage)
+        vout_low_limit              = appIns.gfloat_low_limit_vout.value   * appIns.gfloat_vout_gain.value  * max_adc_value/(adc_ref_voltage)
+        vin_low_limit               = appIns.gfloat_low_limit_vin.value    * appIns.gfloat_vin_gain.value   * max_adc_value/(adc_ref_voltage)
+        iout1_low_limit             = appIns.gfloat_low_limit_iout1.value  * appIns.gfloat_iout1_gain.value * max_adc_value/(adc_ref_voltage)
+        iout2_low_limit             = appIns.gfloat_low_limit_iout2.value  * appIns.gfloat_iout2_gain.value * max_adc_value/(adc_ref_voltage)
+        iout3_low_limit             = appIns.gfloat_low_limit_iout3.value  * appIns.gfloat_iout3_gain.value * max_adc_value/(adc_ref_voltage)
+        iout4_low_limit             = appIns.gfloat_low_limit_iout4.value  * appIns.gfloat_iout4_gain.value * max_adc_value/(adc_ref_voltage)
+    }
+    else /* for XMC1x family */
+    {
+        vout_fix                        = appIns.gfloat_vout_ref.value        * appIns.gfloat_vout_gain.value * max_adc_value/(adc_ref_voltage)
+        vin_fix                         = appIns.gfloat_vin.value             * appIns.gfloat_vin_gain.value  * max_adc_value/(adc_ref_voltage)
+        gain_vout_fix                   = appIns.gfloat_vout_gain.value       * max_adc_value
+        gain_vin_fix                    = appIns.gfloat_vin_gain.value        * max_adc_value
+        gain_iout1_fix                  = appIns.gfloat_iout1_gain.value      * max_adc_value
+        gain_iout2_fix                  = appIns.gfloat_iout2_gain.value      * max_adc_value
+        gain_iout3_fix                  = appIns.gfloat_iout3_gain.value      * max_adc_value
+        gain_iout4_fix                  = appIns.gfloat_iout4_gain.value      * max_adc_value
+     
+        vout_high_limit_fix             = appIns.gfloat_high_limit_vout.value  * appIns.gfloat_vout_gain.value  * max_adc_value/(adc_ref_voltage)
+        vin_high_limit_fix              = appIns.gfloat_high_limit_vin.value   * appIns.gfloat_vin_gain.value   * max_adc_value/(adc_ref_voltage)
+        iout1_high_limit_fix            = appIns.gfloat_high_limit_iout1.value * appIns.gfloat_iout1_gain.value * max_adc_value/(adc_ref_voltage)
+        iout2_high_limit_fix            = appIns.gfloat_high_limit_iout2.value * appIns.gfloat_iout2_gain.value * max_adc_value/(adc_ref_voltage)
+        iout3_high_limit_fix            = appIns.gfloat_high_limit_iout3.value * appIns.gfloat_iout3_gain.value * max_adc_value/(adc_ref_voltage)
+        iout4_high_limit_fix            = appIns.gfloat_high_limit_iout4.value * appIns.gfloat_iout4_gain.value * max_adc_value/(adc_ref_voltage)
+        vout_low_limit_fix              = appIns.gfloat_low_limit_vout.value   * appIns.gfloat_vout_gain.value  * max_adc_value/(adc_ref_voltage)
+        vin_low_limit_fix               = appIns.gfloat_low_limit_vin.value    * appIns.gfloat_vin_gain.value   * max_adc_value/(adc_ref_voltage)
+        iout1_low_limit_fix             = appIns.gfloat_low_limit_iout1.value  * appIns.gfloat_iout1_gain.value * max_adc_value/(adc_ref_voltage)
+        iout2_low_limit_fix             = appIns.gfloat_low_limit_iout2.value  * appIns.gfloat_iout2_gain.value * max_adc_value/(adc_ref_voltage)
+        iout3_low_limit_fix             = appIns.gfloat_low_limit_iout3.value  * appIns.gfloat_iout3_gain.value * max_adc_value/(adc_ref_voltage)
+        iout4_low_limit_fix             = appIns.gfloat_low_limit_iout4.value  * appIns.gfloat_iout4_gain.value * max_adc_value/(adc_ref_voltage)
+    }
+    
+    String soft_start_enable            = appIns.gcheck_soft_start.value
+    
+    if (appIns.gcheck_soft_start.value == true)
+    {
+        if(mc_family == 'XMC4') /* for XMC4x family */
+        {
+            volt_step_increment         = (Float) (appIns.gfloat_vout_ref.value / (appIns.ginteger_soft_start_val.value / appIns.appres_systimer.getVal(["ginteger_systickinterval", "value"])))
+        }
+        else /* for XMC1x family */
+        {
+            volt_step_increment_fix     = (Integer) (appIns.gfloat_vout_ref.value * appIns.gfloat_vout_gain.value * max_adc_value/(adc_ref_voltage)) / (appIns.ginteger_soft_start_val.value / appIns.appres_systimer.getVal(["ginteger_systickinterval", "value"]))
+        }
+       
+        systick_timer_period            = appIns.appres_systimer.getVal(["ginteger_systickinterval", "value"])
+        systimer_call_back              = "(SYSTIMER_CALLBACK_t)" + appInst + "_SoftStart"
+    } 
+    /***********************************************************************************************************************
+     * End of BUCK_VC_FIX_FQ_CONFIG_t variables initialization
+     **********************************************************************************************************************/
+    
+    /**********************************************************************************************************************
+     * Start of printing BUCK_VC_FIX_FQ_t variables
+     **********************************************************************************************************************/
+    out.print("""
+const BUCK_VC_FIX_FQ_CONFIG_t ${appInst}_config =
+{
+  .adc_vout_enable               = ${adc_vout_enable},
+  .adc_vin_enable                = ${adc_vin_enable},
+  .adc_iout1_enable              = ${adc_iout1_enable},
+  .adc_iout2_enable              = ${adc_iout2_enable},
+  .adc_iout3_enable              = ${adc_iout3_enable},
+  .adc_iout4_enable              = ${adc_iout4_enable},
+  .adc_udef_enable               = ${adc_udef_enable},
+
+  .vin_sw_protection             = ${vin_sw_protection},
+  .vout_sw_protection            = ${vout_sw_protection},
+  .iout1_sw_protection           = ${iout1_sw_protection},
+  .iout2_sw_protection           = ${iout2_sw_protection},
+  .iout3_sw_protection           = ${iout3_sw_protection},
+  .iout4_sw_protection           = ${iout4_sw_protection},
+
+  .volt_control_rate             = ${volt_control_rate}U,
+  .filter                        = ${filter},
+  .interrupt_event               = ${interrupt_event},
+    """);
+
+    if(mc_family == 'XMC4') /* for XMC4x family */
+    {
+        out.print("""
+  .vout                          = ${vout}f,
+  .vin                           = ${vin}f,
+  .gain_vout                     = ${gain_vout}f,
+  .gain_vin                      = ${gain_vin}f,
+  .gain_iout1                    = ${gain_iout1}f,
+  .gain_iout2                    = ${gain_iout2}f,
+  .gain_iout3                    = ${gain_iout3}f,
+  .gain_iout4                    = ${gain_iout4}f,
+
+  .vout_high_limit               = ${vout_high_limit}f,
+  .vin_high_limit                = ${vin_high_limit}f,
+  .iout1_high_limit              = ${iout1_high_limit}f,
+  .iout2_high_limit              = ${iout2_high_limit}f,
+  .iout3_high_limit              = ${iout3_high_limit}f,
+  .iout4_high_limit              = ${iout4_high_limit}f,
+  .vout_low_limit                = ${vout_low_limit}f,
+  .vin_low_limit                 = ${vin_low_limit}f,
+  .iout1_low_limit               = ${iout1_low_limit}f,
+  .iout2_low_limit               = ${iout2_low_limit}f,
+  .iout3_low_limit               = ${iout3_low_limit}f,
+  .iout4_low_limit               = ${iout4_low_limit}f, """);
+    }
+    else /* for XMC1x family */
+    {
+        out.print("""
+  .vout                          = ${vout_fix}U,
+  .vin                           = ${vin_fix}U,
+  .gain_vout                     = ${gain_vout_fix}U,
+  .gain_vin                      = ${gain_vin_fix}U,
+  .gain_iout1                    = ${gain_iout1_fix}U,
+  .gain_iout2                    = ${gain_iout2_fix}U,
+  .gain_iout3                    = ${gain_iout3_fix}U,
+  .gain_iout4                    = ${gain_iout4_fix}U,
+
+  .vout_high_limit               = ${vout_high_limit_fix}U,
+  .vin_high_limit                = ${vin_high_limit_fix}U,
+  .iout1_high_limit              = ${iout1_high_limit_fix}U,
+  .iout2_high_limit              = ${iout2_high_limit_fix}U,
+  .iout3_high_limit              = ${iout3_high_limit_fix}U,
+  .iout4_high_limit              = ${iout4_high_limit_fix}U,
+  .vout_low_limit                = ${vout_low_limit_fix}U,
+  .vin_low_limit                 = ${vin_low_limit_fix}U,
+  .iout1_low_limit               = ${iout1_low_limit_fix}U,
+  .iout2_low_limit               = ${iout2_low_limit_fix}U,
+  .iout3_low_limit               = ${iout3_low_limit_fix}U,
+  .iout4_low_limit               = ${iout4_low_limit_fix}U, """);
+    }
+    
+    out.print("""
+  .soft_start_enable             = ${soft_start_enable}, """);
+
+    if (appIns.gcheck_soft_start.value == true)
+    {
+        if(mc_family == 'XMC4') /* for XMC4x family */
+        {
+            out.print("""
+  .volt_step_increment           = ${volt_step_increment}f, """);
+        }
+        else /* for XMC1x family */
+        {
+            out.print("""
+  .volt_step_increment           = ${volt_step_increment_fix}U, """);
+        }
+    
+        out.print("""
+  .systick_timer_period          = ${systick_timer_period}U,
+  .systimer_call_back            = ${systimer_call_back},    """);
+    }
+    out.print("""
+};
+""");
+    /**********************************************************************************************************************
+     * End of printing BUCK_VC_FIX_FQ_CONFIG_t variables
+     **********************************************************************************************************************/
+
+    /***********************************************************************************************************************
+     * Start of Compensator variables initialization
+     **********************************************************************************************************************/
+    /*
+     * Variables for XMC4x family
+     */
+    String coeff_kp                     = null;
+    String coeff_ki                     = null;
+    
+    String coeff_b0                     = null;
+    String coeff_b1                     = null;
+    String coeff_b2                     = null;
+    String coeff_b3                     = null;
+    String coeff_a1                     = null;
+    String coeff_a2                     = null;
+    String coeff_a3                     = null;
+    
+    Float  out_limit_max                = null;
+    Float  out_limit_min                = null;
+    
+    Integer gain_k                      = 0;
+    /*
+     * End 
+     */
+
+    /*
+     * Variables for XMC1x family
+     */
+    Integer coeff_kp_fix                = null;
+    Integer coeff_ki_fix                = null;
+    
+    Integer scale_kpki                  = 15;
+    
+    Integer coeff_b0_fix                = null;
+    Integer coeff_b1_fix                = null;
+    Integer coeff_b2_fix                = null;
+    Integer coeff_b3_fix                = null;
+    Integer coeff_a1_fix                = null;
+    Integer coeff_a2_fix                = null;
+    Integer coeff_a3_fix                = null;
+    
+    Integer out_limit_max_fix           = null;
+    Integer out_limit_min_fix           = null;
+    
+    Integer scale_b                     = null;
+    Integer scale_a                     = null;
+    Integer scale_out                   = null;
+    /*
+     * End
+     */
+    
+    /*
+     * Temporary variables used to help initialize BUCK_VC_FIX_FQ_CONFIG_t variables
+     */
+    Integer period_value                = 0
+    
+    Integer kpki_coeffs_scale_factor    = (2.power(scale_kpki))-1
+    Integer b_coeffs_scale_factor       = (2.power(appIns.ginteger_b_coeffs_fract_bits.value))-1
+    Integer a_coeffs_scale_factor       = (2.power(appIns.ginteger_a_coeffs_fract_bits.value))-1
+    Integer out_scale_factor            = (2.power(appIns.ginteger_comp_output_fract_bits.value))-1
+    /*
+     * End
+     */
+    
+    /*
+     * Get PWM period value 
+     */
+    if (appIns.gcheck_enable_high_res.value){
+        period_value                    = (Integer) (appIns.appres_hrpwm_1.getVal(["ginteger_period", "value"]) + 1) }
+    else{
+        period_value                    = (Integer) (appIns.appres_pwm_ccu8_1.getVal(["ginteger_period", "value"]) + 1) }
+
+    if (mc_family == "XMC4") /* for XMC4x family */
+    {
+        if (appIns.gcheck_enable_high_res.value){
+            gain_k                      = 8}
+        else{
+            gain_k                      = 1}
+        
+        /*
+        coeff_kp                        = appIns.gfloat_kp.value * appIns.gfloat_k_gain.value 
+        coeff_ki                        = appIns.gfloat_ki.value * appIns.gfloat_k_gain.value
+        */
+        
+        coeff_b0                        = appIns.gfloat_b0.value * appIns.gfloat_k_gain.value
+        coeff_b1                        = appIns.gfloat_b1.value * appIns.gfloat_k_gain.value
+        coeff_b2                        = appIns.gfloat_b2.value * appIns.gfloat_k_gain.value
+        coeff_b3                        = appIns.gfloat_b3.value * appIns.gfloat_k_gain.value
+        coeff_a1                        = appIns.gfloat_a1.value 
+        coeff_a2                        = appIns.gfloat_a2.value
+        coeff_a3                        = appIns.gfloat_a3.value
+        
+        out_limit_max                   = (appIns.gfloat_max_dc.value * period_value * ((2.power(gain_k))-1)) /100
+        out_limit_min                   = (appIns.gfloat_min_dc.value * period_value * ((2.power(gain_k))-1)) /100
+    }
+    else /* for XMC1x family */
+    {
+        /*
+        coeff_kp_fix                    = appIns.gfloat_kp.value  * kpki_coeffs_scale_factor
+        coeff_ki_fix                    = appIns.gfloat_ki.value  * kpki_coeffs_scale_factor
+        */
+        
+        coeff_b0_fix                    = appIns.gfloat_b0.value  * b_coeffs_scale_factor * appIns.gfloat_k_gain.value
+        coeff_b1_fix                    = appIns.gfloat_b1.value  * b_coeffs_scale_factor * appIns.gfloat_k_gain.value
+        coeff_b2_fix                    = appIns.gfloat_b2.value  * b_coeffs_scale_factor * appIns.gfloat_k_gain.value
+        coeff_b3_fix                    = appIns.gfloat_b3.value  * b_coeffs_scale_factor * appIns.gfloat_k_gain.value
+        
+        coeff_a1_fix                    = appIns.gfloat_a1.value  * a_coeffs_scale_factor
+        coeff_a2_fix                    = appIns.gfloat_a2.value  * a_coeffs_scale_factor
+        coeff_a3_fix                    = appIns.gfloat_a3.value  * a_coeffs_scale_factor
+
+        out_limit_max_fix               = (appIns.gfloat_max_dc.value * period_value * out_scale_factor) /100
+        out_limit_min_fix               = (appIns.gfloat_min_dc.value * period_value) /100
+        
+        scale_b                         = appIns.ginteger_b_coeffs_fract_bits.value - appIns.ginteger_comp_output_fract_bits.value
+        scale_a                         = appIns.ginteger_a_coeffs_fract_bits.value + appIns.ginteger_comp_output_fract_bits.value - appIns.ginteger_b_coeffs_fract_bits.value
+        scale_out                       = appIns.ginteger_comp_output_fract_bits.value
+    }
+    /***********************************************************************************************************************
+     * End of Compensator variables initialization
+     **********************************************************************************************************************/
+    
+    /**********************************************************************************************************************
+     * Start of printing Compensator variables
+     **********************************************************************************************************************/
+    if(mc_family == 'XMC4') /* for XMC4x family */
+    {
+        if(appIns.gcombo_controller_type.value == "PI")
+        {
+            out.print("""
+CONTROL_LIB_PI_DATA_FLOAT_t ${appInst}_pi = 
+{
+  .fdbk_ptr                      = &${appInst}.buck_vout,
+  .ref_ptr                       = &${appInst}.vout_reference,
+
+  .kp                            = ${coeff_kp}f,
+  .ki                            = ${coeff_ki}f,
+
+  .out_limit_max                 = ${out_limit_max}f,
+  .out_limit_min                 = ${out_limit_min}f,    
+  .out                           = 0.0f,
+  .ik                            = 0.0f,
+  .ik_1                          = 0.0f,
+};
+            """);
+        }
+        else if(appIns.gcombo_controller_type.value == "Type III (3P3Z)")
+        {
+            out.print("""
+CONTROL_LIB_3P3Z_DATA_FLOAT_t ${appInst}_typeIII =
+{
+  .fdbk_ptr                      = &${appInst}.buck_vout,
+  .ref_ptr                       = &${appInst}.vout_reference,
+
+  .coeff_b0                      = ${coeff_b0}f,
+  .coeff_b1                      = ${coeff_b1}f,
+  .coeff_b2                      = ${coeff_b2}f,
+  .coeff_b3                      = ${coeff_b3}f,
+  .coeff_a1                      = ${coeff_a1}f,
+  .coeff_a2                      = ${coeff_a2}f,      
+  .coeff_a3                      = ${coeff_a3}f,
+
+  .out_limit_max                 = ${out_limit_max}f,
+  .out_limit_min                 = ${out_limit_min}f,
+  .out_limit_imin                = -${out_limit_max}f,
+
+  .m_k                           = 0.0f,
+
+  .x_0                           = 0.0f,
+  .x_1                           = 0.0f,
+  .x_2                           = 0.0f,
+  .y_0                           = 0.0f,
+  .y_1                           = 0.0f,
+  .y_2                           = 0.0f,
+
+  .out                           = 0.0f,
+};
+            """);
+        }
+        else if(appIns.gcombo_controller_type.value == "Type II (2P2Z)")
+        {
+            out.print("""
+CONTROL_LIB_2P2Z_DATA_FLOAT_t ${appInst}_typeII =
+{
+  .fdbk_ptr                      = &${appInst}.buck_vout,
+  .ref_ptr                       = &${appInst}.vout_reference,
+
+  .coeff_b0                      = ${coeff_b0}f,
+  .coeff_b1                      = ${coeff_b1}f,
+  .coeff_b2                      = ${coeff_b2}f,
+  .coeff_a1                      = ${coeff_a1}f,
+  .coeff_a2                      = ${coeff_a2}f,      
+
+  .out_limit_max                 = ${out_limit_max}f,
+  .out_limit_imin                = -${out_limit_max}f,
+  .out_limit_min                 = ${out_limit_min}f,
+
+  .m_k                           = 0.0f,
+
+  .x_0                           = 0.0f,
+  .x_1                           = 0.0f,
+  .y_0                           = 0.0f,
+  .y_1                           = 0.0f,
+
+  .out                           = 0.0f,
+};
+            """);
+        }
+    }
+    else /* for XMC1x family */
+    {
+        if(appIns.gcombo_controller_type.value == "PI")
+        {
+            out.print("""
+CONTROL_LIB_PI_DATA_FIXED_POINT_t ${appInst}_pi = 
+{
+  .fdbk_ptr                      = (int16_t *) &${appInst}.buck_vout,
+  .ref_ptr                       = (int16_t *) &${appInst}.vout_reference,
+
+  .kp                            = ${coeff_kp_fix},
+  .ki                            = ${coeff_ki_fix},
+
+  .scale_kpki                    = ${scale_kpki},
+
+  .out_limit_max                 = ${out_limit_max_fix},
+  .out_limit_min                 = ${out_limit_min_fix},    
+  .out                           = 0,
+  .ik                            = 0,
+  .ik_1                          = 0,      
+};
+            """);
+        }
+        else if(appIns.gcombo_controller_type.value == "Type III (3P3Z)")
+        {
+            out.print("""
+CONTROL_LIB_3P3Z_DATA_FIXED_POINT_t ${appInst}_typeIII =
+{
+  .fdbk_ptr                      = (int16_t *) &${appInst}.buck_vout,
+  .ref_ptr                       = (int16_t *) &${appInst}.vout_reference,
+
+  .coeff_b0                      = ${coeff_b0_fix},
+  .coeff_b1                      = ${coeff_b1_fix},
+  .coeff_b2                      = ${coeff_b2_fix},
+  .coeff_b3                      = ${coeff_b3_fix},
+  .coeff_a1                      = ${coeff_a1_fix},
+  .coeff_a2                      = ${coeff_a2_fix},      
+  .coeff_a3                      = ${coeff_a3_fix},
+
+  .out_limit_max                 = ${out_limit_max_fix},
+  .out_limit_min                 = ${out_limit_min_fix},
+  .out_limit_imin                = -${out_limit_max_fix},
+
+  .x_0                           = 0,
+  .x_1                           = 0,
+  .x_2                           = 0,
+  .y_0                           = 0,
+  .y_1                           = 0,
+  .y_2                           = 0,
+
+  .scale_a                       = ${scale_a},
+  .scale_b                       = ${scale_b},
+  .scale_out                     = ${scale_out},
+  .out                           = 0,
+};
+            """);
+        }
+        else if(appIns.gcombo_controller_type.value == "Type II (2P2Z)")
+        {
+            out.print("""
+CONTROL_LIB_2P2Z_DATA_FIXED_POINT_t ${appInst}_typeII =
+{
+  .fdbk_ptr                      = (int16_t *) &${appInst}.buck_vout,
+  .ref_ptr                       = (int16_t *) &${appInst}.vout_reference,
+
+  .coeff_b0                      = ${coeff_b0_fix},
+  .coeff_b1                      = ${coeff_b1_fix},
+  .coeff_b2                      = ${coeff_b2_fix},
+  .coeff_a1                      = ${coeff_a1_fix},
+  .coeff_a2                      = ${coeff_a2_fix},      
+
+  .out_limit_max                 = ${out_limit_max_fix},
+  .out_limit_imin                = -${out_limit_max_fix},
+  .out_limit_min                 = ${out_limit_min_fix},
+
+  .x_0                           = 0,
+  .x_1                           = 0,
+  .y_0                           = 0,
+  .y_1                           = 0,
+
+  .scale_a                       = ${scale_a},
+  .scale_b                       = ${scale_b},
+  .scale_out                     = ${scale_out},
+  .out                           = 0,
+};
+            """);
+        }
+    }
+    /**********************************************************************************************************************
+     * End of printing Compensator variables
+     **********************************************************************************************************************/
+    
+    /**********************************************************************************************************************
+     * Start of initialising BUCK_VC_FIX_FQ_t variables
+     **********************************************************************************************************************/
+    /* Systimer (soft start) variables initialization */
+    String systimer_handle              = "&" + appIns.appres_systimer.getInstanceLabel();
+    
+    /*
+     * Variables for XMC4x family
+     */
+    Float  vout_reference               = null;
+    /*
+     * 
+     * End
+     */
+    
+    /*
+     * Variables for XMC4x family
+     */
+    Integer vout_reference_fix          = null;
+    /*
+     * End 
+     */
+    
+    if (mc_family == "XMC4") /* for XMC4x family */
+    {
+        if (appIns.gcheck_soft_start.value == true)
+            {vout_reference = 0}
+        else
+            {vout_reference = appIns.gfloat_vout_ref.value * appIns.gfloat_vout_gain.value * max_adc_value/(adc_ref_voltage)}
+    }
+    else /* for XMC1x family */
+    {
+        if (appIns.gcheck_soft_start.value == true)
+            {vout_reference_fix = 0}
+        else
+            {vout_reference_fix = appIns.gfloat_vout_ref.value * appIns.gfloat_vout_gain.value * max_adc_value/(adc_ref_voltage)}
+    }
+    /**********************************************************************************************************************
+     * End of initialising BUCK_VC_FIX_FQ_t variables
+     **********************************************************************************************************************/
+    
+    /**********************************************************************************************************************
+     * Start of printing BUCK_VC_FIX_FQ_t APP variables
+     **********************************************************************************************************************/
+out.print("""
+BUCK_VC_FIX_FQ_t ${appInst} =
+{
+  .config                        = &${appInst}_config,
+  .adc_config                    = &${appInst}_ADCConfig,
+  .pwm_config                    = &${appInst}_PWMConfig,  
+  .state                         = BUCK_VC_FIX_FQ_STATE_UNINITIALIZED,
+    """);
+
+    /* code for result interrupt */
+    if (appIns.gcombo_isr_event.value == "Vout Result Event")
+    {
+        out.print("""
+  .interrupt_config              = &${appInst}_InterruptConfig, """);
+    }
+
+    if(mc_family == 'XMC4') /* for XMC4x family */
+    {
+        out.print("""
+  .vout_reference                = ${vout_reference}f, """);
+    }
+    else /* for XMC1x family */
+    {    
+        out.print("""
+  .vout_reference                = ${vout_reference_fix}U, """);
+    }
+    
+    /*
+     * Get the Compensator name
+     */
+    if(appIns.gcombo_controller_type.value == "PI")
+    {
+        out.print("""
+  .pi                            = &${appInst}_pi,
+        """);
+    }
+    else if(appIns.gcombo_controller_type.value == "Type II (2P2Z)")
+    {
+        out.print("""
+  .typeII                        = &${appInst}_typeII,
+        """);
+    }
+    else
+    {
+        out.print("""
+  .typeIII                       = &${appInst}_typeIII,
+        """);
+    }
+    
+    out.print("""
+  .group_ptr_array               = {
+                                    ${list_mappedgrp[0]},
+                                    ${list_mappedgrp[1]},
+                                    ${list_mappedgrp[2]},
+                                    ${list_mappedgrp[3]},
+                                    ${list_mappedgrp[4]},
+                                    ${list_mappedgrp[5]},
+                                    ${list_mappedgrp[6]}
+                                   },
+    """);
+
+    if (appIns.gcombo_adc_measurement_mode.value == "Scan")
+    {
+        out.print("""
+  .adc_scan_app_handle_array     = {
+                                    ${list_scan_app_handle_arr[0]},
+                                    ${list_scan_app_handle_arr[1]},
+                                    ${list_scan_app_handle_arr[2]},
+                                    ${list_scan_app_handle_arr[3]},
+                                    ${list_scan_app_handle_arr[4]},
+                                    ${list_scan_app_handle_arr[5]},
+                                    ${list_scan_app_handle_arr[6]}
+                                   },
+        """);
+    }
+    else
+    {
+        out.print("""
+  .adc_queue_app_handle_array   = {
+                                    ${list_q_app_handle_arr[0]},
+                                    ${list_q_app_handle_arr[1]},
+                                    ${list_q_app_handle_arr[2]},
+                                    ${list_q_app_handle_arr[3]},
+                                    ${list_q_app_handle_arr[4]},
+                                    ${list_q_app_handle_arr[5]},
+                                    ${list_q_app_handle_arr[6]}
+                                  },
+        """);
+    }
+
+    if(appIns.gcheck_enable_high_res.value == true)
+    {
+        out.print("""
+  .hrpwm_handle_array            = {${hrpwm}},
+        """);
+    }
+    else
+    {
+        out.print("""
+  .pwm_ccu8_handle_array         = {${pwm_ccu8}},
+        """);
+    }
+    
+    if (appIns.gcheck_soft_start.value == true)
+    {
+        out.print("""
+  .systimer_handle               = ${systimer_handle},
+        """);
+    }
+    
+    out.print("""
+};
+/******************** End of BUCK_VC_FIX_FQ instance - ${appInst} ********************/
+    """);
+    /**********************************************************************************************************************
+     * End of printing BUCK_VC_FIX_FQ_t APP variables
+     **********************************************************************************************************************/
+
+/* Dummy reading - avoids code generation 'unused variables' pop up window */
+Integer Dummy_Mux_Read = 0
+
+Dummy_Mux_Read = appIns.hwres_chan_a_pin.getRegValue("pdisc","pdisc_pdis")
+Dummy_Mux_Read = appIns.hwres_chan_b_pin.getRegValue("pdisc","pdisc_pdis")
+Dummy_Mux_Read = appIns.hwres_chan_c_pin.getRegValue("pdisc","pdisc_pdis")
+Dummy_Mux_Read = appIns.hwres_chan_d_pin.getRegValue("pdisc","pdisc_pdis")
+Dummy_Mux_Read = appIns.hwres_chan_e_pin.getRegValue("pdisc","pdisc_pdis")
+Dummy_Mux_Read = appIns.hwres_chan_f_pin.getRegValue("pdisc","pdisc_pdis")
+Dummy_Mux_Read = appIns.hwres_chan_g_pin.getRegValue("pdisc","pdisc_pdis")
+
+Dummy_Mux_Read = appIns.hwres_chan_a_pin.getRegValue("","hwsel_hw")
+Dummy_Mux_Read = appIns.hwres_chan_b_pin.getRegValue("","hwsel_hw")
+Dummy_Mux_Read = appIns.hwres_chan_c_pin.getRegValue("","hwsel_hw")
+Dummy_Mux_Read = appIns.hwres_chan_d_pin.getRegValue("","hwsel_hw")
+Dummy_Mux_Read = appIns.hwres_chan_e_pin.getRegValue("","hwsel_hw")
+Dummy_Mux_Read = appIns.hwres_chan_f_pin.getRegValue("","hwsel_hw")
+Dummy_Mux_Read = appIns.hwres_chan_g_pin.getRegValue("","hwsel_hw")
+
+//Dummy_Mux_Read = appIns.hwres_nvicnode.getRegValue("","iser_setena")
+
+/***********************************************************************************************************************
+* BUCK_VC_FIX_FQ end
+**********************************************************************************************************************/
+}

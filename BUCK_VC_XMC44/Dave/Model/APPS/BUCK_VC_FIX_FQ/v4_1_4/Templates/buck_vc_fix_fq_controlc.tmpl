@@ -1,0 +1,1090 @@
+package Model.APPS.BUCK_VC_FIX_FQ.v4_1_4.Templates;
+
+import Model.APPS.BUCK_VC_FIX_FQ.v4_1_4.BUCK_VC_FIX_FQ
+
+out.print("""
+/**
+ * @cond
+ ***********************************************************************************************************************
+ *
+ * Copyright (c) 2015-2020, Infineon Technologies AG
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification,are permitted provided that the
+ * following conditions are met:
+ *
+ *   Redistributions of source code must retain the above copyright notice, this list of conditions and the  following
+ *   disclaimer.
+ *
+ *   Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
+ *   disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *   Neither the name of the copyright holders nor the names of its contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE  FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY,OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * To improve the quality of the software, users are encouraged to share modifications, enhancements or bug fixes
+ * with Infineon Technologies AG (dave@infineon.com).
+ ***********************************************************************************************************************
+ *
+ * Change History
+ * --------------
+ *
+ * 2015-10-08:
+ *     - Initial version for DAVEv4
+ *
+ * 2015-10-15:
+ *     - Number of samples for XMC1x device is set as 8
+ *
+ * 2015-10-16:
+ *     - Voltage gain constant calculation is corrected when Vin is not measured
+ *
+ * 2016-01-18:
+ *     - APP handle structure is modified
+ *
+ * @endcond
+ *
+ */
+
+/***********************************************************************************************************************
+ * HEADER FILES
+ **********************************************************************************************************************/
+#include "buck_vc_fix_fq.h"
+""");
+
+/***********************************************************************************************************************
+ * Global variables start
+ **********************************************************************************************************************/
+String  family                  = daveEnv.project.selectedDevice.deviceId.family;
+String  appInst                 = null;
+String  appname                 = null;
+String  appptr                  = null;
+Integer scaling_factor          = 0;
+String  family_unit_cast        = null;
+String  family_unit_suffix      = null;
+Boolean load_protection_enabled = false;
+
+/***********************************************************************************************************************
+ * Global variables end
+ **********************************************************************************************************************/
+
+/* device specific code */
+if(family == 'XMC4') /* for XMC4x family */
+{
+    family_unit_cast      = "float";
+    family_unit_suffix    = "f";
+}
+else /* for XMC1x family */
+{
+    family_unit_cast      = "uint32_t";
+    family_unit_suffix    = "U";
+}
+
+out.print("""
+/***********************************************************************************************************************
+ * MACROS
+ **********************************************************************************************************************/
+""");
+
+/* calculation of gain constant */
+for (BUCK_VC_FIX_FQ appIns : appInstancesList)
+{
+    appInst                     = appIns.getInstanceLabel()
+    
+    /* The below variables are used for - XMC4x & XMC1x families */
+    Integer number_of_samples             = 0;
+    String  overload_protection_ref       = null;          
+    
+    Integer number_of_adc_bits  = 12; /* set as 12 bits */
+    Integer max_adc_value       = 2.power(number_of_adc_bits)-1; /* maximum adc read value */
+    Float   adc_ref_voltage     = 0;  /* set to zero & initialise it later */
+    String  vout_gain           = null; /* only for XMC4x device */
+    String  vin_gain            = null; /* only for XMC4x device */
+    String  iout1_gain          = null; /* only for XMC4x device */
+    String  iout2_gain          = null; /* only for XMC4x device */
+    String  iout3_gain          = null; /* only for XMC4x device */
+    String  iout4_gain          = null; /* only for XMC4x device */
+    String  volt_step_increment = null;
+    String  voltage_gain_constant   = null;
+    
+    /* get APP name & its handle type */
+    if((appIns.gcheck_enable_high_res.value == true)) /* HRPWM APP is selected */
+    {
+      appname                   = "HRPWM_t"
+      appptr                    = "hrpwm"
+    }
+    else
+    {
+      appname                   = "PWM_CCU8_t"
+      appptr                    = "pwm_ccu8"
+    }
+    
+    /* 
+     * Condition to check if load protection is ON 
+     */
+    if(
+        ((appIns.gcheck_sw_protection_vout.value)  && (appIns.gcheck_measure_vout.value )) ||
+        ((appIns.gcheck_sw_protection_vin.value)   && (appIns.gcheck_measure_vin.value  )) ||
+        ((appIns.gcheck_sw_protection_iout1.value) && (appIns.gcheck_measure_iout1.value)) ||
+        ((appIns.gcheck_sw_protection_iout2.value) && (appIns.gcheck_measure_iout2.value)) ||
+        ((appIns.gcheck_sw_protection_iout3.value) && (appIns.gcheck_measure_iout3.value)) ||
+        ((appIns.gcheck_sw_protection_iout4.value) && (appIns.gcheck_measure_iout4.value))
+      )
+    {
+      load_protection_enabled = true
+    }
+    
+    if(family == 'XMC4') /* for XMC4x family */
+    {
+        scaling_factor          = 12 /* scaling applicable only for XMC1x family */
+        adc_ref_voltage         = 3.3
+        number_of_samples       = 8
+        overload_protection_ref = (Float) (appIns.gfloat_vout_ref.value * appIns.gfloat_vout_gain.value * (2.power(scaling_factor)-1)/(adc_ref_voltage))
+        
+        /* calculation of voltege and current gain */
+        vout_gain               = (adc_ref_voltage /(appIns.gfloat_vout_gain.value  * max_adc_value)).toString() + "f"
+        vin_gain                = (adc_ref_voltage /(appIns.gfloat_vin_gain.value   * max_adc_value)).toString() + "f"
+        iout1_gain              = (adc_ref_voltage /(appIns.gfloat_iout1_gain.value * max_adc_value)).toString() + "f"
+        iout2_gain              = (adc_ref_voltage /(appIns.gfloat_iout2_gain.value * max_adc_value)).toString() + "f"
+        iout3_gain              = (adc_ref_voltage /(appIns.gfloat_iout3_gain.value * max_adc_value)).toString() + "f"
+        iout4_gain              = (adc_ref_voltage /(appIns.gfloat_iout4_gain.value * max_adc_value)).toString() + "f"
+        
+        if (appIns.gcheck_soft_start.value == true)
+        {
+            /*volt_step_increment = (Float) (appIns.gfloat_vout_ref.value / (appIns.ginteger_soft_start_val.value / appIns.appres_systimer.getVal(["ginteger_systickinterval", "value"])))*/
+            volt_step_increment   = (Float) (appIns.gfloat_vout_ref.value * appIns.gfloat_vout_gain.value * (2.power(scaling_factor)-1)/(adc_ref_voltage)) / (appIns.ginteger_soft_start_val.value / appIns.appres_systimer.getVal(["ginteger_systickinterval", "value"]))
+        }
+    }
+    else /* for XMC1x family */
+    {
+        scaling_factor          = 12 /* scaling applicable only for XMC1x family */
+        adc_ref_voltage         = 3.3
+        number_of_samples       = 3
+        
+        /* Vout gain to Vin gain ratio */
+        if (appIns.gcheck_vin_feed_fwd.value) /* if vin feed forward is enabled */
+        {    
+            voltage_gain_constant = (Integer) ((appIns.gfloat_vin_gain.value * (2.power(scaling_factor)-1))/(appIns.gfloat_vout_gain.value))            
+        }
+        else /* if vin feed forward is not enabled */
+        {
+            voltage_gain_constant = ((4095 * appIns.gfloat_vout_gain.value) / (adc_ref_voltage / appIns.gfloat_vin.value)).toInteger();
+        }
+        
+        if (appIns.gcheck_soft_start.value == true)
+        {
+            volt_step_increment   = (Integer) (appIns.gfloat_vout_ref.value * appIns.gfloat_vout_gain.value * (2.power(scaling_factor)-1)/(adc_ref_voltage)) / (appIns.ginteger_soft_start_val.value / appIns.appres_systimer.getVal(["ginteger_systickinterval", "value"]))
+        }
+       
+        overload_protection_ref = (appIns.gfloat_vout_ref.value * appIns.gfloat_vout_gain.value * (2.power(scaling_factor)-1)/(adc_ref_voltage)).toInteger().toString()
+    }
+    
+    /***********************************************************************************************************************
+     * Start of printing constant parameters (Macros): Voltage gain, Current gain
+     **********************************************************************************************************************/
+    /* device specific code */
+    if(family == 'XMC4') /* for XMC4x family */
+    {       
+        if(appIns.gcheck_soft_start.value)
+        {
+            out.print("""
+/* VOLT_STEP_INCREMENT = vout reference in ADC steps/(Soft start period / SysTick timer period )*/
+#define ${appInst}_VOLT_STEP_INCREMENT     (${volt_step_increment}f)
+            """);
+        }
+    }
+    else /* for XMC1x family */
+    {
+        if(appIns.gcheck_soft_start.value)
+        {
+            out.print("""
+/* VOLT_STEP_INCREMENT = vout reference in ADC steps/(Soft start period / SysTick timer period )*/
+#define ${appInst}_VOLT_STEP_INCREMENT     (${volt_step_increment}U)
+            """);
+        }
+    }
+    
+    /* 
+     * OVERLOAD PROTECTION:
+     * - Total number of samples
+     * - Overload reference, above which load protection is enabled 
+     */ 
+    if(load_protection_enabled == true)
+    {
+            out.print("""
+/* Number of samples for used for overload protection */
+#define NUMBER_OF_SAMPLES                        (${number_of_samples}U)
+
+/* Reference for Load protection. Load protection is enabled once vout_avg reaches this reference. */
+#define ${appInst}_OVERLOAD_PROTECTION_REF (${overload_protection_ref}${family_unit_suffix})
+            """);
+    }
+    
+    /***********************************************************************************************************************
+     * End of printing constant parameters (Macros): Voltage gain, Current gain
+     **********************************************************************************************************************/
+}
+
+/***********************************************************************************************************************
+ * BUCK_VC_FIX_FQ ISR Configurations
+ **********************************************************************************************************************/
+for (BUCK_VC_FIX_FQ appIns : appInstancesList)
+{
+    
+    /***********************************************************************************************************************
+     * Initialization of 'for (BUCK_VC_FIX_FQ appIns : appInstancesList)' loop variables
+     **********************************************************************************************************************/
+    appInst                                      = appIns.getInstanceLabel()
+    Integer index                                = 0
+    Integer measurement_cnt                      = 0;
+    List list_mappedgrp                          = ["NULL","NULL","NULL","NULL","NULL","NULL","NULL"] /* Stores ADC group name. Example: VADC_G0 / VADC_G1 */
+    List list_resreg                             = ["0xFF","0xFF","0xFF","0xFF","0xFF","0xFF","0xFF"] /* Stores ADC result register number. Example: 12/13/14 */
+    List list_measurements                       = [
+                                                    appIns.gcheck_measure_vout.value,
+                                                    appIns.gcheck_measure_vin.value,
+                                                    appIns.gcheck_measure_iout1.value,
+                                                    appIns.gcheck_measure_iout2.value,
+                                                    appIns.gcheck_measure_iout3.value,
+                                                    appIns.gcheck_measure_iout4.value,
+                                                    appIns.gcheck_measure_user_defined_1.value ];
+    List list_channeluri                         = [
+                                                    appIns.rarray_hwres_adcchan[0].getSolverUri(),
+                                                    appIns.rarray_hwres_adcchan[1].getSolverUri(),
+                                                    appIns.rarray_hwres_adcchan[2].getSolverUri(),
+                                                    appIns.rarray_hwres_adcchan[3].getSolverUri(),
+                                                    appIns.rarray_hwres_adcchan[4].getSolverUri(),
+                                                    appIns.rarray_hwres_adcchan[5].getSolverUri(),
+                                                    appIns.rarray_hwres_adcchan[6].getSolverUri() ];
+    List list_resulturi                          = [
+                                                    appIns.rarray_hwres_result[0].getSolverUri(),
+                                                    appIns.rarray_hwres_result[1].getSolverUri(),
+                                                    appIns.rarray_hwres_result[2].getSolverUri(),
+                                                    appIns.rarray_hwres_result[3].getSolverUri(),
+                                                    appIns.rarray_hwres_result[4].getSolverUri(),
+                                                    appIns.rarray_hwres_result[5].getSolverUri(),
+                                                    appIns.rarray_hwres_result[6].getSolverUri(),]
+    String  compensator_ptr                      = null;  /* Stores the selected compensator: PI/2P2Z/3P3Z */
+    String  compensator_api                      = null;  /* Stores the compensator api name */
+    Boolean vout_load_protection_enabled         = false; /* Stores over load protection status for vout  - ON / OFF */
+    Boolean vin_load_protection_enabled          = false; /* Stores over load protection status for vin   - ON / OFF */
+    Boolean iout1_load_protection_enabled        = false; /* Stores over load protection status for iout1 - ON / OFF */
+    Boolean iout2_load_protection_enabled        = false; /* Stores over load protection status for iout2 - ON / OFF */
+    Boolean iout3_load_protection_enabled        = false; /* Stores over load protection status for iout3 - ON / OFF */
+    Boolean iout4_load_protection_enabled        = false; /* Stores over load protection status for iout4 - ON / OFF */
+    String  buck_stop_condition_for_overload     = null;
+    
+    /*
+     * Gets the ADC group name (Ex: VADC_G1) & ADC result register number (Ex: 12) for the below use case. 
+     * Example: vout_adc_result  = XMC_VADC_GROUP_GetResult(VADC_G1, 12U);                    
+     */
+    for(index=0; index < 7; index++)
+    {
+        if(list_measurements[index] == true)
+        {
+            measurement_cnt++ /* count for selected measurements */
+            list_mappedgrp[index] = "VADC_G" + list_channeluri[index][6] /* Stores ADC group name. Example: VADC_G0 / VADC_G1 */
+            list_resreg[index]    = list_resulturi[index][8]             /* Stores ADC result register number. Example: 12/13/14 */
+        }
+    }
+    
+    /*
+     * Get PWM APP name & its handle type
+     */
+    if((appIns.gcheck_enable_high_res.value == true)) /* HRPWM APP is selected */
+    {
+      appname                 = "HRPWM_t"
+      appptr                  = "hrpwm"
+    }
+    else /* PWM_CCU8 APP is selected */
+    {
+      appname                 = "PWM_CCU8_t"
+      appptr                  = "pwm_ccu8"
+    }
+    
+    /*
+     * Get the Compensator name & compensator_api name
+     */
+    if(appIns.gcombo_controller_type.value == "PI")
+    {
+      compensator_ptr = "pi"
+      
+      if(family == 'XMC4') /* for XMC4x family */
+      {
+        compensator_api = "CONTROL_LIB_PI_Float"  
+      }
+      else
+      {
+        compensator_api = "CONTROL_LIB_PI_FixedPoint"
+      }
+    }
+    else if (appIns.gcombo_controller_type.value == "Type II (2P2Z)")
+    {
+      compensator_ptr = "typeII"
+      
+      if(family == 'XMC4') /* for XMC4x family */
+      {
+        compensator_api = "CONTROL_LIB_2P2ZFloat"
+      }
+      else
+      {
+        compensator_api = "CONTROL_LIB_2P2ZFixedPoint"
+      }
+    }
+    else if (appIns.gcombo_controller_type.value == "Type III (3P3Z)")
+    {
+      compensator_ptr = "typeIII"
+      
+      if(family == 'XMC4') /* for XMC4x family */
+      {
+        compensator_api = "CONTROL_LIB_3P3ZFloat"
+      }
+      else
+      {
+        compensator_api = "CONTROL_LIB_3P3ZFixedPoint"
+      }
+    }
+    
+    /*
+     * Condition to check if load protection is ON
+     */
+    if(
+        ((appIns.gcheck_sw_protection_vout.value)  && (appIns.gcheck_measure_vout.value )) ||
+        ((appIns.gcheck_sw_protection_vin.value)   && (appIns.gcheck_measure_vin.value  )) ||
+        ((appIns.gcheck_sw_protection_iout1.value) && (appIns.gcheck_measure_iout1.value)) ||
+        ((appIns.gcheck_sw_protection_iout2.value) && (appIns.gcheck_measure_iout2.value)) ||
+        ((appIns.gcheck_sw_protection_iout3.value) && (appIns.gcheck_measure_iout3.value)) ||
+        ((appIns.gcheck_sw_protection_iout4.value) && (appIns.gcheck_measure_iout4.value))
+      )
+    {
+      load_protection_enabled = true
+      
+      /* Condition to enable overload protection for vin */
+      if((appIns.gcheck_sw_protection_vout.value) && (appIns.gcheck_measure_vout.value))
+      {
+          vout_load_protection_enabled = true
+      }
+      
+      /* Condition to enable overload protection for vin */
+      if((appIns.gcheck_sw_protection_vin.value) && (appIns.gcheck_measure_vin.value))
+      {
+          vin_load_protection_enabled = true
+      }
+      
+      /* Condition to enable overload protection for iout1 */
+      if((appIns.gcheck_sw_protection_iout1.value) && (appIns.gcheck_measure_iout1.value) && (appIns.gcombo_no_of_phases.value.toInteger() >= 1))
+      {
+          iout1_load_protection_enabled = true
+      }
+      
+      /* Condition to enable overload protection for iout2 */
+      if((appIns.gcheck_sw_protection_iout2.value) && (appIns.gcheck_measure_iout2.value) && (appIns.gcombo_no_of_phases.value.toInteger() >= 2))
+      {
+          iout2_load_protection_enabled = true
+      }
+      
+      /* Condition to enable overload protection for iout3 */
+      if((appIns.gcheck_sw_protection_iout3.value) && (appIns.gcheck_measure_iout3.value) && (appIns.gcombo_no_of_phases.value.toInteger() >= 3))
+      {
+          iout3_load_protection_enabled = true
+      }
+      
+      /* Condition to enable overload protection for iout4 */
+      if((appIns.gcheck_sw_protection_iout4.value) && (appIns.gcheck_measure_iout4.value) && (appIns.gcombo_no_of_phases.value.toInteger() >= 4))
+      {
+          iout4_load_protection_enabled = true
+      }
+    }
+    
+    
+    /***********************************************************************************************************************
+     * Control loop code architecture
+     **********************************************************************************************************************/
+    /*  STEPS:
+     *  
+     *  1.Control loop variable declarations.                         Code generated only for CONDITION 3.
+     *  2.Read ADC results.                                         Code generated only for CONDITION 3.
+     *  3.Software overload protection.                                Code generated only for CONDITION 3.
+     *  
+     *  if ((control_loop == false) && (user_code == false))         // CONDITION 1
+     *  {
+     *    //print "control_loop is not selected"
+     *    //print "user_code is not selected"
+     *  }
+     *  else if ((control_loop == false) && (user_code == true))     // CONDITION 2
+     *  {
+     *    //print "control_loop is not selected"
+     *
+     *    user_code_call_back();
+     *  }
+     *  else if (control_loop == true)                                 // CONDITION 3
+     *  {
+     *    1.Control loop variable declarations (code is available before CONDITION 1).
+     *    2.Read ADC results (code is available before CONDITION 1).
+     *    3.Software overload protection (code is available before CONDITION 1).
+     *    4.
+     *      if (vcr > 1)                                    //if (vcr > 1)
+     *      {                                               //{
+     *        Control_loop code                  OR           Control_loop code //Just control loop code
+     *      }                                               //}
+     *
+     *    5.
+     *      if (user_code == true)
+     *      {
+     *        user_code_call_back();
+     *      }
+     *  }
+     */
+    
+    
+    /*
+     *  Start of Control loop
+     */
+    out.print("""
+/* Control loop for ${appInst} */
+void ${appInst}_${appIns.gstring_int_handler_cntrl_loop.value}(void)
+{ """);
+
+    /***********************************************************************************************************************
+     * 1. Control loop variable declarations. Code is generated only when 'Control loop' is selected.
+     **********************************************************************************************************************/
+    Boolean feed_fwd_enabled = (appIns.gcheck_vin_feed_fwd.enabled) && (appIns.gcheck_vin_feed_fwd.value)
+    
+    if (appIns.gcheck_volt_ctrl_loop_enable.value == true)
+    {
+        if(family == 'XMC4') /* for XMC4x family */
+        {    
+            if(appIns.gcheck_enable_high_res.value){
+                out.print("""
+  /* Stores High Resolution compare value calculated by control loop */
+  uint8_t  hr_compare_value;\n""");
+            }
+            if (feed_fwd_enabled) /* feed forward is enabled */
+            {
+            out.print("""
+  /* Stores output after feed forward */
+  float    out_ff;\n""");
+            }
+        }
+
+        if ((appIns.gcheck_enable_high_res.value) || (feed_fwd_enabled)) /* either HRPWM should is selected OR FF is selected */
+        {
+            out.print("""
+  /* Stores CCU compare value calculated by control loop */
+  uint16_t ccu_compare_value;
+            """);
+        }
+            out.print("""
+  /* PWM phase 0 handle pointer */
+  ${appname}* ${appptr}_app0_ptr = ${appInst}.${appptr}_handle_array[0];
+            """);
+
+        if (Integer.parseInt(appIns.gcombo_no_of_phases.value) > 1)
+        {
+            out.print("""
+  /* PWM phase 1 handle pointer */
+  ${appname}* ${appptr}_app1_ptr = ${appInst}.${appptr}_handle_array[1]; """);
+        }
+        
+        if (Integer.parseInt(appIns.gcombo_no_of_phases.value) > 2)
+        {
+            out.print("""
+  /* PWM phase 2 handle pointer */
+  ${appname}* ${appptr}_app2_ptr = ${appInst}.${appptr}_handle_array[2]; """);
+        }
+        
+        if (Integer.parseInt(appIns.gcombo_no_of_phases.value) > 3)
+        {
+            out.print("""
+  /* PWM phase 3 handle pointer */
+  ${appname}* ${appptr}_app3_ptr = ${appInst}.${appptr}_handle_array[3]; """);
+        }          
+    }
+    
+    if((appIns.gcheck_volt_ctrl_loop_enable.value) || (appIns.gcheck_user_code.value))
+    {
+        /*
+         * voltage control rate code (vcr) - variable declaration
+         */
+        if(appIns.ginteger_volt_control_rate.value != 1)
+        {
+            out.print("""
+
+  /* Initialize voltage control rate */ 
+  static uint8_t volt_control_rate_count = 0U;
+            """);
+        }
+    }
+    /**********************************************************************************************************************/
+        
+    /***********************************************************************************************************************
+     * 2.Read ADC results. Code is generated only when 'Control loop' is selected.
+     **********************************************************************************************************************/
+    if (appIns.gcheck_volt_ctrl_loop_enable.value == true)
+    {
+        String type_cast_adc_result = "uint32_t"; /* uint32_t is the type case unit for XMC1x */
+        
+        if (family == 'XMC4')
+        {
+            type_cast_adc_result = "float"
+        }
+        
+        if(appIns.gcheck_measure_vout.value)
+        {
+            out.print("""
+  /* Get ADC measured Vout result */
+  ${appInst}.buck_vout  = (${type_cast_adc_result}) XMC_VADC_GROUP_GetResult(${list_mappedgrp[0]}, ${list_resreg[0]}U);
+                """);
+        }
+        if(appIns.gcheck_measure_vin.value)
+        {
+            out.print("""
+  /* Get ADC measured Vin result */
+  ${appInst}.buck_vin   = (${type_cast_adc_result}) XMC_VADC_GROUP_GetResult(${list_mappedgrp[1]}, ${list_resreg[1]}U);
+                """);
+        }
+        if(appIns.gcheck_measure_iout1.value)
+        {
+            out.print("""
+  /* Get ADC measured Iout1 result */
+  ${appInst}.buck_iout1 = (${type_cast_adc_result}) XMC_VADC_GROUP_GetResult(${list_mappedgrp[2]}, ${list_resreg[2]}U);
+                """);
+        }
+        if(appIns.gcheck_measure_iout2.value)
+        {
+            out.print("""
+  /* Get ADC measured Iout2 result */
+  ${appInst}.buck_iout2 = (${type_cast_adc_result}) XMC_VADC_GROUP_GetResult(${list_mappedgrp[3]}, ${list_resreg[3]}U);
+                """);
+        }
+        if(appIns.gcheck_measure_iout3.value)
+        {
+            out.print("""
+  /* Get ADC measured Iout3 result */
+  ${appInst}.buck_iout3 = (${type_cast_adc_result}) XMC_VADC_GROUP_GetResult(${list_mappedgrp[4]}, ${list_resreg[4]}U);
+                """);
+        }
+        if(appIns.gcheck_measure_iout4.value)
+        {
+            out.print("""
+  /* Get ADC measured Iout4 result */
+  ${appInst}.buck_iout4 = (${type_cast_adc_result}) XMC_VADC_GROUP_GetResult(${list_mappedgrp[5]}, ${list_resreg[5]}U);
+                """);
+        }
+        if(appIns.gcheck_measure_user_defined_1.value){
+            out.print("""
+  /* Get ADC measured user defined measurement result */
+  ${appInst}.buck_udef_adc_value = (${type_cast_adc_result}) XMC_VADC_GROUP_GetResult(${list_mappedgrp[6]}, ${list_resreg[6]}U);
+                """);
+        }
+    }
+    /**********************************************************************************************************************/        
+        
+    /***********************************************************************************************************************
+     * 3.Software overload protection. Code is generated only when 'Control loop' is selected.
+     **********************************************************************************************************************/
+    /* Overload protection code needs to be generated only when 'Control loop' is selected */
+    if((load_protection_enabled == true) && (appIns.gcheck_volt_ctrl_loop_enable.value == true))
+    {
+        out.print("""
+  /***********************************************************************************************************************
+   * Software overload protection
+   **********************************************************************************************************************/ 
+  /* Calculate approximate rolling average */    """);
+
+        /* Calculate approximate rolling average for Vout */
+            if(family == 'XMC4') /* for XMC4x family */
+            {
+                out.print("""
+  ${appInst}.vout_avg  = (float) (${appInst}.vout_avg  - ((${appInst}.vout_avg  - ${appInst}.buck_vout)  / NUMBER_OF_SAMPLES));
+                    """);
+            }
+            else /* for XMC1x family */
+            {
+                out.print("""
+  ${appInst}.vout_avg  = ${appInst}.vout_avg  + ((${appInst}.buck_vout  >> NUMBER_OF_SAMPLES) - (${appInst}.vout_avg  >> NUMBER_OF_SAMPLES));
+                    """);
+            }
+            
+        /* Calculate approximate rolling average for Vin */
+        if(vin_load_protection_enabled == true)
+        {
+            if(family == 'XMC4') /* for XMC4x family */
+            {
+                out.print("""
+  ${appInst}.vin_avg   = (float) (${appInst}.vin_avg   - ((${appInst}.vin_avg   - ${appInst}.buck_vin)   / NUMBER_OF_SAMPLES));
+                    """);
+            }
+            else /* for XMC1x family */
+            {
+                out.print("""
+  ${appInst}.vin_avg   = ${appInst}.vin_avg   + ((${appInst}.buck_vin   >> NUMBER_OF_SAMPLES) - (${appInst}.vin_avg   >> NUMBER_OF_SAMPLES));
+                    """);
+            }
+        }
+            
+        /* Calculate approximate rolling average for iout1 */
+        if(iout1_load_protection_enabled == true)
+        {
+            if(family == 'XMC4') /* for XMC4x family */
+            {
+                out.print("""
+  ${appInst}.iout1_avg = (float) (${appInst}.iout1_avg - ((${appInst}.iout1_avg - ${appInst}.buck_iout1) / NUMBER_OF_SAMPLES));
+                    """);
+            }
+            else /* for XMC1x family */
+            {
+                out.print("""
+  ${appInst}.iout1_avg = ${appInst}.iout1_avg + ((${appInst}.buck_iout1 >> NUMBER_OF_SAMPLES) - (${appInst}.iout1_avg >> NUMBER_OF_SAMPLES));
+                    """);
+            }
+        }
+        
+        /* Calculate approximate rolling average for iout2 */
+        if(iout2_load_protection_enabled == true)
+        {
+            if(family == 'XMC4') /* for XMC4x family */
+            {
+                out.print("""
+  ${appInst}.iout2_avg = (float) (${appInst}.iout2_avg - ((${appInst}.iout2_avg - ${appInst}.buck_iout2) / NUMBER_OF_SAMPLES));
+                    """);
+            }
+            else /* for XMC1x family */
+            {
+                out.print("""
+  ${appInst}.iout2_avg = ${appInst}.iout2_avg + ((${appInst}.buck_iout2 >> NUMBER_OF_SAMPLES) - (${appInst}.iout2_avg >> NUMBER_OF_SAMPLES));
+                    """);
+            }
+        }
+            
+        /* Calculate approximate rolling average for iout3 */
+        if(iout3_load_protection_enabled == true)
+        {
+            if(family == 'XMC4') /* for XMC4x family */
+            {
+                out.print("""
+  ${appInst}.iout3_avg = (float) (${appInst}.iout3_avg - ((${appInst}.iout3_avg - ${appInst}.buck_iout3) / NUMBER_OF_SAMPLES));
+                    """);
+            }
+            else /* for XMC1x family */
+            {
+                out.print("""
+  ${appInst}.iout3_avg = ${appInst}.iout3_avg + ((${appInst}.buck_iout3 >> NUMBER_OF_SAMPLES) - (${appInst}.iout3_avg >> NUMBER_OF_SAMPLES));
+                    """);
+            }
+        }
+            
+        /* Calculate approximate rolling average for iout4 */
+        if(iout4_load_protection_enabled == true)
+        {
+            if(family == 'XMC4') /* for XMC4x family */
+            {
+                out.print("""
+  ${appInst}.iout4_avg = (float) (${appInst}.iout4_avg - ((${appInst}.iout4_avg - ${appInst}.buck_iout4) / NUMBER_OF_SAMPLES));
+                    """);
+            }
+            else /* for XMC1x family */
+            {
+                out.print("""
+  ${appInst}.iout4_avg = ${appInst}.iout4_avg + ((${appInst}.buck_iout4 >> NUMBER_OF_SAMPLES) - (${appInst}.iout4_avg >> NUMBER_OF_SAMPLES));
+                    """);
+            }
+        }
+        
+        /* Start - If load protection is enabled check the voltage and current boundaries */  
+        out.print("""
+  if (${appInst}.enable_load_protection == true) /* Check if load protection is turned ON */
+  {
+            """);
+        
+        buck_stop_condition_for_overload = "\n    /* Check for under & over load boundaries */\n    if("
+        Boolean use_or_operation = false
+        String  or_operation_string = ""
+            
+        /* Check for underload and overload for Vout */
+        if(vout_load_protection_enabled == true)
+        {
+            buck_stop_condition_for_overload = "${buck_stop_condition_for_overload}\n" +
+    "       ((${appInst}.vout_avg  < ${appInst}.config->vout_low_limit)  || (${appInst}.vout_avg > ${appInst}.config->vout_high_limit))"
+            use_or_operation = true
+        }
+        
+        /* Check for underload and overload for Vin */
+        if(vin_load_protection_enabled == true)
+        {
+            if(use_or_operation == true) {or_operation_string =  " ||"} else {""}
+            buck_stop_condition_for_overload = "${buck_stop_condition_for_overload}" + "${or_operation_string}" + "\n" +
+    "       ((${appInst}.vin_avg   < ${appInst}.config->vin_low_limit)   || (${appInst}.vin_avg > ${appInst}.config->vin_high_limit))"
+            use_or_operation = true
+        }
+        
+        /* Check for underload and overload for iout1 */
+        if(iout1_load_protection_enabled == true)
+        {
+            if(use_or_operation == true) {or_operation_string =  " ||"} else {""}
+            buck_stop_condition_for_overload = "${buck_stop_condition_for_overload}" + "${or_operation_string}" + "\n" +
+    "       ((${appInst}.iout1_avg < ${appInst}.config->iout1_low_limit) || (${appInst}.iout1_avg > ${appInst}.config->iout1_high_limit))"
+            use_or_operation = true
+        }
+    
+        /* Check for underload and overload for iout2 */
+        if(iout2_load_protection_enabled == true)
+        {
+            if(use_or_operation == true) {or_operation_string =  " ||"} else {""}
+            buck_stop_condition_for_overload = "${buck_stop_condition_for_overload}" + "${or_operation_string}" + "\n" +
+    "       ((${appInst}.iout2_avg < ${appInst}.config->iout2_low_limit) || (${appInst}.iout2_avg > ${appInst}.config->iout2_high_limit))"
+            use_or_operation = true
+        }
+        
+        /* Check for underload and overload for iout3 */
+        if(iout3_load_protection_enabled == true)
+        {
+            if(use_or_operation == true) {or_operation_string =  " ||"} else {""}
+            buck_stop_condition_for_overload = "${buck_stop_condition_for_overload}" + "${or_operation_string}" + "\n" +
+    "       ((${appInst}.iout3_avg < ${appInst}.config->iout3_low_limit) || (${appInst}.iout3_avg > ${appInst}.config->iout3_high_limit))"
+            use_or_operation = true
+        }
+    
+        /* Check for underload and overload for iout4 */
+        if(iout4_load_protection_enabled == true)
+        {
+            buck_stop_condition_for_overload = "${buck_stop_condition_for_overload}" +
+    "       ((${appInst}.iout4_avg < ${appInst}.config->iout4_low_limit) || (${appInst}.iout4_avg > ${appInst}.config->iout4_high_limit))"
+        }
+            
+        buck_stop_condition_for_overload = "${buck_stop_condition_for_overload}" + "\n      )\n    { \n      BUCK_VC_FIX_FQ_Stop(&${appInst}); \n    }\n"
+        out.print("""${buck_stop_condition_for_overload}""");
+        
+        out.print("""
+  }
+  else if (${appInst}.vout_avg > ${appInst}_OVERLOAD_PROTECTION_REF) /* Check if load protection can be turned ON */
+  {
+    ${appInst}.enable_load_protection = true;
+  }
+            """);
+            /* End - If load protection is enable check the voltage and current boundaries */
+    }
+    /**********************************************************************************************************************/
+  
+    if((appIns.gcheck_volt_ctrl_loop_enable.value == false) && (appIns.gcheck_user_code.value == false)) /* CONDITION 1 */
+    {
+        out.print("""
+  /* 
+   * Voltage control loop is not selected
+   */
+
+  /* 
+   * User code is not selected
+   */
+        """);
+    }
+    else if((appIns.gcheck_volt_ctrl_loop_enable.value == false) && (appIns.gcheck_user_code.value == true)) /* CONDITION 2 */
+    {
+        out.print("""
+  /* 
+   * Voltage control loop is not selected
+   */
+        """);
+        
+           /* 
+            * Start of voltage control rate code (vcr) 
+            */
+        if(appIns.ginteger_volt_control_rate.value != 1)
+        {
+            out.print("""
+  if (volt_control_rate_count == 0U)
+  {
+    volt_control_rate_count = ${appInst}.config->volt_control_rate;
+                """);
+        }
+            
+        /*
+         * User code call back
+         */
+        out.print("""
+    ${appIns.gstring_user_code.value}(&${appInst});
+        """);
+        
+        /*
+          * End of voltage control rate code (vcr)
+          */
+        if(appIns.ginteger_volt_control_rate.value != 1)
+        {
+            out.print("""
+  }
+
+  volt_control_rate_count--; /* Decrement volt control rate count */
+           """);
+        }
+    }
+    else if(appIns.gcheck_volt_ctrl_loop_enable.value == true) /* CONDITION 3 */
+    { 
+            
+        /* 
+            * Start of voltage control rate code (vcr) 
+            */
+        if(appIns.ginteger_volt_control_rate.value != 1)
+        {
+            out.print("""
+  if (volt_control_rate_count == 0U)
+  {
+    volt_control_rate_count = ${appInst}.config->volt_control_rate;
+            """);
+        }
+
+        /***********************************************************************************************************************
+         * Filter
+         **********************************************************************************************************************/
+        String ccu_comp_match_arg = "";
+        String hrpwm_comp_match_arg = "${appInst}.${compensator_ptr}->out";
+        
+        out.print("""
+    /* Controller */
+    ${compensator_api}(${appInst}.${compensator_ptr});
+        """);
+        
+        if (feed_fwd_enabled) /* feed forward is enabled */
+        {
+            if (appIns.gcheck_enable_high_res.value) /* HRPWM is used */
+            {
+                out.print("""
+    out_ff = ((${appInst}.${compensator_ptr}->out * ${appInst}.buck_vin) / ${appInst}.config->vin);
+
+    out_ff = CONTROL_LIB_FloatMin(out_ff, ${appInst}.${compensator_ptr}->out_limit_max);
+    out_ff = CONTROL_LIB_FloatMax(out_ff, ${appInst}.${compensator_ptr}->out_limit_min);
+
+    ccu_compare_value = (uint16_t) (((uint32_t) out_ff) >> 8U);
+                """);
+            
+                ccu_comp_match_arg = "ccu_compare_value"
+                hrpwm_comp_match_arg = "out_ff"
+            }
+            else /* CCU8 used */
+            {
+                /* saturation for feed forward output */
+                if(family == 'XMC4') /* XMC4x family is selected */
+                {
+                    out.print("""
+    out_ff = ((${appInst}.${compensator_ptr}->out * ${appInst}.buck_vin) / ${appInst}.config->vin);
+
+    out_ff = CONTROL_LIB_FloatMin(out_ff, ${appInst}.${compensator_ptr}->out_limit_max);
+    out_ff = CONTROL_LIB_FloatMax(out_ff, ${appInst}.${compensator_ptr}->out_limit_min);
+
+    ccu_compare_value = (uint16_t) out_ff;
+                    """);
+                    ccu_comp_match_arg = "ccu_compare_value"
+                }
+                else /* XMC1x family is selected */
+                {
+                    out.print("""
+    ccu_compare_value = ((${appInst}.${compensator_ptr}->out * ${appInst}.buck_vin) / ${appInst}.config->vin);
+
+    ccu_compare_value = CONTROL_LIB_FixMin(ccu_compare_value, (${appInst}.${compensator_ptr}->out_limit_max >> ${appInst}.${compensator_ptr}->scale_out));
+    ccu_compare_value = CONTROL_LIB_FixMax(ccu_compare_value, (${appInst}.${compensator_ptr}->out_limit_min >> ${appInst}.${compensator_ptr}->scale_out));
+                    """);
+                    ccu_comp_match_arg = "ccu_compare_value"
+                }
+            }
+        } 
+        else /* feed forward not enabled */
+        {
+            if (appIns.gcheck_enable_high_res.value) /* HRPWM is used */
+            {
+                out.print("""
+    ccu_compare_value = (uint16_t) (((uint32_t) ${appInst}.${compensator_ptr}->out) >> 8U);
+                """);
+            
+                ccu_comp_match_arg = "ccu_compare_value"
+                hrpwm_comp_match_arg = "${appInst}.${compensator_ptr}->out";
+            }
+            else /* CCU8 is used */
+            {
+                ccu_comp_match_arg = "(uint16_t) ${appInst}.${compensator_ptr}->out"
+            }
+        }
+        
+        
+        /*
+         * Code block - Update CCU8 compare value
+         */
+            out.print("""
+    /* Set compare value for CC8 phase 0 */
+    XMC_CCU8_SLICE_SetTimerCompareMatchChannel1(${appptr}_app0_ptr->ccu8_slice_ptr, ${ccu_comp_match_arg});
+            """);
+
+            if (Integer.parseInt(appIns.gcombo_no_of_phases.value) > 1)
+            {
+                out.print("""
+    /* Set compare value for CC8 phase 1 */
+    XMC_CCU8_SLICE_SetTimerCompareMatchChannel1(${appptr}_app1_ptr->ccu8_slice_ptr, ${ccu_comp_match_arg});
+                """);
+            }
+        
+            if (Integer.parseInt(appIns.gcombo_no_of_phases.value) > 2)
+            {
+                out.print("""
+    /* Set compare value for CC8 phase 2 */
+    XMC_CCU8_SLICE_SetTimerCompareMatchChannel1(${appptr}_app2_ptr->ccu8_slice_ptr, ${ccu_comp_match_arg});
+                """);
+            }
+            
+            if (Integer.parseInt(appIns.gcombo_no_of_phases.value) > 3)
+            {
+                out.print("""
+    /* Set compare value for CC8 phase 3 */
+    XMC_CCU8_SLICE_SetTimerCompareMatchChannel1(${appptr}_app3_ptr->ccu8_slice_ptr, ${ccu_comp_match_arg});
+                """);
+            }
+        
+        
+        /*
+         * Update HRPWM compare value
+         */
+        if(appIns.gcheck_enable_high_res.value == true)
+        {
+            out.print("""
+    /* Compare value calculation for HRPWM phase 0 */
+    hr_compare_value = (uint8_t) (((((uint32_t) ${hrpwm_comp_match_arg}) && 0xFF) * ${appptr}_app0_ptr->hr_cr_max) >> 8U);
+
+    /* Set compare value for HRPWM phase 0 */
+    XMC_HRPWM_HRC_SetCompare1(${appptr}_app0_ptr->hrc_slice_ptr, hr_compare_value);
+            """);
+            if (Integer.parseInt(appIns.gcombo_no_of_phases.value) > 1)
+            {
+                out.print("""
+    /* Set compare value for HRPWM phase 1 */
+    XMC_HRPWM_HRC_SetCompare1(${appptr}_app1_ptr->hrc_slice_ptr, hr_compare_value);
+                """);
+            }
+            
+            if (Integer.parseInt(appIns.gcombo_no_of_phases.value) > 2)
+            {
+                out.print("""
+    /* Set compare value for HRPWM phase 2 */
+    XMC_HRPWM_HRC_SetCompare1(${appptr}_app2_ptr->hrc_slice_ptr, hr_compare_value);
+                """);
+            }
+            
+            if (Integer.parseInt(appIns.gcombo_no_of_phases.value) > 3)
+            {
+                out.print("""
+    /* Set compare value for HRPWM phase 3 */
+    XMC_HRPWM_HRC_SetCompare1(${appptr}_app3_ptr->hrc_slice_ptr, hr_compare_value);
+                """);
+            }
+        }
+        
+        
+        /*
+         * Use code call back
+         */
+        if (appIns.gcheck_user_code.value == true)
+        {
+            out.print("""
+
+    /**********************************************************************************************************************
+     * User code
+     **********************************************************************************************************************/
+    ${appIns.gstring_user_code.value}(&${appInst});
+            """);
+        }
+        
+        
+        /*
+         * Request shadow transfer to load new compare value (Common code for both CCU8 & HRC)
+         */ 
+            out.print("""
+    /* Transfer phase 0 compare value from shadow register to actual register */
+    XMC_CCU8_EnableShadowTransfer(${appptr}_app0_ptr->ccu8_module_ptr, ${appptr}_app0_ptr->shadow_txfr_msk);
+            """);
+
+            if (Integer.parseInt(appIns.gcombo_no_of_phases.value) > 1)
+            {
+                out.print("""
+    /* Transfer phase 1 compare value from shadow register to actual register */
+    XMC_CCU8_EnableShadowTransfer(${appptr}_app1_ptr->ccu8_module_ptr, ${appptr}_app1_ptr->shadow_txfr_msk);
+                """);
+            }
+
+            if (Integer.parseInt(appIns.gcombo_no_of_phases.value) > 2)
+            {
+                out.print("""
+    /* Transfer phase 2 compare value from shadow register to actual register */
+    XMC_CCU8_EnableShadowTransfer(${appptr}_app2_ptr->ccu8_module_ptr, ${appptr}_app2_ptr->shadow_txfr_msk);
+                """);
+            }
+
+            if (Integer.parseInt(appIns.gcombo_no_of_phases.value) > 3)
+            {
+                out.print("""
+    /* Transfer phase 3 compare value from shadow register to actual register */
+    XMC_CCU8_EnableShadowTransfer(${appptr}_app3_ptr->ccu8_module_ptr, ${appptr}_app3_ptr->shadow_txfr_msk);
+                """);
+            }
+
+            
+       /* 
+        * End of voltage control rate code (vcr) 
+        */
+       if(appIns.ginteger_volt_control_rate.value != 1)
+       {
+           out.print("""
+  }
+
+  volt_control_rate_count--; /* Decrement volt control rate count */
+           """);
+       }
+       
+    }
+    
+out.print("""
+} /* end of Control loop */
+""");
+/***********************************************************************************************************************
+ * End of Control loop
+ **********************************************************************************************************************/
+
+/***********************************************************************************************************************
+ * Start of SYSTIMER ISR for Soft Start (Step incrementing of Vref)
+ **********************************************************************************************************************/
+if(appIns.gcheck_soft_start.value)
+{   
+    out.print ("""
+/* Systimer call back function for ${appInst} - Increments Vref in steps */
+void ${appInst}_SoftStart(BUCK_VC_FIX_FQ_t * handle_ptr)
+{
+  SYSTIMER_STATUS_t status = SYSTIMER_STATUS_FAILURE;
+
+  handle_ptr->vout_reference += ${appInst}_VOLT_STEP_INCREMENT; /* Step increment the reference voltage */
+
+  if (handle_ptr->vout_reference >= handle_ptr->config->vout)
+  {
+    handle_ptr->vout_reference = handle_ptr->config->vout; /* This is final step of Vref increment. Ensures Vref is not more than expected Vout */
+
+    handle_ptr->soft_start_complete = true; /* Soft start completed */
+
+    status = SYSTIMER_StopTimer(handle_ptr->software_timer_id); /* Stop software timer */
+
+    if (status == SYSTIMER_STATUS_SUCCESS)
+    {
+      handle_ptr->software_timer_status = BUCK_VC_FIX_FQ_SW_TIMER_STOP_SUCCESS; /* Software timer is stopped successfully */
+    }
+    else
+    {
+      handle_ptr->software_timer_status = BUCK_VC_FIX_FQ_SW_TIMER_STOP_FAILED; /* Failed to stop software timer */
+    }
+  }
+}
+    """)
+}
+/***********************************************************************************************************************
+ * End of SYSTIMER ISR for Soft Start (Step incrementing of Vref)
+ **********************************************************************************************************************/
+
+} /* end of for (BUCK_VC_FIX_FQ appIns : appInstancesList) */

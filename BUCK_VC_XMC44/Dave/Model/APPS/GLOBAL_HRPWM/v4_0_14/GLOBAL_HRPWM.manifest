@@ -1,0 +1,177 @@
+package Model.APPS.GLOBAL_HRPWM.v4_0_14;
+
+/*
+ Copyright (c) 2015-2020, Infineon Technologies AG
+ All rights reserved.
+											
+ Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ following conditions are met:
+																			 
+ Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ disclaimer.
+  
+ Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
+ disclaimer in the documentation and/or other materials provided with the distribution.
+  
+ Neither the name of the copyright holders nor the names of its contributors may be used to endorse or promote
+ products derived from this software without specific prior written permission.
+																			 
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE  FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ WHETHER IN CONTRACT, STRICT LIABILITY,OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+																			 
+ To improve the quality of the software, users are encouraged to share modifications, enhancements or bug fixes with
+ Infineon Technologies AG: dave@infineon.com. */
+
+/*************** Revision History **********************************************
+Version        Date          Description 
+
+  4.0.0       14-Feb-2015   Initial version for DAVEv4<br>
+  4.0.1       19-Feb-2015   APP help document is updated<br>
+  4.0.2       11-May-2015   1.Enum GLOBAL_HRPWM_STATUS_t member name GLOBAL_HRPWM_SUCCESS changed to GLOBAL_HRPWM_STATUS_SUCCESS<br>
+                            2.Enum GLOBAL_HRPWM_STATUS_t member name GLOBAL_HRPWM_FAILURE changed to GLOBAL_HRPWM_STATUS_FAILURE<br>
+  4.0.4       19-Feb-2015   Logic for minimum LLD version check is added in global_hrpwm.h file.<br>
+  4.0.6       02-Jun-2015   Fixed the issue where DAVE reports error:"It is not allowed to read cell values during the updating except in CellClosures"<br>
+  4.0.8       19-Jun-2015   LLD package version check is added.<br>
+  4.0.10      06-Oct-2015   Copyright information is added in manifest.<br>
+  4.0.12      10-Feb-2016   Added warning message to check if ccu_clock is enabled.
+  4.0.14      09-Jan-2021   Modified check for minimum XMCLib version. <BR>
+*******************************************************************************/
+
+
+// Import statements
+import ifx.davex.app.manifest.*
+
+
+class  GLOBAL_HRPWM extends GLOBAL_HRPWM_GUI {
+
+static final String APP_NAME = "GLOBAL_HRPWM:"
+    // Note  : HRPWMGLOBAL properties are mandatory and important
+    // Begin : HRPWMGLOBAL property section
+    def version            = '4.0.14'
+    
+    // Example
+    //    def categoriesDescription = [
+    //        "Peripheral Specific Apps/Communication/Universal Serial Interface Channel (USIC)"]
+
+    def categoriesDescription = ["System/~Global Reg Control"] 
+
+    // Minimum DAVE version required for the App
+    def minDaveVersion           = '4.0.0'
+    
+    // Keywords to search in Apps selection view
+    def keywords      = [
+        "ALL"
+    ]
+        
+    def softwareIDs       = [
+        "XMC4.4.00.F100.ALL":"1.0.0",
+        "XMC4.4.00.F64.ALL":"1.0.0",
+        
+        "XMC4.4.02.F100.ALL":"1.0.0",
+        "XMC4.4.02.F64.ALL":"1.0.0",
+                            
+        //"XMC42
+        "XMC4.2.00.F64.ALL":"1.0.0",
+        "XMC4.2.00.Q48.ALL":"1.0.0",
+                            
+        //"XMC41
+        "XMC4.1.00.F64.ALL":"1.0.0",
+        "XMC4.1.00.Q48.ALL":"1.0.0",
+        
+        "XMC4.1.04.F64.ALL":"1.0.0",
+        "XMC4.1.04.Q48.ALL":"1.0.0",
+        
+        "XMC4.1.08.F64.ALL":"1.0.0",
+        "XMC4.1.08.Q48.ALL":"1.0.0",
+    ]
+
+    def singleton     = true
+    def initProvider  = true
+    def deprecated    = false
+    def sharable      = true
+
+    // App short description 
+    def description = "APP initializes HRPWM global register set configuration"
+    
+    /*----------------------------------- End  : APP property section---------------------------------------------------------*/
+
+        
+    /*-----------------------------------Begin : APP User variable section---------------------------------------------------------*/
+    // Begin : User variable section
+    // End   : User variable section
+    //SolverVariable CCU8_base_module
+    MRequiredApp appres_clock_0
+    MVirtualResourceGroup hwres_global_hrpwm_module
+
+    //Virtual Signals
+    MVirtualSignal   vs_global_hrpwm_globalsignal                //vs_hrpwmGlobal_globalsignal      //input to HRPWMGlobal app
+
+    
+    
+    // App Constructor
+    public GLOBAL_HRPWM(DaveEnv daveEnv) {
+        /* -------------------------------------------------------------- */
+        /* ---------- Target Specific User Variable Initialization ------ */
+        /* -------------------------------------------------------------- */
+        
+        /* ---------------------------------------------------------- */
+        /* ------------ Hardware resource consumption block --------- */
+        /* ---------------------------------------------------------- */
+        hwres_global_hrpwm_module = MVirtualResourceGroup("Global", ["peripheral", "hrpwm", "*", "global"])
+        
+        /* ---------------------------------------------------------- */
+        /* ------------ App consumption Block ----------------------- */
+        /* ---------------------------------------------------------- */
+         appres_clock_0 =  MRequiredApp("CLOCK_XMC4","CLOCK APP for XMC4X", RSHARABLE, "4.0.18", true)
+
+        /* ---------------------------------------------------------- */
+        /* -------------- APP IO Signals ---------------------------- */
+        /* ---------------------------------------------------------- */
+        vs_global_hrpwm_globalsignal = MVirtualSignal(hwres_global_hrpwm_module, "global_signal", "global_signal", true , false)
+        
+        /* ---------------------------------------------------------- */
+        /* ---------------- APP IO Connections ---------------------- */
+        /* ---------------------------------------------------------- */
+
+        /* ------ TAB : Clock Setting related configuration ---------- */
+        gfloat_ccu8ClkFreq.value = MF({appres_clock_0.getVal(["gfloat_ccufreq", "value"])}, Float)
+
+        /* ------ TAB : Error Message Configuration ---------- */
+		gmessage_clock_message.visible = MF({!appres_clock_0.getVal(["gcheck_enable_ccu_clock", "value"])}, Boolean)
+		
+        gFloat_modClkFreq.value = MF({
+         double temp = 0.0
+          temp = (double)gfloat_ccu8ClkFreq.value
+         if(temp >= 156)
+         {
+             (double)180
+         }
+         else if (temp >= 101)
+         {
+             (double)120
+         }
+         else
+         {
+             (double)80
+         }
+       }, Float)
+    }
+    
+    // File Generation
+    def generateFiles(){
+        copy("global_hrpwm.c", "global_hrpwm.c")
+        copy("global_hrpwm.h", "global_hrpwm.h")
+        generate("global_hrpwm_confc.tmpl", "global_hrpwm_conf.c")
+        generate("global_hrpwm_confh.tmpl", "global_hrpwm_conf.h")
+        generate("global_hrpwm_externh.tmpl", "global_hrpwm_extern.h")
+    }
+    
+    //
+    // Add main code here
+    //
+}

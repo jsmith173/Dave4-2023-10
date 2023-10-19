@@ -1,0 +1,508 @@
+<?xml version="1.0" encoding="ASCII"?>
+<ResourceModel:Peripheral xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ResourceModel="http://www.infineon.com/Davex/Resource.ecore" URI="http://resources/0.4.5/peripheral/hrpwm/0" description="high resolution pwm unit 0 (HRPWM0)" baseAddress="0x40020000">
+  <provided xsi:type="ResourceModel:ResourceGroup" name="3" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc/3">
+    <resourcesList name="hrcgc" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc3gc"/>
+    <resourcesList name="hrcpl" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc3pl"/>
+    <resourcesList name="hrcgsel" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc3gsel"/>
+    <resourcesList name="hrcgsel_c0ss" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc3gsel/c0ss"/>
+    <resourcesList name="hrcgsel_c0cs" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc3gsel/c0cs"/>
+    <resourcesList name="hrcgsel_c1ss" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc3gsel/c1ss"/>
+    <resourcesList name="hrcgsel_c1cs" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc3gsel/c1cs"/>
+    <resourcesList name="hrcgsel_c0m" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc3gsel/c0m"/>
+    <resourcesList name="hrcgsel_c1m" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc3gsel/c1m"/>
+    <resourcesList name="hrcgsel_s0m" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc3gsel/s0m"/>
+    <resourcesList name="hrcgsel_s1m" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc3gsel/s1m"/>
+    <resourcesList name="hrctsel" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc3tsel"/>
+    <resourcesList name="hrctsel_tsel0" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc3tsel/tsel0"/>
+    <resourcesList name="hrctsel_tsel1" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc3tsel/tsel1"/>
+    <resourcesList name="hrcdcr" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc3dcr"/>
+    <resourcesList name="hrcdcf" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc3dcf"/>
+    <resourcesList name="hrccr1" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc3cr1"/>
+    <resourcesList name="hrccr2" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc3cr2"/>
+    <resourcesList name="hrcsdcr" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc3sdcr"/>
+    <resourcesList name="hrcsdcf" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc3sdcf"/>
+    <resourcesList name="hrcscr1" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc3scr1"/>
+    <resourcesList name="hrcscr2" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc3scr2"/>
+    <resourcesList name="hrccfg_hrce" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrccfg/hrc3e"/>
+    <resourcesList name="hrccfg_lrce" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrccfg/lrc3e"/>
+    <resourcesList name="hrcstrg_hes" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrcstrg/h3es"/>
+    <resourcesList name="hrcstrg_hdes" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrcstrg/h3des"/>
+    <resourcesList name="hrcctrg_hec" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrcctrg/h3ec"/>
+    <resourcesList name="hrcctrg_hdec" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrcctrg/h3dec"/>
+    <resourcesList name="hrcstsg_hste" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrcstsg/h3ste"/>
+    <resourcesList name="hrcstsg_hdste" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrcstsg/h3dste"/>
+    <resourcesList name="set_0" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc3_set_0"/>
+    <resourcesList name="clear_0" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc3_clear_0"/>
+    <resourcesList name="set_1" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc3_set_1"/>
+    <resourcesList name="clear_1" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc3_clear_1"/>
+    <resourcesList name="trap0" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc3_trap0"/>
+    <resourcesList name="trap1" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc3_trap1"/>
+    <resourcesList name="global_signal" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc3_global_signal"/>
+    <resourcesList name="hrout0" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrout30"/>
+    <resourcesList name="hrout1" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrout31"/>
+    <resourcesList name="qout" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/qout3"/>
+  </provided>
+  <provided xsi:type="ResourceModel:RegisterParameter" name="HRC3TSEL" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc3tsel" value="00000000" toolTipHelpDescription="HRC0 timer selection" defaultValue="00000000" accessPermission="rw" addressOffset="0x160C" resetValue="00000000" resetMask="0xFFFFFFFF">
+    <bitFields name="TSEL0" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc3tsel/tsel0" value="0" toolTipHelpDescription="Source Selector 0 Timer connection" defaultValue="0" startPos="0" stopPos="2" accessPermission="rw" maxValue="7" minValue="0">
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b000" description="Source Selector 0 is connected to Capture/Compare Unit Timer 0 (CCST0 can be used)"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b001" description="Source Selector 0 is connected to Capture/Compare Unit Timer 1 (CCST1 can be used)"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b010" description="Source Selector 0 is connected to Capture/Compare Unit Timer 2 (CCST2 can be used)"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b011" description="Source Selector 0 is connected to Capture/Compare Unit Timer 3 (CCST3 can be used)"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b100" description="Reserved"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b101" description="Reserved"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b110" description="Reserved"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b111" description="Reserved"/>
+    </bitFields>
+    <bitFields name="TSEL1" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc3tsel/tsel1" value="0" toolTipHelpDescription="Source Selector 1 Timer connection" defaultValue="0" startPos="3" stopPos="5" accessPermission="rw" maxValue="7" minValue="0">
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b000" description="Source Selector 1 is connected to Capture/Compare Unit Timer 0 (CCST0 can be used)"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b001" description="Source Selector 1 is connected to Capture/Compare Unit Timer 1 (CCST1 can be used)"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b010" description="Source Selector 1 is connected to Capture/Compare Unit Timer 2 (CCST2 can be used)"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b011" description="Source Selector 1 is connected to Capture/Compare Unit Timer 3 (CCST3 can be used)"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b100" description="Reserved"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b101" description="Reserved"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b110" description="Reserved"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b111" description="Reserved"/>
+    </bitFields>
+    <bitFields name="TS0E" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc3tsel/ts0e" value="0" toolTipHelpDescription="Source selector 0 TRAP enable" defaultValue="0" startPos="16" stopPos="16" accessPermission="rw" maxValue="1" minValue="0">
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b0" description="TRAP signal generated from the Timer connected to Source Selector 0 is disabled."/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b1" description="TRAP signal generated from the Timer connected to Source Selector 0 is enabled."/>
+    </bitFields>
+    <bitFields name="TS1E" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc3tsel/ts1e" value="0" toolTipHelpDescription="Source selector 1 TRAP enable" defaultValue="0" startPos="17" stopPos="17" accessPermission="rw" maxValue="1" minValue="0">
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b0" description="TRAP signal generated from the Timer connected to Source Selector 1 is disabled."/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b1" description="TRAP signal generated from the Timer connected to Source Selector 1 is enabled."/>
+    </bitFields>
+  </provided>
+  <provided xsi:type="ResourceModel:BitField" name="TSEL1" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc3tsel/tsel1" value="0" toolTipHelpDescription="Source Selector 1 Timer connection" defaultValue="0" startPos="3" stopPos="5" accessPermission="rw" maxValue="7" minValue="0">
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b000" description="Source Selector 1 is connected to Capture/Compare Unit Timer 0 (CCST0 can be used)"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b001" description="Source Selector 1 is connected to Capture/Compare Unit Timer 1 (CCST1 can be used)"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b010" description="Source Selector 1 is connected to Capture/Compare Unit Timer 2 (CCST2 can be used)"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b011" description="Source Selector 1 is connected to Capture/Compare Unit Timer 3 (CCST3 can be used)"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b100" description="Reserved"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b101" description="Reserved"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b110" description="Reserved"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b111" description="Reserved"/>
+  </provided>
+  <provided xsi:type="ResourceModel:RegisterParameter" name="HRC3GSEL" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc3gsel" value="00000000" toolTipHelpDescription="HRC0 global control selection" defaultValue="00000000" accessPermission="rw" addressOffset="0x1608" resetValue="00000000" resetMask="0xFFFFFFFF">
+    <bitFields name="C0SS" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc3gsel/c0ss" value="0" toolTipHelpDescription="Source selector 0 comparator set configuration" defaultValue="0" startPos="0" stopPos="2" accessPermission="rw" maxValue="7" minValue="0">
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b000" description="CMP output of CSG0 unit can be used as set source for the output latch"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b001" description="CMP output of CSG2 unit can be used as set source for the output latch"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b010" description="CMP output of CSG2 unit can be used as set source for the output latch"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b011" description="Reserved"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b100" description="Reserved"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b101" description="Reserved"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b110" description="Reserved"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b111" description="Reserved"/>
+    </bitFields>
+    <bitFields name="C0CS" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc3gsel/c0cs" value="0" toolTipHelpDescription="Source selector 0 comparator clear configuration" defaultValue="0" startPos="3" stopPos="5" accessPermission="rw" maxValue="7" minValue="0">
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b000" description="CMP output of CSG0 unit can be used as clear source for the output latch"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b001" description="CMP output of CSG2 unit can be used as clear source for the output latch"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b010" description="CMP output of CSG2 unit can be used as clear source for the output latch"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b011" description="Reserved"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b100" description="Reserved"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b101" description="Reserved"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b110" description="Reserved"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b111" description="Reserved"/>
+    </bitFields>
+    <bitFields name="S0M" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc3gsel/s0m" value="0" toolTipHelpDescription="Source selector 0 set configuration" defaultValue="0" startPos="6" stopPos="7" accessPermission="rw" maxValue="3" minValue="0">
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b00" description="Set from source selector 0 is controlled via the Capture/Compare Unit timer, CCSTy signal"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b01" description="Set from source selector 0 is controlled via the CMP output from the CSGy unit. Which unit is being used is configured via the C0SS field."/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b10" description="Reserved"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b11" description="Reserved"/>
+    </bitFields>
+    <bitFields name="C0M" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc3gsel/c0m" value="0" toolTipHelpDescription="Source selector 0 clear configuration" defaultValue="0" startPos="8" stopPos="9" accessPermission="rw" maxValue="3" minValue="0">
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b00" description="Clear from source selector 0 is controlled via the Capture/Compare Unit timer, CCSTy signal"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b01" description="Clear from source selector 0 is controlled via the CMP output from the CSGy unit. Which unit is being used is configured via the C0CS field."/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b10" description="Reserved"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b11" description="Reserved"/>
+    </bitFields>
+    <bitFields name="S0ES" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc3gsel/s0es" value="0" toolTipHelpDescription="Source selector 0 set edge configuration" defaultValue="0" startPos="10" stopPos="11" accessPermission="rw" maxValue="3" minValue="0">
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b00" description="Generation of the set signal is disabled"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b01" description="Set signal is generated on a LOW to HIGH transition of the selected input"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b10" description="Set signal is generated on a HIGH to LOW transition of the selected input"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b11" description="Set signal is generated on both transitions of the selected input"/>
+    </bitFields>
+    <bitFields name="C0ES" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc3gsel/c0es" value="0" toolTipHelpDescription="Source selector 0 clear edge configuration" defaultValue="0" startPos="12" stopPos="13" accessPermission="rw" maxValue="3" minValue="0">
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b00" description="Generation of the clear signal is disabled"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b01" description="Clear signal is generated on a LOW to HIGH transition of the selected input"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b10" description="Clear signal is generated on a HIGH to LOW transition of the selected input"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b11" description="Clear signal is generated on both transitions of the selected input"/>
+    </bitFields>
+    <bitFields name="C1SS" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc3gsel/c1ss" value="0" toolTipHelpDescription="Source selector 1 comparator set configuration" defaultValue="0" startPos="16" stopPos="18" accessPermission="rw" maxValue="7" minValue="0">
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b000" description="CMP output of CSG0 unit can be used as set source for the output latch"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b001" description="CMP output of CSG2 unit can be used as set source for the output latch"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b010" description="CMP output of CSG2 unit can be used as set source for the output latch"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b11" description="Reserved"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b100" description="Reserved"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b101" description="Reserved"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b110" description="Reserved"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b111" description="Reserved"/>
+    </bitFields>
+    <bitFields name="C1CS" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc3gsel/c1cs" value="0" toolTipHelpDescription="Source selector 1 comparator clear configuration" defaultValue="0" startPos="19" stopPos="21" accessPermission="rw" maxValue="7" minValue="0">
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b000" description="CMP output of CSG0 unit can be used as clear source for the output latch"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b001" description="CMP output of CSG2 unit can be used as clear source for the output latch"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b010" description="CMP output of CSG2 unit can be used as clear source for the output latch"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b011" description="Reserved"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b100" description="Reserved"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b101" description="Reserved"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b110" description="Reserved"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b111" description="Reserved"/>
+    </bitFields>
+    <bitFields name="S1M" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc3gsel/s1m" value="0" toolTipHelpDescription="Source selector 1 set configuration" defaultValue="0" startPos="22" stopPos="23" accessPermission="rw" maxValue="3" minValue="0">
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b00" description="Set from source selector 1 is controlled via the Capture/Compare Unit timer, CCSTy signal"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b01" description="Set from source selector 1 is controlled via the CMP output from the CSGy unit. Which unit is being used is configured via the C1SS field."/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b10" description="Reserved"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b11" description="Reserved"/>
+    </bitFields>
+    <bitFields name="C1M" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc3gsel/c1m" value="0" toolTipHelpDescription="Source selector 1 clear configuration" defaultValue="0" startPos="24" stopPos="25" accessPermission="rw" maxValue="3" minValue="0">
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b00" description="Clear from source selector 1 is controlled via the Capture/Compare Unit timer, CCSTy signal"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b01" description="Clear from source selector 1 is controlled via the CMP output from the CSGy unit. Which unit is being used is configured via the C1CS field."/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b10" description="Reserved"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b11" description="Reserved"/>
+    </bitFields>
+    <bitFields name="S1ES" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc3gsel/s1es" value="0" toolTipHelpDescription="Source selector 1 set edge configuration" defaultValue="0" startPos="26" stopPos="27" accessPermission="rw" maxValue="3" minValue="0">
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b00" description="Generation of the set signal is disabled"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b01" description="Set signal is generated on a LOW to HIGH transition of the selected input"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b10" description="Set signal is generated on a HIGH to LOW transition of the selected input"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b11" description="Set signal is generated on both transitions of the selected input"/>
+    </bitFields>
+    <bitFields name="C1ES" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc3gsel/c1es" value="0" toolTipHelpDescription="Source selector 1 clear edge configuration" defaultValue="0" startPos="28" stopPos="29" accessPermission="rw" maxValue="3" minValue="0">
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b00" description="Generation of the clear signal is disabled"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b01" description="Clear signal is generated on a LOW to HIGH transition of the selected input"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b10" description="Clear signal is generated on a HIGH to LOW transition of the selected input"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b11" description="Clear signal is generated on both transitions of the selected input"/>
+    </bitFields>
+  </provided>
+  <provided xsi:type="ResourceModel:BitField" name="C0M" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc3gsel/c0m" value="0" toolTipHelpDescription="Source selector 0 clear configuration" defaultValue="0" startPos="8" stopPos="9" accessPermission="rw" maxValue="3" minValue="0">
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b00" description="Clear from source selector 0 is controlled via the Capture/Compare Unit timer, CCSTy signal"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b01" description="Clear from source selector 0 is controlled via the CMP output from the CSGy unit. Which unit is being used is configured via the C0CS field."/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b10" description="Reserved"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b11" description="Reserved"/>
+  </provided>
+  <provided xsi:type="ResourceModel:BitField" name="TSEL0" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc3tsel/tsel0" value="0" toolTipHelpDescription="Source Selector 0 Timer connection" defaultValue="0" startPos="0" stopPos="2" accessPermission="rw" maxValue="7" minValue="0">
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b000" description="Source Selector 0 is connected to Capture/Compare Unit Timer 0 (CCST0 can be used)"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b001" description="Source Selector 0 is connected to Capture/Compare Unit Timer 1 (CCST1 can be used)"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b010" description="Source Selector 0 is connected to Capture/Compare Unit Timer 2 (CCST2 can be used)"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b011" description="Source Selector 0 is connected to Capture/Compare Unit Timer 3 (CCST3 can be used)"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b100" description="Reserved"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b101" description="Reserved"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b110" description="Reserved"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b111" description="Reserved"/>
+  </provided>
+  <provided xsi:type="ResourceModel:BitField" name="C1M" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc3gsel/c1m" value="0" toolTipHelpDescription="Source selector 1 clear configuration" defaultValue="0" startPos="24" stopPos="25" accessPermission="rw" maxValue="3" minValue="0">
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b00" description="Clear from source selector 1 is controlled via the Capture/Compare Unit timer, CCSTy signal"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b01" description="Clear from source selector 1 is controlled via the CMP output from the CSGy unit. Which unit is being used is configured via the C1CS field."/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b10" description="Reserved"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b11" description="Reserved"/>
+  </provided>
+  <provided xsi:type="ResourceModel:BitField" name="S1M" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc3gsel/s1m" value="0" toolTipHelpDescription="Source selector 1 set configuration" defaultValue="0" startPos="22" stopPos="23" accessPermission="rw" maxValue="3" minValue="0">
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b00" description="Set from source selector 1 is controlled via the Capture/Compare Unit timer, CCSTy signal"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b01" description="Set from source selector 1 is controlled via the CMP output from the CSGy unit. Which unit is being used is configured via the C1SS field."/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b10" description="Reserved"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b11" description="Reserved"/>
+  </provided>
+  <provided xsi:type="ResourceModel:BitField" name="S0M" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc3gsel/s0m" value="0" toolTipHelpDescription="Source selector 0 set configuration" defaultValue="0" startPos="6" stopPos="7" accessPermission="rw" maxValue="3" minValue="0">
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b00" description="Set from source selector 0 is controlled via the Capture/Compare Unit timer, CCSTy signal"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b01" description="Set from source selector 0 is controlled via the CMP output from the CSGy unit. Which unit is being used is configured via the C0SS field."/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b10" description="Reserved"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b11" description="Reserved"/>
+  </provided>
+  <provided xsi:type="ResourceModel:BitField" name="C0SS" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc3gsel/c0ss" value="0" toolTipHelpDescription="Source selector 0 comparator set configuration" defaultValue="0" startPos="0" stopPos="2" accessPermission="rw" maxValue="7" minValue="0">
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b000" description="CMP output of CSG0 unit can be used as set source for the output latch"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b001" description="CMP output of CSG2 unit can be used as set source for the output latch"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b010" description="CMP output of CSG2 unit can be used as set source for the output latch"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b011" description="Reserved"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b100" description="Reserved"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b101" description="Reserved"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b110" description="Reserved"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b111" description="Reserved"/>
+  </provided>
+  <provided xsi:type="ResourceModel:BitField" name="C0CS" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc3gsel/c0cs" value="0" toolTipHelpDescription="Source selector 0 comparator clear configuration" defaultValue="0" startPos="3" stopPos="5" accessPermission="rw" maxValue="7" minValue="0">
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b000" description="CMP output of CSG0 unit can be used as clear source for the output latch"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b001" description="CMP output of CSG2 unit can be used as clear source for the output latch"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b010" description="CMP output of CSG2 unit can be used as clear source for the output latch"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b011" description="Reserved"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b100" description="Reserved"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b101" description="Reserved"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b110" description="Reserved"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b111" description="Reserved"/>
+  </provided>
+  <provided xsi:type="ResourceModel:BitField" name="C1SS" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc3gsel/c1ss" value="0" toolTipHelpDescription="Source selector 1 comparator set configuration" defaultValue="0" startPos="16" stopPos="18" accessPermission="rw" maxValue="7" minValue="0">
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b000" description="CMP output of CSG0 unit can be used as set source for the output latch"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b001" description="CMP output of CSG2 unit can be used as set source for the output latch"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b010" description="CMP output of CSG2 unit can be used as set source for the output latch"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b11" description="Reserved"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b100" description="Reserved"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b101" description="Reserved"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b110" description="Reserved"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b111" description="Reserved"/>
+  </provided>
+  <provided xsi:type="ResourceModel:BitField" name="C1CS" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc3gsel/c1cs" value="0" toolTipHelpDescription="Source selector 1 comparator clear configuration" defaultValue="0" startPos="19" stopPos="21" accessPermission="rw" maxValue="7" minValue="0">
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b000" description="CMP output of CSG0 unit can be used as clear source for the output latch"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b001" description="CMP output of CSG2 unit can be used as clear source for the output latch"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b010" description="CMP output of CSG2 unit can be used as clear source for the output latch"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b011" description="Reserved"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b100" description="Reserved"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b101" description="Reserved"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b110" description="Reserved"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b111" description="Reserved"/>
+  </provided>
+  <provided xsi:type="ResourceModel:ResourceGroup" name="global" URI="http://resources/0.4.5/peripheral/hrpwm/0/global">
+    <upwardMapList xsi:type="ResourceModel:HWResource" href="../../APPS/GLOBAL_HRPWM/v4_0_14/GLOBAL_HRPWM_0.app#//@hwResources.0"/>
+    <resourcesList name="hrbsc" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrbsc"/>
+    <resourcesList name="midr" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/midr"/>
+    <resourcesList name="hrccfg_hrcpm" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrccfg/hrcpm"/>
+    <resourcesList name="hrccfg_clkc" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrccfg/clkc"/>
+    <resourcesList name="hrghrs" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrghrs"/>
+    <resourcesList name="glbana" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/glbana"/>
+    <resourcesList name="global_signal" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/global_signal"/>
+    <resourcesList name="mclk" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/mclk"/>
+  </provided>
+  <provided xsi:type="ResourceModel:ResourceGroup" name="0" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc/0">
+    <upwardMapList xsi:type="ResourceModel:HWResource" href="../../APPS/HRPWM/v4_1_22/HRPWM_0.app#//@hwResources.1"/>
+    <resourcesList name="hrcgc" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc0gc"/>
+    <resourcesList name="hrcpl" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc0pl"/>
+    <resourcesList name="hrcgsel" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc0gsel"/>
+    <resourcesList name="hrcgsel_c0ss" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc0gsel/c0ss"/>
+    <resourcesList name="hrcgsel_c0cs" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc0gsel/c0cs"/>
+    <resourcesList name="hrcgsel_c1ss" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc0gsel/c1ss"/>
+    <resourcesList name="hrcgsel_c1cs" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc0gsel/c1cs"/>
+    <resourcesList name="hrcgsel_c0m" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc0gsel/c0m"/>
+    <resourcesList name="hrcgsel_c1m" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc0gsel/c1m"/>
+    <resourcesList name="hrcgsel_s0m" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc0gsel/s0m"/>
+    <resourcesList name="hrcgsel_s1m" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc0gsel/s1m"/>
+    <resourcesList name="hrctsel" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc0tsel"/>
+    <resourcesList name="hrctsel_tsel0" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc0tsel/tsel0"/>
+    <resourcesList name="hrctsel_tsel1" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc0tsel/tsel1"/>
+    <resourcesList name="hrcdcr" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc0dcr"/>
+    <resourcesList name="hrcdcf" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc0dcf"/>
+    <resourcesList name="hrccr1" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc0cr1"/>
+    <resourcesList name="hrccr2" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc0cr2"/>
+    <resourcesList name="hrcsdcr" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc0sdcr"/>
+    <resourcesList name="hrcsdcf" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc0sdcf"/>
+    <resourcesList name="hrcscr1" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc0scr1"/>
+    <resourcesList name="hrcscr2" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc0scr2"/>
+    <resourcesList name="hrccfg_hrce" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrccfg/hrc0e"/>
+    <resourcesList name="hrccfg_lrce" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrccfg/lrc0e"/>
+    <resourcesList name="hrcstrg_hes" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrcstrg/h0es"/>
+    <resourcesList name="hrcstrg_hdes" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrcstrg/h0des"/>
+    <resourcesList name="hrcctrg_hec" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrcctrg/h0ec"/>
+    <resourcesList name="hrcctrg_hdec" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrcctrg/h0dec"/>
+    <resourcesList name="hrcstsg_hste" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrcstsg/h0ste"/>
+    <resourcesList name="hrcstsg_hdste" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrcstsg/h0dste"/>
+    <resourcesList name="set_0" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc0_set_0"/>
+    <resourcesList name="clear_0" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc0_clear_0"/>
+    <resourcesList name="set_1" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc0_set_1"/>
+    <resourcesList name="clear_1" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc0_clear_1"/>
+    <resourcesList name="trap0" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc0_trap0"/>
+    <resourcesList name="trap1" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc0_trap1"/>
+    <resourcesList name="global_signal" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrc0_global_signal"/>
+    <resourcesList name="hrout0" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrout00"/>
+    <resourcesList name="hrout1" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/hrout01"/>
+    <resourcesList name="qout" requiredResourceUri="http://resources/0.4.5/peripheral/hrpwm/0/qout0"/>
+  </provided>
+  <provided xsi:type="ResourceModel:RegisterParameter" name="HRC0GSEL" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc0gsel" value="00000000" toolTipHelpDescription="HRC0 global control selection" defaultValue="00000000" accessPermission="rw" addressOffset="0x1308" resetValue="00000000" resetMask="0xFFFFFFFF">
+    <bitFields name="C0SS" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc0gsel/c0ss" value="0" toolTipHelpDescription="Source selector 0 comparator set configuration" defaultValue="0" startPos="0" stopPos="2" accessPermission="rw" maxValue="7" minValue="0">
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b000" description="CMP output of CSG0 unit can be used as set source for the output latch"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b001" description="CMP output of CSG2 unit can be used as set source for the output latch"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b010" description="CMP output of CSG2 unit can be used as set source for the output latch"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b011" description="Reserved"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b100" description="Reserved"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b101" description="Reserved"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b110" description="Reserved"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b111" description="Reserved"/>
+    </bitFields>
+    <bitFields name="C0CS" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc0gsel/c0cs" value="0" toolTipHelpDescription="Source selector 0 comparator clear configuration" defaultValue="0" startPos="3" stopPos="5" accessPermission="rw" maxValue="7" minValue="0">
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b000" description="CMP output of CSG0 unit can be used as clear source for the output latch"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b001" description="CMP output of CSG2 unit can be used as clear source for the output latch"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b010" description="CMP output of CSG2 unit can be used as clear source for the output latch"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b011" description="Reserved"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b100" description="Reserved"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b101" description="Reserved"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b110" description="Reserved"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b111" description="Reserved"/>
+    </bitFields>
+    <bitFields name="S0M" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc0gsel/s0m" value="0" toolTipHelpDescription="Source selector 0 set configuration" defaultValue="0" startPos="6" stopPos="7" accessPermission="rw" maxValue="3" minValue="0">
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b00" description="Set from source selector 0 is controlled via the Capture/Compare Unit timer, CCSTy signal"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b01" description="Set from source selector 0 is controlled via the CMP output from the CSGy unit. Which unit is being used is configured via the C0SS field."/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b10" description="Reserved"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b11" description="Reserved"/>
+    </bitFields>
+    <bitFields name="C0M" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc0gsel/c0m" value="0" toolTipHelpDescription="Source selector 0 clear configuration" defaultValue="0" startPos="8" stopPos="9" accessPermission="rw" maxValue="3" minValue="0">
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b00" description="Clear from source selector 0 is controlled via the Capture/Compare Unit timer, CCSTy signal"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b01" description="Clear from source selector 0 is controlled via the CMP output from the CSGy unit. Which unit is being used is configured via the C0CS field."/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b10" description="Reserved"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b11" description="Reserved"/>
+    </bitFields>
+    <bitFields name="S0ES" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc0gsel/s0es" value="0" toolTipHelpDescription="Source selector 0 set edge configuration" defaultValue="0" startPos="10" stopPos="11" accessPermission="rw" maxValue="3" minValue="0">
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b00" description="Generation of the set signal is disabled"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b01" description="Set signal is generated on a LOW to HIGH transition of the selected input"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b10" description="Set signal is generated on a HIGH to LOW transition of the selected input"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b11" description="Set signal is generated on both transitions of the selected input"/>
+    </bitFields>
+    <bitFields name="C0ES" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc0gsel/c0es" value="0" toolTipHelpDescription="Source selector 0 clear edge configuration" defaultValue="0" startPos="12" stopPos="13" accessPermission="rw" maxValue="3" minValue="0">
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b00" description="Generation of the clear signal is disabled"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b01" description="Clear signal is generated on a LOW to HIGH transition of the selected input"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b10" description="Clear signal is generated on a HIGH to LOW transition of the selected input"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b11" description="Clear signal is generated on both transitions of the selected input"/>
+    </bitFields>
+    <bitFields name="C1SS" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc0gsel/c1ss" value="0" toolTipHelpDescription="Source selector 1 comparator set configuration" defaultValue="0" startPos="16" stopPos="18" accessPermission="rw" maxValue="7" minValue="0">
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b000" description="CMP output of CSG0 unit can be used as set source for the output latch"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b001" description="CMP output of CSG2 unit can be used as set source for the output latch"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b010" description="CMP output of CSG2 unit can be used as set source for the output latch"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b11" description="Reserved"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b100" description="Reserved"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b101" description="Reserved"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b110" description="Reserved"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b111" description="Reserved"/>
+    </bitFields>
+    <bitFields name="C1CS" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc0gsel/c1cs" value="0" toolTipHelpDescription="Source selector 1 comparator clear configuration" defaultValue="0" startPos="19" stopPos="21" accessPermission="rw" maxValue="7" minValue="0">
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b000" description="CMP output of CSG0 unit can be used as clear source for the output latch"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b001" description="CMP output of CSG2 unit can be used as clear source for the output latch"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b010" description="CMP output of CSG2 unit can be used as clear source for the output latch"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b011" description="Reserved"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b100" description="Reserved"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b101" description="Reserved"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b110" description="Reserved"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b111" description="Reserved"/>
+    </bitFields>
+    <bitFields name="S1M" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc0gsel/s1m" value="0" toolTipHelpDescription="Source selector 1 set configuration" defaultValue="0" startPos="22" stopPos="23" accessPermission="rw" maxValue="3" minValue="0">
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b00" description="Set from source selector 1 is controlled via the Capture/Compare Unit timer, CCSTy signal"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b01" description="Set from source selector 1 is controlled via the CMP output from the CSGy unit. Which unit is being used is configured via the C1SS field."/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b10" description="Reserved"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b11" description="Reserved"/>
+    </bitFields>
+    <bitFields name="C1M" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc0gsel/c1m" value="0" toolTipHelpDescription="Source selector 1 clear configuration" defaultValue="0" startPos="24" stopPos="25" accessPermission="rw" maxValue="3" minValue="0">
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b00" description="Clear from source selector 1 is controlled via the Capture/Compare Unit timer, CCSTy signal"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b01" description="Clear from source selector 1 is controlled via the CMP output from the CSGy unit. Which unit is being used is configured via the C1CS field."/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b10" description="Reserved"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b11" description="Reserved"/>
+    </bitFields>
+    <bitFields name="S1ES" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc0gsel/s1es" value="0" toolTipHelpDescription="Source selector 1 set edge configuration" defaultValue="0" startPos="26" stopPos="27" accessPermission="rw" maxValue="3" minValue="0">
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b00" description="Generation of the set signal is disabled"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b01" description="Set signal is generated on a LOW to HIGH transition of the selected input"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b10" description="Set signal is generated on a HIGH to LOW transition of the selected input"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b11" description="Set signal is generated on both transitions of the selected input"/>
+    </bitFields>
+    <bitFields name="C1ES" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc0gsel/c1es" value="0" toolTipHelpDescription="Source selector 1 clear edge configuration" defaultValue="0" startPos="28" stopPos="29" accessPermission="rw" maxValue="3" minValue="0">
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b00" description="Generation of the clear signal is disabled"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b01" description="Clear signal is generated on a LOW to HIGH transition of the selected input"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b10" description="Clear signal is generated on a HIGH to LOW transition of the selected input"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b11" description="Clear signal is generated on both transitions of the selected input"/>
+    </bitFields>
+  </provided>
+  <provided xsi:type="ResourceModel:BitField" name="C1SS" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc0gsel/c1ss" value="0" toolTipHelpDescription="Source selector 1 comparator set configuration" defaultValue="0" startPos="16" stopPos="18" accessPermission="rw" maxValue="7" minValue="0">
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b000" description="CMP output of CSG0 unit can be used as set source for the output latch"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b001" description="CMP output of CSG2 unit can be used as set source for the output latch"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b010" description="CMP output of CSG2 unit can be used as set source for the output latch"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b11" description="Reserved"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b100" description="Reserved"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b101" description="Reserved"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b110" description="Reserved"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b111" description="Reserved"/>
+  </provided>
+  <provided xsi:type="ResourceModel:BitField" name="C1CS" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc0gsel/c1cs" value="0" toolTipHelpDescription="Source selector 1 comparator clear configuration" defaultValue="0" startPos="19" stopPos="21" accessPermission="rw" maxValue="7" minValue="0">
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b000" description="CMP output of CSG0 unit can be used as clear source for the output latch"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b001" description="CMP output of CSG2 unit can be used as clear source for the output latch"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b010" description="CMP output of CSG2 unit can be used as clear source for the output latch"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b011" description="Reserved"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b100" description="Reserved"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b101" description="Reserved"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b110" description="Reserved"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b111" description="Reserved"/>
+  </provided>
+  <provided xsi:type="ResourceModel:RegisterParameter" name="HRC0TSEL" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc0tsel" value="00000000" toolTipHelpDescription="HRC0 timer selection" defaultValue="00000000" accessPermission="rw" addressOffset="0x130C" resetValue="00000000" resetMask="0xFFFFFFFF">
+    <bitFields name="TSEL0" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc0tsel/tsel0" value="0" toolTipHelpDescription="Source Selector 0 Timer connection" defaultValue="0" startPos="0" stopPos="2" accessPermission="rw" maxValue="7" minValue="0">
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b000" description="Source Selector 0 is connected to Capture/Compare Unit Timer 0 (CCST0 can be used)"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b001" description="Source Selector 0 is connected to Capture/Compare Unit Timer 1 (CCST1 can be used)"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b010" description="Source Selector 0 is connected to Capture/Compare Unit Timer 2 (CCST2 can be used)"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b011" description="Source Selector 0 is connected to Capture/Compare Unit Timer 3 (CCST3 can be used)"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b100" description="Reserved"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b101" description="Reserved"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b110" description="Reserved"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b111" description="Reserved"/>
+    </bitFields>
+    <bitFields name="TSEL1" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc0tsel/tsel1" value="0" toolTipHelpDescription="Source Selector 1 Timer connection" defaultValue="0" startPos="3" stopPos="5" accessPermission="rw" maxValue="7" minValue="0">
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b000" description="Source Selector 1 is connected to Capture/Compare Unit Timer 0 (CCST0 can be used)"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b001" description="Source Selector 1 is connected to Capture/Compare Unit Timer 1 (CCST1 can be used)"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b010" description="Source Selector 1 is connected to Capture/Compare Unit Timer 2 (CCST2 can be used)"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b011" description="Source Selector 1 is connected to Capture/Compare Unit Timer 3 (CCST3 can be used)"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b100" description="Reserved"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b101" description="Reserved"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b110" description="Reserved"/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b111" description="Reserved"/>
+    </bitFields>
+    <bitFields name="TS0E" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc0tsel/ts0e" value="0" toolTipHelpDescription="Source selector 0 TRAP enable" defaultValue="0" startPos="16" stopPos="16" accessPermission="rw" maxValue="1" minValue="0">
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b0" description="TRAP signal generated from the Timer connected to Source Selector 0 is disabled."/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b1" description="TRAP signal generated from the Timer connected to Source Selector 0 is enabled."/>
+    </bitFields>
+    <bitFields name="TS1E" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc0tsel/ts1e" value="0" toolTipHelpDescription="Source selector 1 TRAP enable" defaultValue="0" startPos="17" stopPos="17" accessPermission="rw" maxValue="1" minValue="0">
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b0" description="TRAP signal generated from the Timer connected to Source Selector 1 is disabled."/>
+      <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b1" description="TRAP signal generated from the Timer connected to Source Selector 1 is enabled."/>
+    </bitFields>
+  </provided>
+  <provided xsi:type="ResourceModel:BitField" name="TSEL1" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc0tsel/tsel1" value="0" toolTipHelpDescription="Source Selector 1 Timer connection" defaultValue="0" startPos="3" stopPos="5" accessPermission="rw" maxValue="7" minValue="0">
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b000" description="Source Selector 1 is connected to Capture/Compare Unit Timer 0 (CCST0 can be used)"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b001" description="Source Selector 1 is connected to Capture/Compare Unit Timer 1 (CCST1 can be used)"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b010" description="Source Selector 1 is connected to Capture/Compare Unit Timer 2 (CCST2 can be used)"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b011" description="Source Selector 1 is connected to Capture/Compare Unit Timer 3 (CCST3 can be used)"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b100" description="Reserved"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b101" description="Reserved"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b110" description="Reserved"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b111" description="Reserved"/>
+  </provided>
+  <provided xsi:type="ResourceModel:BitField" name="C0SS" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc0gsel/c0ss" value="0" toolTipHelpDescription="Source selector 0 comparator set configuration" defaultValue="0" startPos="0" stopPos="2" accessPermission="rw" maxValue="7" minValue="0">
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b000" description="CMP output of CSG0 unit can be used as set source for the output latch"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b001" description="CMP output of CSG2 unit can be used as set source for the output latch"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b010" description="CMP output of CSG2 unit can be used as set source for the output latch"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b011" description="Reserved"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b100" description="Reserved"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b101" description="Reserved"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b110" description="Reserved"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b111" description="Reserved"/>
+  </provided>
+  <provided xsi:type="ResourceModel:BitField" name="C0CS" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc0gsel/c0cs" value="0" toolTipHelpDescription="Source selector 0 comparator clear configuration" defaultValue="0" startPos="3" stopPos="5" accessPermission="rw" maxValue="7" minValue="0">
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b000" description="CMP output of CSG0 unit can be used as clear source for the output latch"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b001" description="CMP output of CSG2 unit can be used as clear source for the output latch"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b010" description="CMP output of CSG2 unit can be used as clear source for the output latch"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b011" description="Reserved"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b100" description="Reserved"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b101" description="Reserved"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b110" description="Reserved"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b111" description="Reserved"/>
+  </provided>
+  <provided xsi:type="ResourceModel:BitField" name="S1M" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc0gsel/s1m" value="0" toolTipHelpDescription="Source selector 1 set configuration" defaultValue="0" startPos="22" stopPos="23" accessPermission="rw" maxValue="3" minValue="0">
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b00" description="Set from source selector 1 is controlled via the Capture/Compare Unit timer, CCSTy signal"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b01" description="Set from source selector 1 is controlled via the CMP output from the CSGy unit. Which unit is being used is configured via the C1SS field."/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b10" description="Reserved"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b11" description="Reserved"/>
+  </provided>
+  <provided xsi:type="ResourceModel:BitField" name="C1M" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc0gsel/c1m" value="0" toolTipHelpDescription="Source selector 1 clear configuration" defaultValue="0" startPos="24" stopPos="25" accessPermission="rw" maxValue="3" minValue="0">
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b00" description="Clear from source selector 1 is controlled via the Capture/Compare Unit timer, CCSTy signal"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b01" description="Clear from source selector 1 is controlled via the CMP output from the CSGy unit. Which unit is being used is configured via the C1CS field."/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b10" description="Reserved"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b11" description="Reserved"/>
+  </provided>
+  <provided xsi:type="ResourceModel:BitField" name="S0M" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc0gsel/s0m" value="0" toolTipHelpDescription="Source selector 0 set configuration" defaultValue="0" startPos="6" stopPos="7" accessPermission="rw" maxValue="3" minValue="0">
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b00" description="Set from source selector 0 is controlled via the Capture/Compare Unit timer, CCSTy signal"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b01" description="Set from source selector 0 is controlled via the CMP output from the CSGy unit. Which unit is being used is configured via the C0SS field."/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b10" description="Reserved"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b11" description="Reserved"/>
+  </provided>
+  <provided xsi:type="ResourceModel:BitField" name="C0M" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc0gsel/c0m" value="0" toolTipHelpDescription="Source selector 0 clear configuration" defaultValue="0" startPos="8" stopPos="9" accessPermission="rw" maxValue="3" minValue="0">
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b00" description="Clear from source selector 0 is controlled via the Capture/Compare Unit timer, CCSTy signal"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b01" description="Clear from source selector 0 is controlled via the CMP output from the CSGy unit. Which unit is being used is configured via the C0CS field."/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b10" description="Reserved"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b11" description="Reserved"/>
+  </provided>
+  <provided xsi:type="ResourceModel:BitField" name="TSEL0" URI="http://resources/0.4.5/peripheral/hrpwm/0/hrc0tsel/tsel0" value="0" toolTipHelpDescription="Source Selector 0 Timer connection" defaultValue="0" startPos="0" stopPos="2" accessPermission="rw" maxValue="7" minValue="0">
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b000" description="Source Selector 0 is connected to Capture/Compare Unit Timer 0 (CCST0 can be used)"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b001" description="Source Selector 0 is connected to Capture/Compare Unit Timer 1 (CCST1 can be used)"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b010" description="Source Selector 0 is connected to Capture/Compare Unit Timer 2 (CCST2 can be used)"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b011" description="Source Selector 0 is connected to Capture/Compare Unit Timer 3 (CCST3 can be used)"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b100" description="Reserved"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b101" description="Reserved"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b110" description="Reserved"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b111" description="Reserved"/>
+  </provided>
+  <addressBlock offset="0x0000" size="0x4000" usage="registers"/>
+</ResourceModel:Peripheral>

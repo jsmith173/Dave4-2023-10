@@ -1,0 +1,10 @@
+*.d
+*.o
+*.lst
+*.mk
+*.elf
+*.hex
+*.map
+*.rsp
+/.metadata/
+.settings/

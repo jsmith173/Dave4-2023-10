@@ -1,0 +1,361 @@
+package Model.APPS.COMP_SLOPE_GEN.v4_0_10;
+
+/*
+ Copyright (c) 2015-2020, Infineon Technologies AG
+ All rights reserved.
+											
+ Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ following conditions are met:
+																			 
+ Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+ disclaimer.
+  
+ Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
+ disclaimer in the documentation and/or other materials provided with the distribution.
+  
+ Neither the name of the copyright holders nor the names of its contributors may be used to endorse or promote
+ products derived from this software without specific prior written permission.
+																			 
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE  FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ WHETHER IN CONTRACT, STRICT LIABILITY,OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+																			 
+ To improve the quality of the software, users are encouraged to share modifications, enhancements or bug fixes with
+ Infineon Technologies AG: dave@infineon.com. */
+
+/*************** Revision History **********************************************
+Version        Date          Description 
+
+  1.0.0       16-Apr-2015   Initial version for DAVEv4 (Internal Release)<br>
+  1.0.1       14-May-2015   Updates as per review comments.<br>
+  1.0.3       20-May-2015   Logic for minimum LLD version check is added in comp_slope_gen.h file.<br>
+  1.0.4       11-Jun-2015   <ul>
+                            <li>Corrected the typo in "Comparator Output Setting" tab, Blanking time [nses]: --> Blanking time [nsec]:</li><br>
+                            <li>Signal name "comp_out" changed to "comp_out_to_hrc"</li><br>
+                            <li>Signal name "Comp Input" changed to "comp_input_pin"</li><br>   
+                            <li>Support for comparator output signal after sync stage add with signal name "comp_out_cyo"</li><br>
+                            <li>Removed API COMP_SLOPE_GEN_ReqImmediateShadowTx()</li><br>
+                            </ul>
+  4.0.1       19-Jun-2015   <ul>   
+                            <li>LLD package version check is added.</li><br>
+                            <li>'_AddPin' suffix is removed for MVirtualSignal variables. </li><br>  
+                            </ul>     
+  4.0.3       8-July-2015   <ul>   
+                            <li>Help Doc update</li><br>
+                            </ul>     
+  4.0.4       07-Oct-2015   <ul>
+                            <li>Copyright information is added in manifest.</li><br>
+                            </ul>     
+  4.0.6       27-Nov-2015   <ul>
+                            <li>Added images for comparator out put waveform when comparator inversion is selected.</li><br>
+                            </ul>     
+  4.0.8       25-Apr-2016   APP help documentation, contents page updated for formatting errors.
+  4.0.10      09-Jan-2021   Modified check for minimum XMCLib version. <BR>
+                            Added NOPs in COMP_SLOPE_GEN_Init() between XMC_HRPWM_StartDac() and XMC_HRPWM_StartComparator(). <BR>
+*******************************************************************************/
+import ifx.davex.app.manifest.*
+
+class  COMP_SLOPE_GEN extends COMP_SLOPE_GEN_GUI {
+
+    private static final Double DAC_MAX_VALUE = 3300.0
+    private static final Double DAC_MIN_VALUE = 0.0
+    // Note  : Following App properties are mandatory and important
+    // Begin : App property section
+
+    /**
+     * App version
+     * Format: a string with three digit separated by a dot.
+     */
+    def version            = '4.0.10'
+    
+    /**
+     * App categories declaration. 
+     * It is list of strings. Subcategories are separated by slash.
+     * No limits on number of categories and subcategories depth.
+     */
+    def categoriesDescription = ["General Purpose/Timed Signals", "Power Conversion"] 
+
+    /** 
+     * Minimum DAVE version required for this app.
+     * 
+     * It is string with three digit separated by a dot.
+     */
+    def minDaveVersion           = '4.0.0'
+    
+    /** 
+     * Keywords used by search feature in Apps selection view
+     * 
+     * It is a list of string.
+     */
+    def keywords      = ['ALL', 'CSG', 'Comparator','Slope', 'HRPWM', 'Power Conversion']
+    
+    /** 
+     * softwareIDs is used to declare which devices are compatible with this app.
+     * It is a map with key a string containing a pattern that shall match the SW id of
+     * the device and as value the minimal version of the app.
+     * 
+     * 
+     */
+    
+    //Any step of XMC4500F144 and XMC4400F144
+    //Any step of XMC4400F100 and XMC4400F54
+    //Any step, any variant and any packages of XMC1300
+    def softwareIDs       = [
+        //"XMC44
+        "XMC4.4.00.F100.ALL":"1.0.0",
+        "XMC4.4.00.F64.ALL":"1.0.0",
+        
+        "XMC4.4.02.F100.ALL":"1.0.0",
+        "XMC4.4.02.F64.ALL":"1.0.0",
+                            
+        //"XMC42
+        "XMC4.2.00.F64.ALL":"1.0.0",
+        "XMC4.2.00.Q48.ALL":"1.0.0",
+                            
+        //"XMC41
+        "XMC4.1.00.F64.ALL":"1.0.0",
+        "XMC4.1.00.Q48.ALL":"1.0.0",
+        
+        "XMC4.1.04.F64.ALL":"1.0.0",
+        "XMC4.1.04.Q48.ALL":"1.0.0",
+        
+        "XMC4.1.08.F64.ALL":"1.0.0",
+        "XMC4.1.08.Q48.ALL":"1.0.0",
+    ]
+    
+    /**
+     * Singleton property:
+     * When it is true the app can be instantiated only once. 
+     */
+    def singleton     = false
+
+
+    /**
+     * initProvider property
+     * It shall be true to add a call to <AppName>_Init() 
+     */
+    def initProvider  = true
+    
+    /**
+     * Deprecated app
+     * Set it to true to indicate that the app shall be not used for new projects.
+     */
+    def deprecated    = false
+    
+    /**
+     * Sharable property.
+     * It shall be true to allows multiple apps to require the same instance of this app.
+     */
+    def sharable      = false
+
+    /**
+     *  App function description.
+     */
+    def description = "CSG APP generates PWM using comparator and slope generator \n This APP requires GLOBAL_CCU8 consuming kernal 0"
+    
+    // End   : App property section
+    
+    // Begin : User app property section 
+    // End   : User app property section
+    
+    MVirtualResourceGroup hwres_csg_slice
+    MVirtualResourceGroup hwres_port_cmp_input
+    
+    MRequiredApp   csg_app_global_ccu8_cc8
+    MRequiredApp   csg_app_global_hrpwm
+    
+    MVirtualSignalRA vs_hrpwm_global
+    MVirtualSignalRA vs_ccu8_cc8_global
+    
+    MVirtualSignal vs_csg_global
+    MVirtualSignal vs_csg_ext_switch
+    MVirtualSignal vs_csg_ext_clamp_control
+    MVirtualSignal vs_csg_slope_start
+    MVirtualSignal vs_csg_crs_cfs
+    MVirtualSignal vs_csg_cse
+    MVirtualSignal vs_csg_comp_out_to_hrc
+    MVirtualSignal vs_csg_comp_out_cyo
+    MVirtualSignal vs_csg_cina
+    MVirtualSignal vs_csg_cinb
+    MVirtualSignal vs_port_cmp_input
+
+    GFloat   gfloat_ccu8_clock             = GFloat  (widgetName:"gfloat_ccu8_clock",             value:50,   minValue:0,              maxValue:Double.POSITIVE_INFINITY, enabled:true, visible:false, isMandatoryValue:false)
+    GInteger ginteger_pulse_swallow_count  = GInteger(widgetName:"ginteger_pulse_swallow_count",  value:1999, minValue:Long.MIN_VALUE, maxValue:Long.MAX_VALUE,           enabled:true, visible:false, isMandatoryValue:false)
+    GInteger ginteger_pulse_swallow_gain   = GInteger(widgetName:"ginteger_pulse_swallow_gain",   value:1,    minValue:Long.MIN_VALUE, maxValue:Long.MAX_VALUE,           enabled:true, visible:false, isMandatoryValue:false)
+
+    // App Constructor
+    public COMP_SLOPE_GEN(DaveEnv daveEnv) {
+        
+        /* ---------------------------------------------------------- */
+        /* ------------ Hardware resource consumption block --------- */
+        /* ---------------------------------------------------------- */
+        String dave_family = daveEnv.project.selectedDevice.deviceId.family;
+        String dave_series = daveEnv.project.selectedDevice.deviceId.series;
+        
+        hwres_csg_slice          = MVirtualResourceGroup("CSG",            ["peripheral", "hrpwm", "*", "csg", "*"],  true );
+        hwres_port_cmp_input     = MVirtualResourceGroup("CSG COMP INPUT", ["port", "p", "*", "pad", "*"],            true );
+        
+        
+        /* ---------------------------------------------------------- */
+        /* ------------ App consumption Block ----------------------- */
+        /* ---------------------------------------------------------- */
+        
+        csg_app_global_ccu8_cc8  = MRequiredApp("GLOBAL_CCU8",  "GLOBAL_CCU8",  RSHARABLE, "4.1.4", true);
+        csg_app_global_hrpwm     = MRequiredApp("GLOBAL_HRPWM", "GLOBAL_HRPWM", RSHARABLE, "4.0.8", true);
+        
+        
+        /* ---------------------------------------------------------- */
+        /* -------------- APP IO Signals ---------------------------- */
+        /* ---------------------------------------------------------- */
+        
+        vs_ccu8_cc8_global       =  MVirtualSignalRA(csg_app_global_ccu8_cc8, "vs_global_ccu8_globalsignal" );    
+        vs_hrpwm_global          =  MVirtualSignalRA(csg_app_global_hrpwm,    "vs_global_hrpwm_globalsignal");
+
+        vs_csg_global            =  MVirtualSignal(hwres_csg_slice,  "global_signal",            "global_signal",     true, true);
+
+        vs_csg_ext_switch        =  MVirtualSignal(hwres_csg_slice,  "ext_switch_blank",         "ext_switch",        true, true);
+        vs_csg_ext_clamp_control =  MVirtualSignal(hwres_csg_slice,  "ext_clamp_control",        "ext_clamp_control", true, true);
+        vs_csg_slope_start       =  MVirtualSignal(hwres_csg_slice,  "ext_slope_start",          "slope_start",       true, true);
+        vs_csg_crs_cfs           =  MVirtualSignal(hwres_csg_slice,  "event_comp_out_rise_fall", "crs_cfs",           true, true);
+        vs_csg_cse               =  MVirtualSignal(hwres_csg_slice,  "event_clamp_state_enter",  "cse",               true, true);
+                
+        vs_csg_comp_out_to_hrc   =  MVirtualSignal(hwres_csg_slice,  "comp_out_to_hrc",          "gsc_comp",          true, true);
+        vs_csg_comp_out_cyo      =  MVirtualSignal(hwres_csg_slice,  "comp_out_cyo",             "cno",               true, true);//gsc_comp to be changed to new name as per new DD
+        vs_csg_cina              =  MVirtualSignal(hwres_csg_slice,  "comp_input_A",             "cina",              true, true);
+        vs_csg_cinb              =  MVirtualSignal(hwres_csg_slice,  "comp_input_B",             "cinb",              true, true);
+        
+        @AddPin
+        vs_port_cmp_input        =  MVirtualSignal(hwres_port_cmp_input, "comp_input_pin", "pad", true, false);
+        
+        /* ---------------------------------------------------------- */
+        /* ---------------- APP IO Connections ---------------------- */
+        /* ---------------------------------------------------------- */
+
+        addConnectionConstraint(vs_ccu8_cc8_global,   vs_hrpwm_global, true);
+        addConnectionConstraint(vs_hrpwm_global,      vs_csg_global,   true);
+        addConnectionConstraint(vs_port_cmp_input,    vs_csg_cina,     MF({gcombo_csg_cinx.value == 'CINA'},Boolean));
+        addConnectionConstraint(vs_port_cmp_input,    vs_csg_cinb,     MF({gcombo_csg_cinx.value == 'CINB'},Boolean));
+        
+/************************************************************************************************************************************/
+        gfloat_ccu8_clock.value  = MF({
+            Double Clock = 120;
+                Clock = (Double)(csg_app_global_ccu8_cc8.getVal(["gfloat_clkFreq", "value"]))
+            return(Clock);
+            }, Double); // get clock form global app.
+        
+/************************************************************************************************************************************/
+
+        gfloat_blanking_time.enabled  = MF({gcombo_blanking_config.value != "Disabled"},Boolean);
+        gfloat_blanking_time.maxValue = MF({255.0 * 1000.0 /(Double)gfloat_ccu8_clock.value },Double);
+        glabel_csg_cinx.visible       = false;
+        
+/************************************************************************************************************************************/
+        
+        gcombo_csg_clamp_level.enabled          = MF({gcheck_csg_comp_clamp_enable.value},Boolean);
+        gcombo_csg_clamp_ctrl_lvl.enabled       = MF({gcheck_csg_comp_clamp_enable.value},Boolean);
+        gcombo_csg_clamp_enter_config.enabled   = MF({gcheck_csg_comp_clamp_enable.value},Boolean);
+        gcombo_scg_clamp_exit_config.enabled    = MF({gcheck_csg_comp_clamp_enable.value},Boolean);
+        gcombo_csg_clamp_exit_sw_config.enabled = MF({gcheck_csg_comp_clamp_enable.value},Boolean);
+        
+/************************************************************************************************************************************/
+        
+        gfloat_slope_value.maxValue = MF({  64.0 * 8.0 /(19.84 * (1.0/(Double)gfloat_ccu8_clock.value))},Double);
+        gfloat_slope_value.minValue = MF({  01.0 * 1.0 /(19.84 * (1.0/(Double)gfloat_ccu8_clock.value))},Double);
+        
+        ginteger_pulse_swallow_count.value = MF({
+            Integer value = 0;
+            Double gain = 1;
+            Integer prescaler = 0;
+            Integer i = 0;
+            Double time = 1.0/(Double)gfloat_ccu8_clock.value;
+            for(i=0;i<4;i++)
+            {
+                gain = 2.power(i);
+                value =  (gfloat_slope_value.value * 19.84 * time / gain).toInteger(); // 19.84 = 64*1023/3300;
+                if(value <= 64)
+                {
+                    break;
+                }
+            }
+            return(64 - value)},Integer);
+    
+         ginteger_pulse_swallow_gain.value = MF({
+             Integer prescaler = 0;
+             Double gain = 1.0;
+             Double time = 1.0/(Double)gfloat_ccu8_clock.value;
+             
+             gain = gfloat_slope_value.value * 19.84 * time / (Double)(64-ginteger_pulse_swallow_count.value);
+             gain = Math.log10(gain)*3.321;
+             return (gain.toInteger()); },Integer);
+         
+         
+         ggroup_8.visible = MF({!(gcombo_dac_mode.value == "Static")},Boolean); /*To be removed once static image is available*/
+         
+         /*Disable gcombo_restart_slope in triangle mode of operation.*/
+         gcombo_restart_slope.enabled  = MF({!(gcombo_dac_mode.value == "Triangular Slope" || gcombo_dac_mode.value == "Static")},Boolean);
+         gfloat_slope_value.enabled    = MF({!(gcombo_dac_mode.value == "Static")},Boolean);
+
+         gfloat_dac_dsv2.enabled       = MF({gcombo_dac_mode.value == "Triangular Slope" || (gcombo_restart_slope.value == "If DAC Value Reaches Stop Value (DSV2)" && gcombo_dac_mode.value != "Static")
+                                            },Boolean);
+                                        
+
+// Condition                        |     DSV1      |      DSV2     |
+//                                  |  Min  |  MAX  |  Min  |  MAX  |    
+//                                  |_______________________________|    
+// Static                           |   0   | 3300  |   0   | 3300  |  DSV2 - Don't care                                                                    
+// decrement & !external start      |   0   | 3300  |   0   | DSV1  |  DSV2<DSV1
+// decrement &  external start      |   0   | 3300  |   0   | 3300  |  DSV2 - Don't care
+// increment & !external start      |   0   | 3300  |  DSV1 | 3300  |  DSV2>DSV1
+// increment &  external start      |   0   | 3300  |   0   | 3300  |  DSV2 - Don't care
+// triangle                         | DSV2  | 3300  |   0   | 3300  |  DSV1>DSV2
+                                        
+         gfloat_dac_dsv1.maxValue      = DAC_MAX_VALUE;
+         
+         gfloat_dac_dsv1.minValue      = MF({if(gcombo_dac_mode.value == "Triangular Slope")  
+                                               {gfloat_dac_dsv2.value}
+                                             else
+                                               {DAC_MIN_VALUE} },Double);
+                                         
+        gfloat_dac_dsv2.maxValue      = MF({if(gcombo_dac_mode.value == "Decrementing Slope" && gcombo_restart_slope.value == "If DAC Value Reaches Stop Value (DSV2)")
+                                               {gfloat_dac_dsv1.value}
+                                             else
+                                               {DAC_MAX_VALUE} },Double);
+
+         gfloat_dac_dsv2.minValue      = MF({if(gcombo_dac_mode.value == "Incrementing Slope" && gcombo_restart_slope.value == "If DAC Value Reaches Stop Value (DSV2)")
+                                               {gfloat_dac_dsv1.value}
+                                             else{DAC_MIN_VALUE} },Double);
+                                         
+
+                                                                            
+         gimage_peak_cur_ctrl.path     = MF({
+                                              String path;
+                                              if(gcombo_dac_mode.value == "Static")                 {path = "Uimodel/static.PNG";}
+                                              else if(gcombo_dac_mode.value == "Decrementing Slope" && !gcheck_csg_comp_inv_enable.value){path = "Uimodel/decrement.PNG";}
+                                              else if(gcombo_dac_mode.value == "Incrementing Slope" && !gcheck_csg_comp_inv_enable.value){path = "Uimodel/increment.PNG";}
+                                              else if(gcombo_dac_mode.value == "Triangular Slope"   && !gcheck_csg_comp_inv_enable.value){path = "Uimodel/triangle.PNG";}
+                                              else if(gcombo_dac_mode.value == "Decrementing Slope" &&  gcheck_csg_comp_inv_enable.value){path = "Uimodel/decrement_inv.PNG";}
+                                              else if(gcombo_dac_mode.value == "Incrementing Slope" &&  gcheck_csg_comp_inv_enable.value){path = "Uimodel/increment_inv.PNG";}
+                                              else if(gcombo_dac_mode.value == "Triangular Slope"   &&  gcheck_csg_comp_inv_enable.value){path = "Uimodel/triangle_inv.PNG";}
+                                              else                                                  {path = "Uimodel/static.PNG";}
+                                              return(path); },String);
+         
+/************************************************************************************************************************************/
+    }
+    
+    // File Generation
+    def generateFiles(){
+        copy("comp_slope_gen.c", "comp_slope_gen.c");
+        copy("comp_slope_gen.h", "comp_slope_gen.h");
+        generate("comp_slope_gen_confc.tmpl", "comp_slope_gen_conf.c", true);
+        generate("comp_slope_gen_confh.tmpl", "comp_slope_gen_conf.h", true);
+        generate("comp_slope_gen_externh.tmpl", "comp_slope_gen_extern.h", true);
+    }
+    
+    //
+    // Add main code here
+    //
+}

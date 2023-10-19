@@ -1,0 +1,307 @@
+package Model.APPS.BUCK_VC_FIX_FQ.v4_1_4;
+
+// Import statements
+import ifx.davex.app.manifest.*
+
+abstract class BUCK_VC_FIX_FQ_GUI extends AppManifest {
+	/* Begin : UI variable section */
+	 public GTab gtab_controller_config;
+	 public GTab gtab_control_configurations;
+	 public GTab gtab_overlaod_protection;
+	 public GTab gtab_dummy_adc_measurement;
+	 public GTab gtab_dummy_overload_protections;
+	 public GImage gimage_buck_topology;
+	 public GImage gimage_pwm;
+	 public GImage gimage_adc;
+	 public GImage gimage_filter;
+	 public GImage gimage_control_config;
+	 public GInteger ginteger_pwm_freq;
+	 public GInteger ginteger_phase_shift;
+	 public GInteger ginteger_a_coeffs_int_bits;
+	 public GInteger ginteger_a_coeffs_fract_bits;
+	 public GInteger ginteger_b_coeffs_int_bits;
+	 public GInteger ginteger_b_coeffs_fract_bits;
+	 public GInteger ginteger_comp_output_int_bits;
+	 public GInteger ginteger_comp_output_fract_bits;
+	 public GInteger ginteger_volt_control_rate;
+	 public GInteger ginteger_soft_start_val;
+	 public GCombo gcombo_no_of_phases;
+	 public GCombo gcombo_mesurement_trigger;
+	 public GCombo gcombo_passive_lvl;
+	 public GCombo gcombo_adc_measurement_mode;
+	 public GCombo gcombo_vout_q_pos;
+	 public GCombo gcombo_vin_q_pos;
+	 public GCombo gcombo_iout1_q_pos;
+	 public GCombo gcombo_iout2_q_pos;
+	 public GCombo gcombo_iout3_q_pos;
+	 public GCombo gcombo_iout4_q_pos;
+	 public GCombo gcombo_adc_q_pos_user_defined_1;
+	 public GCombo gcombo_controller_type;
+	 public GCombo gcombo_protection_reaction_vout;
+	 public GCombo gcombo_protection_reaction_vin;
+	 public GCombo gcombo_protection_reaction_iout1;
+	 public GCombo gcombo_protection_reaction_iout2;
+	 public GCombo gcombo_protection_reaction_iout3;
+	 public GCombo gcombo_protection_reaction_iout4;
+	 public GCombo gcombo_isr_event;
+	 public GFloat gfloat_vin;
+	 public GFloat gfloat_vout_ref;
+	 public GFloat gfloat_pwm_res;
+	 public GFloat gfloat_init_dc;
+	 public GFloat gfloat_min_dc;
+	 public GFloat gfloat_max_dc;
+	 public GFloat gfloat_dt_rising;
+	 public GFloat gfloat_dt_falling;
+	 public GFloat gfloat_vout_gain;
+	 public GFloat gfloat_vin_gain;
+	 public GFloat gfloat_iout1_gain;
+	 public GFloat gfloat_iout2_gain;
+	 public GFloat gfloat_iout3_gain;
+	 public GFloat gfloat_iout4_gain;
+	 public GFloat gfloat_a1;
+	 public GFloat gfloat_a2;
+	 public GFloat gfloat_a3;
+	 public GFloat gfloat_b0;
+	 public GFloat gfloat_b1;
+	 public GFloat gfloat_b2;
+	 public GFloat gfloat_b3;
+	 public GFloat gfloat_k_gain;
+	 public GFloat gfloat_max_out;
+	 public GFloat gfloat_min_out;
+	 public GFloat gfloat_high_limit_vout;
+	 public GFloat gfloat_low_limit_vout;
+	 public GFloat gfloat_high_limit_vin;
+	 public GFloat gfloat_low_limit_vin;
+	 public GFloat gfloat_high_limit_iout1;
+	 public GFloat gfloat_low_limit_iout1;
+	 public GFloat gfloat_high_limit_iout2;
+	 public GFloat gfloat_low_limit_iout2;
+	 public GFloat gfloat_high_limit_iout3;
+	 public GFloat gfloat_low_limit_iout3;
+	 public GFloat gfloat_high_limit_iout4;
+	 public GFloat gfloat_low_limit_iout4;
+	 public GString gstring_vout_measurement;
+	 public GString gstring_vin_measurement;
+	 public GString gstring_iout1_measurement;
+	 public GString gstring_iout2_measurement;
+	 public GString gstring_iout3_measurement;
+	 public GString gstring_iout4_measurement;
+	 public GString gstring_udef1_measurement;
+	 public GString gstring_user_code;
+	 public GString gstring_int_handler_cntrl_loop;
+	 public GCheck gcheck_synch_conv;
+	 public GCheck gcheck_enable_high_res;
+	 public GCheck gcheck_measure_vout;
+	 public GCheck gcheck_measure_vin;
+	 public GCheck gcheck_measure_iout1;
+	 public GCheck gcheck_measure_iout2;
+	 public GCheck gcheck_measure_iout3;
+	 public GCheck gcheck_measure_iout4;
+	 public GCheck gcheck_measure_user_defined_1;
+	 public GCheck gcheck_user_code;
+	 public GCheck gcheck_volt_ctrl_loop_enable;
+	 public GCheck gcheck_soft_start;
+	 public GCheck gcheck_vin_feed_fwd;
+	 public GCheck gcheck_sw_protection_vout;
+	 public GCheck gcheck_sw_protection_vin;
+	 public GCheck gcheck_sw_protection_iout1;
+	 public GCheck gcheck_sw_protection_iout2;
+	 public GCheck gcheck_sw_protection_iout3;
+	 public GCheck gcheck_sw_protection_iout4;
+	 public GLabel glabel_1413;
+	 public GLabel glabel_dt_rising;
+	 public GLabel glabel_dt_falling;
+	 public GLabel gLabel145;
+	 public GLabel glabel_a1;
+	 public GLabel glabel_a2;
+	 public GLabel glabel_a3;
+	 public GLabel glabel_b0;
+	 public GLabel glabel_b1;
+	 public GLabel glabel_b2;
+	 public GLabel glabel_b3;
+	 public GLabel glabel_k_gain;
+	 public GLabel glabel_max_out;
+	 public GLabel glabel_min_out;
+	 public GLabel glabel_integer_bits;
+	 public GLabel glabel_factional_bits;
+	 public GLabel glabel_a_coeffs;
+	 public GLabel glabel_b_coeffs;
+	 public GLabel glabel_output;
+	 public GLabel glabel_note_fixed_pt_calc;
+	 public GLabel glabel_overload_protect_vout;
+	 public GLabel glabel_overload_protect_vin;
+	 public GLabel glabel_overload_protect_iout1;
+	 public GLabel glabel_overload_protect_iout2;
+	 public GLabel glabel_overload_protect_iout3;
+	 public GLabel glabel_overload_protect_iout4;
+	 public GLabel glabel_vin;
+	 public GLabel glabel_vout_ref;
+	 public GLabel glabel_soft_start_val;
+	 public GLabel glabel_user_code;
+	 public GLabel glabel_b_coeffs_int_bits;
+	 public GLabel glabel_a_coeffs_int_bits;
+	 public GLabel glabel_comp_output_int_bits;
+	 public GLabel glabel_b_coeffs_fract_bits;
+	 public GLabel glabel_a_coeffs_fract_bits;
+	 public GLabel glabel_comp_output_fract_bits;
+	 public GGroup ggroup_filter_var_format;
+	 public GGroup ggroup_18;
+	 public GGroup ggroup_user_code;
+	 public GInterruptPrio ginterruptprio_cntrl_loop;
+	 public GMessage gmessage_measurements;
+	 public GMessage gmessage_user_callback;
+	 public GMessage gmessage_cntrl_loop_isr;
+
+	 public BUCK_VC_FIX_FQ_GUI(DaveEnv daveEnv){
+
+	 gtab_controller_config = GTab(widgetName:"gtab_controller_config", text:"Control Settings", enabled:true, visible:true)
+	 gtab_control_configurations = GTab(widgetName:"gtab_control_configurations", text:"Control Configuration", enabled:true, visible:true)
+	 gtab_overlaod_protection = GTab(widgetName:"gtab_overlaod_protection", text:"Overload Protection", enabled:true, visible:true)
+	 gtab_dummy_adc_measurement = GTab(widgetName:"gtab_dummy_adc_measurement", text:"dummy adc measurement", enabled:true, visible:true)
+	 gtab_dummy_overload_protections = GTab(widgetName:"gtab_dummy_overload_protections", text:"dummy_overload_protections", enabled:true, visible:true)
+	 gimage_buck_topology = GImage(widgetName:"gimage_buck_topology", path: "doc/Buck_vcm_single_phase_synch.png", enabled:true, visible:true)
+	 gimage_pwm = GImage(widgetName:"gimage_pwm", path: "doc/pwm_ccu.png", enabled:true, visible:true)
+	 gimage_adc = GImage(widgetName:"gimage_adc", path: "doc/adc.png", enabled:true, visible:true)
+	 gimage_filter = GImage(widgetName:"gimage_filter", path: "doc/filter_3p3z.png", enabled:true, visible:true)
+	 gimage_control_config = GImage(widgetName:"gimage_control_config", path: "doc/buck_control_config_without_ff.png", enabled:true, visible:true)
+	 ginteger_pwm_freq = GInteger(widgetName:"ginteger_pwm_freq", value:200, minValue:2, maxValue:10000, enabled:true, visible:true, isMandatoryValue:false)
+	 ginteger_phase_shift = GInteger(widgetName:"ginteger_phase_shift", value:180, minValue:0, maxValue:360, enabled:false, visible:true, isMandatoryValue:false)
+	 ginteger_a_coeffs_int_bits = GInteger(widgetName:"ginteger_a_coeffs_int_bits", value:8, minValue:-10, maxValue:32, enabled:true, visible:true, isMandatoryValue:false)
+	 ginteger_a_coeffs_fract_bits = GInteger(widgetName:"ginteger_a_coeffs_fract_bits", value:16, minValue:0, maxValue:32, enabled:true, visible:true, isMandatoryValue:false)
+	 ginteger_b_coeffs_int_bits = GInteger(widgetName:"ginteger_b_coeffs_int_bits", value:0, minValue:-10, maxValue:32, enabled:true, visible:true, isMandatoryValue:false)
+	 ginteger_b_coeffs_fract_bits = GInteger(widgetName:"ginteger_b_coeffs_fract_bits", value:0, minValue:0, maxValue:32, enabled:true, visible:true, isMandatoryValue:false)
+	 ginteger_comp_output_int_bits = GInteger(widgetName:"ginteger_comp_output_int_bits", value:0, minValue:-10, maxValue:32, enabled:true, visible:true, isMandatoryValue:false)
+	 ginteger_comp_output_fract_bits = GInteger(widgetName:"ginteger_comp_output_fract_bits", value:0, minValue:0, maxValue:32, enabled:false, visible:true, isMandatoryValue:false)
+	 ginteger_volt_control_rate = GInteger(widgetName:"ginteger_volt_control_rate", value:1, minValue:1, maxValue:100, enabled:true, visible:true, isMandatoryValue:false)
+	 ginteger_soft_start_val = GInteger(widgetName:"ginteger_soft_start_val", value:5000, minValue:100, maxValue:1000000, enabled:true, visible:true, isMandatoryValue:false)
+	 gcombo_no_of_phases = GCombo(widgetName:"gcombo_no_of_phases", options:["1","2","3","4"], value:"1", enabled:true, visible:true, isMandatoryValue:false)
+	 gcombo_mesurement_trigger = GCombo(widgetName:"gcombo_mesurement_trigger", options:["User Manual Connection","PWM Timer (Phase 0)"], value:"User Manual Connection", enabled:true, visible:true, isMandatoryValue:false)
+	 gcombo_passive_lvl = GCombo(widgetName:"gcombo_passive_lvl", options:["Low","High"], value:"Low", enabled:true, visible:true, isMandatoryValue:false)
+	 gcombo_adc_measurement_mode = GCombo(widgetName:"gcombo_adc_measurement_mode", options:["Scan","Queue"], value:"Scan", enabled:true, visible:true, isMandatoryValue:false)
+	 gcombo_vout_q_pos = GCombo(widgetName:"gcombo_vout_q_pos", options:["0","1","2","3","4","5","6","7"], value:"0", enabled:true, visible:true, isMandatoryValue:false)
+	 gcombo_vin_q_pos = GCombo(widgetName:"gcombo_vin_q_pos", options:["0","1","2","3","4","5","6","7"], value:"1", enabled:true, visible:true, isMandatoryValue:false)
+	 gcombo_iout1_q_pos = GCombo(widgetName:"gcombo_iout1_q_pos", options:["0","1","2","3","4","5","6","7"], value:"2", enabled:true, visible:true, isMandatoryValue:false)
+	 gcombo_iout2_q_pos = GCombo(widgetName:"gcombo_iout2_q_pos", options:["0","1","2","3","4","5","6","7"], value:"3", enabled:true, visible:true, isMandatoryValue:false)
+	 gcombo_iout3_q_pos = GCombo(widgetName:"gcombo_iout3_q_pos", options:["0","1","2","3","4","5","6","7"], value:"4", enabled:true, visible:true, isMandatoryValue:false)
+	 gcombo_iout4_q_pos = GCombo(widgetName:"gcombo_iout4_q_pos", options:["0","1","2","3","4","5","6","7"], value:"5", enabled:true, visible:true, isMandatoryValue:false)
+	 gcombo_adc_q_pos_user_defined_1 = GCombo(widgetName:"gcombo_adc_q_pos_user_defined_1", options:["0","1","2","3","4","5","6","7"], value:"6", enabled:true, visible:true, isMandatoryValue:false)
+	 gcombo_controller_type = GCombo(widgetName:"gcombo_controller_type", options:["Type II (2P2Z)","Type III (3P3Z)"], value:"Type III (3P3Z)", enabled:true, visible:true, isMandatoryValue:false)
+	 gcombo_protection_reaction_vout = GCombo(widgetName:"gcombo_protection_reaction_vout", options:["Stop Buck (OVP, UVP)"], value:"Stop Buck (OVP, UVP)", enabled:true, visible:true, isMandatoryValue:false)
+	 gcombo_protection_reaction_vin = GCombo(widgetName:"gcombo_protection_reaction_vin", options:["Stop Buck (OVP, UVP)"], value:"Stop Buck (OVP, UVP)", enabled:true, visible:true, isMandatoryValue:false)
+	 gcombo_protection_reaction_iout1 = GCombo(widgetName:"gcombo_protection_reaction_iout1", options:["Stop Buck (OCP, UCP)"], value:"Stop Buck (OCP, UCP)", enabled:true, visible:true, isMandatoryValue:false)
+	 gcombo_protection_reaction_iout2 = GCombo(widgetName:"gcombo_protection_reaction_iout2", options:["Stop Buck (OCP, UCP)"], value:"Stop Buck (OCP, UCP)", enabled:true, visible:true, isMandatoryValue:false)
+	 gcombo_protection_reaction_iout3 = GCombo(widgetName:"gcombo_protection_reaction_iout3", options:["Stop Buck (OCP, UCP)"], value:"Stop Buck (OCP, UCP)", enabled:true, visible:true, isMandatoryValue:false)
+	 gcombo_protection_reaction_iout4 = GCombo(widgetName:"gcombo_protection_reaction_iout4", options:["Stop Buck (OCP, UCP)"], value:"Stop Buck (OCP, UCP)", enabled:true, visible:true, isMandatoryValue:false)
+	 gcombo_isr_event = GCombo(widgetName:"gcombo_isr_event", options:["Vout Result Event","End Of Request Source Event"], value:"Vout Result Event", enabled:true, visible:true, isMandatoryValue:false)
+	 gfloat_vin = GFloat(widgetName:"gfloat_vin", value:12, minValue:1.8, maxValue:10000, enabled:true, visible:true, isMandatoryValue:false)
+	 gfloat_vout_ref = GFloat(widgetName:"gfloat_vout_ref", value:3.3, minValue:0.5, maxValue:10000, enabled:true, visible:true, isMandatoryValue:false)
+	 gfloat_pwm_res = GFloat(widgetName:"gfloat_pwm_res", value:16, minValue:9, maxValue:20000, enabled:true, visible:true, isMandatoryValue:false)
+	 gfloat_init_dc = GFloat(widgetName:"gfloat_init_dc", value:10, minValue:0, maxValue:100, enabled:true, visible:true, isMandatoryValue:false)
+	 gfloat_min_dc = GFloat(widgetName:"gfloat_min_dc", value:0, minValue:0, maxValue:100, enabled:true, visible:true, isMandatoryValue:false)
+	 gfloat_max_dc = GFloat(widgetName:"gfloat_max_dc", value:40, minValue:0, maxValue:100, enabled:true, visible:true, isMandatoryValue:false)
+	 gfloat_dt_rising = GFloat(widgetName:"gfloat_dt_rising", value:100.0, minValue:0.0, maxValue:1500, enabled:true, visible:true, isMandatoryValue:false)
+	 gfloat_dt_falling = GFloat(widgetName:"gfloat_dt_falling", value:100.0, minValue:0.0, maxValue:1500, enabled:true, visible:true, isMandatoryValue:false)
+	 gfloat_vout_gain = GFloat(widgetName:"gfloat_vout_gain", value:0.79295, minValue:0.0000001, maxValue:100, enabled:true, visible:true, isMandatoryValue:false)
+	 gfloat_vin_gain = GFloat(widgetName:"gfloat_vin_gain", value:0.2093, minValue:0.0000001, maxValue:100, enabled:true, visible:true, isMandatoryValue:false)
+	 gfloat_iout1_gain = GFloat(widgetName:"gfloat_iout1_gain", value:1, minValue:0.0000001, maxValue:100, enabled:true, visible:true, isMandatoryValue:false)
+	 gfloat_iout2_gain = GFloat(widgetName:"gfloat_iout2_gain", value:1, minValue:0.0000001, maxValue:100, enabled:true, visible:true, isMandatoryValue:false)
+	 gfloat_iout3_gain = GFloat(widgetName:"gfloat_iout3_gain", value:1, minValue:0.0000001, maxValue:100, enabled:true, visible:true, isMandatoryValue:false)
+	 gfloat_iout4_gain = GFloat(widgetName:"gfloat_iout4_gain", value:1, minValue:0.0000001, maxValue:100, enabled:true, visible:true, isMandatoryValue:false)
+	 gfloat_a1 = GFloat(widgetName:"gfloat_a1", value:1.529212840391, minValue:-2048, maxValue:2047, enabled:true, visible:true, isMandatoryValue:false)
+	 gfloat_a2 = GFloat(widgetName:"gfloat_a2", value:-0.362413476977, minValue:-2048, maxValue:2047, enabled:true, visible:true, isMandatoryValue:false)
+	 gfloat_a3 = GFloat(widgetName:"gfloat_a3", value:-0.166799363414, minValue:-2048, maxValue:2047, enabled:true, visible:true, isMandatoryValue:false)
+	 gfloat_b0 = GFloat(widgetName:"gfloat_b0", value:1.584570155507, minValue:-2048, maxValue:2047, enabled:true, visible:true, isMandatoryValue:false)
+	 gfloat_b1 = GFloat(widgetName:"gfloat_b1", value:-1.474570376299, minValue:-2048, maxValue:2047, enabled:true, visible:true, isMandatoryValue:false)
+	 gfloat_b2 = GFloat(widgetName:"gfloat_b2", value:-1.582984032568, minValue:-2048, maxValue:2047, enabled:true, visible:true, isMandatoryValue:false)
+	 gfloat_b3 = GFloat(widgetName:"gfloat_b3", value:1.476156499238, minValue:-2048, maxValue:2047, enabled:true, visible:true, isMandatoryValue:false)
+	 gfloat_k_gain = GFloat(widgetName:"gfloat_k_gain", value:0.0, minValue:-1024, maxValue:1023, enabled:true, visible:true, isMandatoryValue:false)
+	 gfloat_max_out = GFloat(widgetName:"gfloat_max_out", value:0.0, minValue:10, maxValue:12000, enabled:true, visible:true, isMandatoryValue:false)
+	 gfloat_min_out = GFloat(widgetName:"gfloat_min_out", value:0.0, minValue:0.0, maxValue:10000, enabled:true, visible:true, isMandatoryValue:false)
+	 gfloat_high_limit_vout = GFloat(widgetName:"gfloat_high_limit_vout", value:3.96, minValue:0.5, maxValue:11000, enabled:true, visible:true, isMandatoryValue:false)
+	 gfloat_low_limit_vout = GFloat(widgetName:"gfloat_low_limit_vout", value:2.31, minValue:0.5, maxValue:1100, enabled:true, visible:true, isMandatoryValue:false)
+	 gfloat_high_limit_vin = GFloat(widgetName:"gfloat_high_limit_vin", value:14.4, minValue:1, maxValue:11000, enabled:true, visible:true, isMandatoryValue:false)
+	 gfloat_low_limit_vin = GFloat(widgetName:"gfloat_low_limit_vin", value:9.6, minValue:0, maxValue:1100, enabled:true, visible:true, isMandatoryValue:false)
+	 gfloat_high_limit_iout1 = GFloat(widgetName:"gfloat_high_limit_iout1", value:2, minValue:0.02, maxValue:1100, enabled:true, visible:true, isMandatoryValue:false)
+	 gfloat_low_limit_iout1 = GFloat(widgetName:"gfloat_low_limit_iout1", value:0.01, minValue:0.01, maxValue:1100, enabled:true, visible:true, isMandatoryValue:false)
+	 gfloat_high_limit_iout2 = GFloat(widgetName:"gfloat_high_limit_iout2", value:2, minValue:0.02, maxValue:1100, enabled:true, visible:true, isMandatoryValue:false)
+	 gfloat_low_limit_iout2 = GFloat(widgetName:"gfloat_low_limit_iout2", value:0.01, minValue:0.01, maxValue:1100, enabled:true, visible:true, isMandatoryValue:false)
+	 gfloat_high_limit_iout3 = GFloat(widgetName:"gfloat_high_limit_iout3", value:2, minValue:0.02, maxValue:1100, enabled:true, visible:true, isMandatoryValue:false)
+	 gfloat_low_limit_iout3 = GFloat(widgetName:"gfloat_low_limit_iout3", value:0.01, minValue:0.01, maxValue:1100, enabled:true, visible:true, isMandatoryValue:false)
+	 gfloat_high_limit_iout4 = GFloat(widgetName:"gfloat_high_limit_iout4", value:2, minValue:0.02, maxValue:1100, enabled:true, visible:true, isMandatoryValue:false)
+	 gfloat_low_limit_iout4 = GFloat(widgetName:"gfloat_low_limit_iout4", value:0.01, minValue:0.01, maxValue:1100, enabled:true, visible:true, isMandatoryValue:false)
+	 gstring_vout_measurement = GString(widgetName:"gstring_vout_measurement", value:"Vout", enabled:true, visible:true, isMandatoryValue:false)
+	 gstring_vin_measurement = GString(widgetName:"gstring_vin_measurement", value:"Vin", enabled:true, visible:true, isMandatoryValue:false)
+	 gstring_iout1_measurement = GString(widgetName:"gstring_iout1_measurement", value:"Iout1", enabled:true, visible:true, isMandatoryValue:false)
+	 gstring_iout2_measurement = GString(widgetName:"gstring_iout2_measurement", value:"Iout2", enabled:true, visible:true, isMandatoryValue:false)
+	 gstring_iout3_measurement = GString(widgetName:"gstring_iout3_measurement", value:"Iout3", enabled:true, visible:true, isMandatoryValue:false)
+	 gstring_iout4_measurement = GString(widgetName:"gstring_iout4_measurement", value:"Iout4", enabled:true, visible:true, isMandatoryValue:false)
+	 gstring_udef1_measurement = GString(widgetName:"gstring_udef1_measurement", value:"User_Defined", enabled:true, visible:true, isMandatoryValue:false)
+	 gstring_user_code = GString(widgetName:"gstring_user_code", value:"user_callback", enabled:true, visible:true, isMandatoryValue:false)
+	 gstring_int_handler_cntrl_loop = GString(widgetName:"gstring_int_handler_cntrl_loop", value:"Control_Loop_ISR", enabled:true, visible:true, isMandatoryValue:false)
+	 gcheck_synch_conv = GCheck(widgetName:"gcheck_synch_conv", value:true, enabled:true, visible:true)
+	 gcheck_enable_high_res = GCheck(widgetName:"gcheck_enable_high_res", value:false, enabled:true, visible:true)
+	 gcheck_measure_vout = GCheck(widgetName:"gcheck_measure_vout", value:true, enabled:false, visible:true)
+	 gcheck_measure_vin = GCheck(widgetName:"gcheck_measure_vin", value:false, enabled:true, visible:true)
+	 gcheck_measure_iout1 = GCheck(widgetName:"gcheck_measure_iout1", value:false, enabled:true, visible:true)
+	 gcheck_measure_iout2 = GCheck(widgetName:"gcheck_measure_iout2", value:false, enabled:true, visible:true)
+	 gcheck_measure_iout3 = GCheck(widgetName:"gcheck_measure_iout3", value:false, enabled:true, visible:true)
+	 gcheck_measure_iout4 = GCheck(widgetName:"gcheck_measure_iout4", value:false, enabled:true, visible:true)
+	 gcheck_measure_user_defined_1 = GCheck(widgetName:"gcheck_measure_user_defined_1", value:false, enabled:true, visible:true)
+	 gcheck_user_code = GCheck(widgetName:"gcheck_user_code", value:false, enabled:true, visible:true)
+	 gcheck_volt_ctrl_loop_enable = GCheck(widgetName:"gcheck_volt_ctrl_loop_enable", value:true, enabled:true, visible:true)
+	 gcheck_soft_start = GCheck(widgetName:"gcheck_soft_start", value:false, enabled:true, visible:true)
+	 gcheck_vin_feed_fwd = GCheck(widgetName:"gcheck_vin_feed_fwd", value:false, enabled:true, visible:true)
+	 gcheck_sw_protection_vout = GCheck(widgetName:"gcheck_sw_protection_vout", value:false, enabled:true, visible:true)
+	 gcheck_sw_protection_vin = GCheck(widgetName:"gcheck_sw_protection_vin", value:false, enabled:true, visible:true)
+	 gcheck_sw_protection_iout1 = GCheck(widgetName:"gcheck_sw_protection_iout1", value:false, enabled:true, visible:true)
+	 gcheck_sw_protection_iout2 = GCheck(widgetName:"gcheck_sw_protection_iout2", value:false, enabled:true, visible:true)
+	 gcheck_sw_protection_iout3 = GCheck(widgetName:"gcheck_sw_protection_iout3", value:false, enabled:true, visible:true)
+	 gcheck_sw_protection_iout4 = GCheck(widgetName:"gcheck_sw_protection_iout4", value:false, enabled:true, visible:true)
+	 glabel_1413 = GLabel(widgetName:"glabel_1413", text:"Note:                                          Additionally 'Trigger edge selection' needs to be configured in ADC APP's.", enabled:true, visible:true)
+	 glabel_dt_rising = GLabel(widgetName:"glabel_dt_rising", text:"Dead time rising [nsec]:", enabled:true, visible:true)
+	 glabel_dt_falling = GLabel(widgetName:"glabel_dt_falling", text:"Dead time falling [nsec]:", enabled:true, visible:true)
+	 gLabel145 = GLabel(widgetName:"gLabel145", text:"            ", enabled:true, visible:true)
+	 glabel_a1 = GLabel(widgetName:"glabel_a1", text:"A1:", enabled:true, visible:true)
+	 glabel_a2 = GLabel(widgetName:"glabel_a2", text:"A2:", enabled:true, visible:true)
+	 glabel_a3 = GLabel(widgetName:"glabel_a3", text:"A3:", enabled:true, visible:true)
+	 glabel_b0 = GLabel(widgetName:"glabel_b0", text:"B0:", enabled:true, visible:true)
+	 glabel_b1 = GLabel(widgetName:"glabel_b1", text:"B1:", enabled:true, visible:true)
+	 glabel_b2 = GLabel(widgetName:"glabel_b2", text:"B2:", enabled:true, visible:true)
+	 glabel_b3 = GLabel(widgetName:"glabel_b3", text:"B3:", enabled:true, visible:true)
+	 glabel_k_gain = GLabel(widgetName:"glabel_k_gain", text:"K (gain):", enabled:true, visible:true)
+	 glabel_max_out = GLabel(widgetName:"glabel_max_out", text:"Max out:", enabled:true, visible:true)
+	 glabel_min_out = GLabel(widgetName:"glabel_min_out", text:"Min out:", enabled:true, visible:true)
+	 glabel_integer_bits = GLabel(widgetName:"glabel_integer_bits", text:"Integer bits", enabled:true, visible:true)
+	 glabel_factional_bits = GLabel(widgetName:"glabel_factional_bits", text:"Fractional bits", enabled:true, visible:true)
+	 glabel_a_coeffs = GLabel(widgetName:"glabel_a_coeffs", text:"A coefficients", enabled:true, visible:true)
+	 glabel_b_coeffs = GLabel(widgetName:"glabel_b_coeffs", text:"B coefficients", enabled:true, visible:true)
+	 glabel_output = GLabel(widgetName:"glabel_output", text:"Output", enabled:true, visible:true)
+	 glabel_note_fixed_pt_calc = GLabel(widgetName:"glabel_note_fixed_pt_calc", text:"Note: Control loop will be calculated in fixed point (signed).\r\n           ADC resolution is 12 bits.\r\n           ADC reference voltage is 3.3 volts.", enabled:true, visible:true)
+	 glabel_overload_protect_vout = GLabel(widgetName:"glabel_overload_protect_vout", text:"Vout [V]:", enabled:true, visible:true)
+	 glabel_overload_protect_vin = GLabel(widgetName:"glabel_overload_protect_vin", text:"Vin [V]:", enabled:true, visible:true)
+	 glabel_overload_protect_iout1 = GLabel(widgetName:"glabel_overload_protect_iout1", text:"Iout1 [A]:", enabled:true, visible:true)
+	 glabel_overload_protect_iout2 = GLabel(widgetName:"glabel_overload_protect_iout2", text:"Iout2 [A]:", enabled:true, visible:true)
+	 glabel_overload_protect_iout3 = GLabel(widgetName:"glabel_overload_protect_iout3", text:"Iout3 [A]:", enabled:true, visible:true)
+	 glabel_overload_protect_iout4 = GLabel(widgetName:"glabel_overload_protect_iout4", text:"Iout4 [A]:", enabled:true, visible:true)
+	 glabel_vin = GLabel(widgetName:"glabel_vin", text:"Buck input voltage [V]", enabled:true, visible:true)
+	 glabel_vout_ref = GLabel(widgetName:"glabel_vout_ref", text:"Buck output reference voltage [V]", enabled:true, visible:true)
+	 glabel_soft_start_val = GLabel(widgetName:"glabel_soft_start_val", text:"Soft start timing", enabled:true, visible:true)
+	 glabel_user_code = GLabel(widgetName:"glabel_user_code", text:"User code", enabled:true, visible:true)
+	 glabel_b_coeffs_int_bits = GLabel(widgetName:"glabel_b_coeffs_int_bits", text:"Integer bits for B coefficients", enabled:true, visible:true)
+	 glabel_a_coeffs_int_bits = GLabel(widgetName:"glabel_a_coeffs_int_bits", text:"Integer bits for A coefficients", enabled:true, visible:true)
+	 glabel_comp_output_int_bits = GLabel(widgetName:"glabel_comp_output_int_bits", text:"Integer bits for controller output", enabled:true, visible:true)
+	 glabel_b_coeffs_fract_bits = GLabel(widgetName:"glabel_b_coeffs_fract_bits", text:"Fractional bits for B coefficients", enabled:true, visible:true)
+	 glabel_a_coeffs_fract_bits = GLabel(widgetName:"glabel_a_coeffs_fract_bits", text:"Fractional bits for A coefficients", enabled:true, visible:true)
+	 glabel_comp_output_fract_bits = GLabel(widgetName:"glabel_comp_output_fract_bits", text:"Fractional bits for controller output", enabled:true, visible:true)
+	 ggroup_filter_var_format = GGroup(widgetName:"ggroup_filter_var_format", text:"Filter variable formats", enabled:true, visible:true)
+	 ggroup_18 = GGroup(widgetName:"ggroup_18", text:"Control Configurations", enabled:true, visible:true)
+	 ggroup_user_code = GGroup(widgetName:"ggroup_user_code", text:"User call back", enabled:true, visible:true)
+	 ginterruptprio_cntrl_loop = GInterruptPrio(widgetName:"ginterruptprio_cntrl_loop", priorityValue:0, minPriority:0, maxPriority:63, subPriorityValue:0, minSubPriority:0, maxSubPriority:63, subPriorityVisible:true, enabled:true, visible:true)
+	 gmessage_measurements = GMessage(widgetName:"gmessage_measurements", text:"Invalid name given in the Measure field - Vout/Vin/Ioutx/User_Defined", isError:false, visible:true)
+	 gmessage_user_callback = GMessage(widgetName:"gmessage_user_callback", text:"Invalid function name - User call back", isError:false, visible:true)
+	 gmessage_cntrl_loop_isr = GMessage(widgetName:"gmessage_cntrl_loop_isr", text:"Invalid function name - Control loop ISR", isError:false, visible:true)
+
+
+	 }
+	/* End : UI variable section */
+}

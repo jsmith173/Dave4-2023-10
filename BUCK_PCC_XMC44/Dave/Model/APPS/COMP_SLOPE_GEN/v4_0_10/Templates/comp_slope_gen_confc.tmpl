@@ -1,0 +1,693 @@
+package Model.APPS.COMP_SLOPE_GEN.v4_0_10.Templates;
+
+import Model.APPS.COMP_SLOPE_GEN.v4_0_10.COMP_SLOPE_GEN
+
+out.print("""
+/**
+ * @cond
+ ***********************************************************************************************************************
+ *
+ * Copyright (c) 2015-2020, Infineon Technologies AG
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification,are permitted provided that the
+ * following conditions are met:
+ *
+ *   Redistributions of source code must retain the above copyright notice, this list of conditions and the  following
+ *   disclaimer.
+ *
+ *   Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
+ *   disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *   Neither the name of the copyright holders nor the names of its contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE  FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY,OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * To improve the quality of the software, users are encouraged to share modifications, enhancements or bug fixes
+ * with Infineon Technologies AG (dave@infineon.com).
+ ***********************************************************************************************************************
+ *
+ * Change History
+ * --------------
+ *
+ * 2015-02-14:
+ *     - Initial version for DAVEv4
+ * @endcond
+ *
+ */
+/***********************************************************************************************************************
+ * HEADER FILES
+ **********************************************************************************************************************/
+#include "comp_slope_gen.h"
+
+/**********************************************************************************************************************
+* DATA STRUCTURES
+**********************************************************************************************************************/
+
+""");
+
+List      MappedUri                 = null;
+String    appInst                   = null;
+String    KernelNo                  = null;
+String    SliceNo                   = null;
+String    CCU8_Global_Handle        = null;
+String    HRPWM_Global_Handle       = null;
+String    KernRegs_Handle           = null;
+String    Slice_Handle              = null;
+String    Dynamic_Handle            = null;
+String    shadow_txfr_msk           = 0;
+
+String    blanking_mode             = null;
+String    blank_ext_enable          = null;
+String    filter_enable             = null;
+String    filter_window             = null;
+
+Integer   blanking_val              = 0;
+String    blanking_input            = null;
+String    blanking_edge             = null;
+String    blanking_level            = null;
+
+String    start_slope_input         = null;
+String    start_slope_edge          = null;
+String    start_slope_level         = null;
+
+String    shadow_transfer_input     = null;
+String    shadow_transfer_edge      = null;
+String    shadow_transfer_level     = null;
+
+
+String    clamp_ctrl_lvl            = null;
+String    clamp_level               = null;
+String    clamp_exit_sw_config      = null;
+String    clamp_enter_config        = null;
+String    clamp_exit_config         = null;
+
+String    clamp_trigger_input       = null;
+String    clamp_trigger_edge        = null;
+String    clamp_trigger_level       = null;
+
+String    cmp_input_sel             = null;
+String    cmp_input_sw              = null;
+String    cmp_ext_sw_enable         = null;
+String    cmp_out_inv               = null;
+
+String    dac_dsv1                  = null;
+String    dac_dsv2                  = null;
+
+String    static_mode_ist_enable    = null;
+String    step_gain                 = null;
+String    pulse_swallow_val         = null;
+
+String    dac_ctrl_mode             = null;
+String    dac_slope_ref_val_mode    = null;
+
+String    cmp_rise_event_enable     = null;
+String    cmp_fall_event_enable     = null
+String    cmp_state_enter_event_enable = null;
+
+String    csg_dac_run_bit           = null;
+String    csg_cmp_run_bit           = null;
+String    csg_cmp_psl_bit           = null;
+
+String    csg_dac_slope_start       = null;
+String    csg_dac_slope_stop        = null;
+String    csg_dac_prescaler_start   = null;
+String    csg_dac_prescaler_stop    = null;
+
+String    int_cmp_rise              = null;
+String    int_cmp_fall              = null;
+String    int_clamp_state_enter       = null;
+
+String    sr_crse                   = null;
+String    sr_cfse                   = null;
+String    sr_cfee                   = null;
+
+String    run_dac_at_init           = null;
+
+String    csg_shadow_transfer_msk   = null;
+
+List gpio_mode_array = [
+    'XMC_GPIO_MODE_INPUT',
+    'XMC_GPIO_MODE_INPUT_PULL_UP',
+    'XMC_GPIO_MODE_INPUT_PULL_DOWN',
+    'XMC_GPIO_MODE_INPUT_SAMPLING',
+    'XMC_GPIO_MODE_INPUT_INVERTED_TRISTATE',
+    'XMC_GPIO_MODE_INPUT_INVERTED_PULL_UP',
+    'XMC_GPIO_MODE_INPUT_INVERTED_PULL_DOWN',
+    'XMC_GPIO_MODE_INPUT_INVERTED_SAMPLING',
+    'XMC_GPIO_MODE_OUTPUT_PUSH_PULL',
+    'XMC_GPIO_MODE_OUTPUT_PUSH_PULL_ALT1',
+    'XMC_GPIO_MODE_OUTPUT_PUSH_PULL_ALT2',
+    'XMC_GPIO_MODE_OUTPUT_PUSH_PULL_ALT3',
+    'XMC_GPIO_MODE_OUTPUT_PUSH_PULL_ALT4',
+    'XMC_GPIO_MODE_OUTPUT_PUSH_PULL_ALT5',
+    'XMC_GPIO_MODE_OUTPUT_PUSH_PULL_ALT6',
+    'XMC_GPIO_MODE_OUTPUT_PUSH_PULL_ALT7',
+    'XMC_GPIO_MODE_OUTPUT_OPEN_DRAIN',
+    'XMC_GPIO_MODE_OUTPUT_OPEN_DRAIN_ALT1',
+    'XMC_GPIO_MODE_OUTPUT_OPEN_DRAIN_ALT2',
+    'XMC_GPIO_MODE_OUTPUT_OPEN_DRAIN_ALT3',
+    'XMC_GPIO_MODE_OUTPUT_OPEN_DRAIN_ALT4',
+    'XMC_GPIO_MODE_OUTPUT_OPEN_DRAIN_ALT5',
+    'XMC_GPIO_MODE_OUTPUT_OPEN_DRAIN_ALT6',
+    'XMC_GPIO_MODE_OUTPUT_OPEN_DRAIN_ALT7'
+    ];
+
+List gpio_output_strength = [
+    'XMC_GPIO_OUTPUT_STRENGTH_WEAK',
+    'XMC_GPIO_OUTPUT_STRENGTH_MEDIUM',
+    'XMC_GPIO_OUTPUT_STRENGTH_STRONG_SOFT_EDGE',
+    'XMC_GPIO_OUTPUT_STRENGTH_STRONG_SLOW_EDGE',
+    'XMC_GPIO_OUTPUT_STRENGTH_STRONG_SHARP_EDGE',
+    'XMC_GPIO_OUTPUT_STRENGTH_STRONG_MEDIUM_EDGE',
+    ];
+
+
+List hrc_channel_array = [
+    'HRPWM0_HRC0',
+    'HRPWM0_HRC1',
+    'HRPWM0_HRC2',
+    'HRPWM0_HRC3'
+];
+
+List hr_enable_array =[
+    'XMC_HRPWM_HR_PATH_HRC0',
+    'XMC_HRPWM_HR_PATH_HRC1',
+    'XMC_HRPWM_HR_PATH_HRC2',
+    'XMC_HRPWM_HR_PATH_HRC3',
+    ];
+List lr_enable_array =[
+    'XMC_HRPWM_LR_PATH_HRC0',
+    'XMC_HRPWM_LR_PATH_HRC1',
+    'XMC_HRPWM_LR_PATH_HRC2',
+    'XMC_HRPWM_LR_PATH_HRC3',
+    ];
+List hrpwm_func_status_array = [
+    'XMC_HRPWM_FUNC_STATUS_DISABLE',
+    'XMC_HRPWM_FUNC_STATUS_ENABLE'];
+
+List hrc_pass_level_array = [
+    'XMC_HRPWM_HRC_OUT_PASSIVE_LOW',
+    'XMC_HRPWM_HRC_OUT_PASSIVE_HIGH'
+];
+
+List hrc_edge_array = [
+    'XMC_HRPWM_HRC_HR_EDGE_SEL_RISING',
+    'XMC_HRPWM_HRC_HR_EDGE_SEL_FALLING',
+    'XMC_HRPWM_HRC_HR_EDGE_SEL_BOTH',
+    'XMC_HRPWM_HRC_HR_EDGE_SEL_NONE'
+ ];
+
+List hrc_input_array = [
+    'XMC_HRPWM_HRC_SRC_INPUT_CCU',
+    'XMC_HRPWM_HRC_SRC_INPUT_CSG'
+];
+List hrc_cmp_sel_array = [
+    'XMC_HRPWM_HRC_CMP_SEL_CSG0',
+    'XMC_HRPWM_HRC_CMP_SEL_CSG1',
+    'XMC_HRPWM_HRC_CMP_SEL_CSG2'
+];
+
+List hrc_ch_timer_sel_array = [
+    'XMC_HRPWM_HRC_TIMER_SEL_CCU_CC0',
+    'XMC_HRPWM_HRC_TIMER_SEL_CCU_CC1',
+    'XMC_HRPWM_HRC_TIMER_SEL_CCU_CC2',
+    'XMC_HRPWM_HRC_TIMER_SEL_CCU_CC3'
+];
+
+List hrc_src_edge_array = [
+    'XMC_HRPWM_HRC_SRC_EDGE_SEL_DISABLED',
+    'XMC_HRPWM_HRC_SRC_EDGE_SEL_RISING',
+    'XMC_HRPWM_HRC_SRC_EDGE_SEL_FALLING',
+    'XMC_HRPWM_HRC_SRC_EDGE_SEL_BOTH'
+ ];
+
+List hrc_shadow_tx_array = [
+  'XMC_HRPWM_HRC_SHADOW_TX_HRC0_VALUE',
+  'XMC_HRPWM_HRC_SHADOW_TX_HRC0_DT_VALUE',
+  'XMC_HRPWM_HRC_SHADOW_TX_HRC1_VALUE',
+  'XMC_HRPWM_HRC_SHADOW_TX_HRC1_DT_VALUE',
+  'XMC_HRPWM_HRC_SHADOW_TX_HRC2_VALUE',
+  'XMC_HRPWM_HRC_SHADOW_TX_HRC2_DT_VALUE',
+  'XMC_HRPWM_HRC_SHADOW_TX_HRC3_VALUE',
+  'XMC_HRPWM_HRC_SHADOW_TX_HRC3_DT_VALUE'
+ ];
+
+List csg_edge_sel = [
+    'XMC_HRPWM_CSG_EDGE_SEL_DISABLED',
+    'XMC_HRPWM_CSG_EDGE_SEL_RISING_EDGE',
+    'XMC_HRPWM_CSG_EDGE_SEL_FALLING_EDGE',
+    'XMC_HRPWM_CSG_EDGE_SEL_BOTH_EDGE',
+    'XMC_HRPWM_CSG_EDGE_SEL_DISABLED',
+    ];
+List csg_level_sel = [
+    'XMC_HRPWM_CSG_LVL_SEL_DISABLED',
+    'XMC_HRPWM_CSG_LVL_SEL_HIGH',
+    'XMC_HRPWM_CSG_LVL_SEL_LOW',
+    ];
+List csg_cmp_filter_window = [
+    'XMC_HRPWM_CSG_CMP_FILTER_WINDOW_2_CLK_CYCLES',
+    'XMC_HRPWM_CSG_CMP_FILTER_WINDOW_2_CLK_CYCLES',
+    'XMC_HRPWM_CSG_CMP_FILTER_WINDOW_3_CLK_CYCLES',
+    'XMC_HRPWM_CSG_CMP_FILTER_WINDOW_4_CLK_CYCLES',
+    'XMC_HRPWM_CSG_CMP_FILTER_WINDOW_5_CLK_CYCLES',
+    'XMC_HRPWM_CSG_CMP_FILTER_WINDOW_6_CLK_CYCLES',
+    'XMC_HRPWM_CSG_CMP_FILTER_WINDOW_7_CLK_CYCLES',
+    'XMC_HRPWM_CSG_CMP_FILTER_WINDOW_8_CLK_CYCLES',
+    'XMC_HRPWM_CSG_CMP_FILTER_WINDOW_9_CLK_CYCLES',
+    'XMC_HRPWM_CSG_CMP_FILTER_WINDOW_10_CLK_CYCLES',
+    'XMC_HRPWM_CSG_CMP_FILTER_WINDOW_11_CLK_CYCLES',
+    'XMC_HRPWM_CSG_CMP_FILTER_WINDOW_12_CLK_CYCLES',
+    'XMC_HRPWM_CSG_CMP_FILTER_WINDOW_13_CLK_CYCLES',
+    'XMC_HRPWM_CSG_CMP_FILTER_WINDOW_14_CLK_CYCLES',
+    'XMC_HRPWM_CSG_CMP_FILTER_WINDOW_15_CLK_CYCLES',
+    'XMC_HRPWM_CSG_CMP_FILTER_WINDOW_16_CLK_CYCLES',
+    'XMC_HRPWM_CSG_CMP_FILTER_WINDOW_32_CLK_CYCLES',
+    ];
+
+List csg_input_array = [
+    
+    'XMC_HRPWM_CSG_INPUT_SEL_IA',
+    'XMC_HRPWM_CSG_INPUT_SEL_IB',
+    'XMC_HRPWM_CSG_INPUT_SEL_IC',
+    'XMC_HRPWM_CSG_INPUT_SEL_ID',
+    'XMC_HRPWM_CSG_INPUT_SEL_IE',
+    'XMC_HRPWM_CSG_INPUT_SEL_IF',
+    'XMC_HRPWM_CSG_INPUT_SEL_IG',
+    'XMC_HRPWM_CSG_INPUT_SEL_IH',
+    'XMC_HRPWM_CSG_INPUT_SEL_II',
+    'XMC_HRPWM_CSG_INPUT_SEL_IJ',
+    'XMC_HRPWM_CSG_INPUT_SEL_IK',
+    'XMC_HRPWM_CSG_INPUT_SEL_IL',
+    'XMC_HRPWM_CSG_INPUT_SEL_IM',
+    'XMC_HRPWM_CSG_INPUT_SEL_IN',
+    'XMC_HRPWM_CSG_INPUT_SEL_IO',
+    'XMC_HRPWM_CSG_INPUT_SEL_IP'
+    ];
+
+List csg_cmp_input = [
+    'XMC_HRPWM_CSG_CMP_INPUT_CINA',
+    'XMC_HRPWM_CSG_CMP_INPUT_CINB'
+    ];
+List csg_lvl_sel = [
+    'XMC_HRPWM_CSG_LVL_SEL_DISABLED',
+    'XMC_HRPWM_CSG_LVL_SEL_HIGH',
+    'XMC_HRPWM_CSG_LVL_SEL_LOW'    
+    ];
+
+List csg_sr_node = [
+    'XMC_HRPWM_CSG_IRQ_SR_LINE_0',
+    'XMC_HRPWM_CSG_IRQ_SR_LINE_1',
+    'XMC_HRPWM_CSG_IRQ_SR_LINE_2',
+    'XMC_HRPWM_CSG_IRQ_SR_LINE_3'
+    ];
+
+List csg_sr_irq = [
+    'XMC_HRPWM_CSG_IRQ_ID_VLS1',
+    'XMC_HRPWM_CSG_IRQ_ID_VLS2',
+    'XMC_HRPWM_CSG_IRQ_ID_TRGS',
+    'XMC_HRPWM_CSG_IRQ_ID_STRS',
+    'XMC_HRPWM_CSG_IRQ_ID_STPS',
+    'XMC_HRPWM_CSG_IRQ_ID_STD',
+    'XMC_HRPWM_CSG_IRQ_ID_CRSE',
+    'XMC_HRPWM_CSG_IRQ_ID_CFSE',
+    'XMC_HRPWM_CSG_IRQ_ID_CSEE',
+];
+
+List csg_run_bit =[
+    'XMC_HRPWM_CSG_RUN_BIT_DAC0',
+    'XMC_HRPWM_CSG_RUN_BIT_CMP0',
+    'XMC_HRPWM_CSG_RUN_BIT_CMP0_PSL', 
+    'XMC_HRPWM_CSG_RUN_BIT_DAC1',
+    'XMC_HRPWM_CSG_RUN_BIT_CMP1',
+    'XMC_HRPWM_CSG_RUN_BIT_CMP1_PSL',
+    'XMC_HRPWM_CSG_RUN_BIT_DAC2',
+    'XMC_HRPWM_CSG_RUN_BIT_CMP2',
+    'XMC_HRPWM_CSG_RUN_BIT_CMP2_PSL',
+];
+
+List csg_slope_start = [
+    'XMC_HRPWM_CSG_SLOPE_START_DAC0',
+    'XMC_HRPWM_CSG_SLOPE_START_DAC1',
+    'XMC_HRPWM_CSG_SLOPE_START_DAC2'];
+
+List csg_slope_stop = [
+    'XMC_HRPWM_CSG_SLOPE_STOP_DAC0',
+    'XMC_HRPWM_CSG_SLOPE_STOP_DAC1',
+    'XMC_HRPWM_CSG_SLOPE_STOP_DAC2'];
+
+List csg_prescaler_start = [
+    'XMC_HRPWM_CSG_PRESCALER_START_CSG0',
+    'XMC_HRPWM_CSG_PRESCALER_START_CSG1',
+    'XMC_HRPWM_CSG_PRESCALER_START_CSG2'];
+
+List csg_prescaler_stop = [
+    'XMC_HRPWM_CSG_PRESCALER_STOP_CSG0',
+    'XMC_HRPWM_CSG_PRESCALER_STOP_CSG1',
+    'XMC_HRPWM_CSG_PRESCALER_STOP_CSG2'];
+
+
+List csg_shadow_tx = [
+    'XMC_HRPWM_SHADOW_TX_DAC0',
+    'XMC_HRPWM_SHADOW_TX_DAC1',
+    'XMC_HRPWM_SHADOW_TX_DAC2'
+    ];
+List boolArray = ['false', 'true'];
+
+/*************************/
+for (COMP_SLOPE_GEN appIns : appInstancesList  ) {
+    
+      appInst = appIns.getInstanceLabel() 
+      MappedUri = appIns.hwres_csg_slice.getSolverUri()
+    
+      
+      if (MappedUri != null) {
+          
+          KernelNo               = MappedUri[4]
+          SliceNo                = MappedUri[6]
+          KernRegs_Handle        = "HRPWM"  + KernelNo;
+          Slice_Handle           = "HRPWM"     + KernelNo  + "_CSG" + SliceNo; //HRPWM0_CSG0
+          Dynamic_Handle         = "&" + appInst +"_DynamicHandle";
+          CCU8_Global_Handle  = "(GLOBAL_CCU8_t*) &"  + appIns.csg_app_global_ccu8_cc8.getInstanceLabel();
+          HRPWM_Global_Handle    = "(GLOBAL_HRPWM_t*) &" + appIns.csg_app_global_hrpwm.getInstanceLabel();
+          
+          filter_enable          = hrpwm_func_status_array[boolArray.indexOf((!appIns.gcombo_csg_comp_filtering.value.equals("No Filtering")).toString())];
+          filter_window          = csg_cmp_filter_window[appIns.gcombo_csg_comp_filtering.options.indexOf(appIns.gcombo_csg_comp_filtering.value)];
+          
+          if(appIns.gcombo_blanking_config.value == 'Disabled')
+          {
+              blanking_mode      = 'XMC_HRPWM_CSG_EDGE_SEL_DISABLED';
+              blanking_edge      = 'XMC_HRPWM_CSG_EDGE_SEL_DISABLED';
+              blank_ext_enable   = 'XMC_HRPWM_FUNC_STATUS_DISABLE';
+          }
+          else if(appIns.gcombo_blanking_config.value == 'Start Upon Low To High Transition Of Comp Output')
+          {
+              blanking_mode      = 'XMC_HRPWM_CSG_EDGE_SEL_RISING_EDGE';
+              blanking_edge      = 'XMC_HRPWM_CSG_EDGE_SEL_RISING_EDGE';
+              blank_ext_enable   = 'XMC_HRPWM_FUNC_STATUS_DISABLE';
+          }
+          else if(appIns.gcombo_blanking_config.value == 'Start Upon High To Low Transition Of Comp Output')
+          {
+              blanking_mode      = 'XMC_HRPWM_CSG_EDGE_SEL_FALLING_EDGE';
+              blanking_edge      = 'XMC_HRPWM_CSG_EDGE_SEL_FALLING_EDGE';
+              blank_ext_enable   = 'XMC_HRPWM_FUNC_STATUS_DISABLE';
+          }
+          else if(appIns.gcombo_blanking_config.value == 'Start Upon Both Transitions Of Comp Output')
+          {
+              blanking_mode      = 'XMC_HRPWM_CSG_EDGE_SEL_BOTH_EDGE';
+              blanking_edge      = 'XMC_HRPWM_CSG_EDGE_SEL_BOTH_EDGE';
+              blank_ext_enable   = 'XMC_HRPWM_FUNC_STATUS_DISABLE';
+          }
+          else if(appIns.gcombo_blanking_config.value == 'Start Upon Low To High Transition Of External Signal')
+          {
+              blanking_mode      = 'XMC_HRPWM_CSG_EDGE_SEL_RISING_EDGE';
+              blanking_edge      = 'XMC_HRPWM_CSG_EDGE_SEL_RISING_EDGE';
+              blank_ext_enable   = 'XMC_HRPWM_FUNC_STATUS_ENABLE';
+          }
+          else if(appIns.gcombo_blanking_config.value == 'Start Upon High To Low Transition Of External Signal')
+          {
+              blanking_mode      = 'XMC_HRPWM_CSG_EDGE_SEL_FALLING_EDGE';
+              blanking_edge      = 'XMC_HRPWM_CSG_EDGE_SEL_FALLING_EDGE';
+              blank_ext_enable   = 'XMC_HRPWM_FUNC_STATUS_ENABLE';
+          }
+          else if(appIns.gcombo_blanking_config.value == 'Start Upon Both Transitions Of External Signal')
+          {
+              blanking_mode      = 'XMC_HRPWM_CSG_EDGE_SEL_BOTH_EDGE';
+              blanking_edge      = 'XMC_HRPWM_CSG_EDGE_SEL_BOTH_EDGE';
+              blank_ext_enable   = 'XMC_HRPWM_FUNC_STATUS_ENABLE';
+          }
+          else
+          {
+              blanking_mode      = 'XMC_HRPWM_CSG_EDGE_SEL_DISABLED';
+              blanking_edge      = 'XMC_HRPWM_CSG_EDGE_SEL_DISABLED';
+          }
+
+          blanking_val           = appIns.gfloat_blanking_time.value * (Double)appIns.gfloat_ccu8_clock.value / 1000.0;
+          blanking_input         = csg_input_array[(int) appIns.hwres_csg_slice.getRegValue("csgcc","csgcc_ibs")];
+          blanking_level         = 'XMC_HRPWM_CSG_LVL_SEL_DISABLED';
+          
+          start_slope_input      = csg_input_array[(int) appIns.hwres_csg_slice.getRegValue("csgdci","csgdci_stris")];
+          start_slope_edge       = csg_edge_sel[(int) appIns.gcombo_restart_slope.options.indexOf(appIns.gcombo_restart_slope.value) + 1];
+          start_slope_level      = 'XMC_HRPWM_CSG_LVL_SEL_DISABLED';
+          
+          shadow_transfer_input  = csg_input_array[(int) appIns.hwres_csg_slice.getRegValue("csgdci","csgdci_stis")];
+          shadow_transfer_edge   = 'XMC_HRPWM_CSG_EDGE_SEL_FALLING_EDGE';
+          shadow_transfer_level  = 'XMC_HRPWM_CSG_LVL_SEL_DISABLED';
+          
+          if(appIns.gcheck_csg_comp_clamp_enable.value)
+          {
+              clamp_level            = appIns.gcombo_csg_clamp_level.options.indexOf(appIns.gcombo_csg_clamp_level.value).toString();
+              clamp_ctrl_lvl         = csg_lvl_sel[appIns.gcombo_csg_clamp_ctrl_lvl.options.indexOf(appIns.gcombo_csg_clamp_ctrl_lvl.value) + 1];
+              clamp_enter_config     = appIns.gcombo_csg_clamp_enter_config.options.indexOf(appIns.gcombo_csg_clamp_enter_config.value).toString();
+              clamp_exit_config      = appIns.gcombo_scg_clamp_exit_config.options.indexOf(appIns.gcombo_scg_clamp_exit_config.value).toString();
+              clamp_exit_sw_config   = appIns.gcombo_csg_clamp_exit_sw_config.options.indexOf(appIns.gcombo_csg_clamp_exit_sw_config.value).toString();
+          }
+          else
+          {
+              clamp_level            = 0;
+              clamp_ctrl_lvl         = 'XMC_HRPWM_CSG_LVL_SEL_DISABLED';
+              clamp_enter_config     = 0;
+              clamp_exit_config      = 0;
+              clamp_exit_sw_config   = 0; 
+          }
+          
+          clamp_trigger_input    = csg_input_array[(int) appIns.hwres_csg_slice.getRegValue("csgplc","csgplc_ipls")];
+          clamp_trigger_edge     = 'XMC_HRPWM_CSG_EDGE_SEL_DISABLED';
+          clamp_trigger_level    = clamp_ctrl_lvl;
+
+          cmp_input_sel          = csg_cmp_input[appIns.gcombo_csg_cinx.options.indexOf(appIns.gcombo_csg_cinx.value)];
+          cmp_input_sw           = 'XMC_HRPWM_CSG_LVL_SEL_DISABLED';
+          cmp_ext_sw_enable      = 'XMC_HRPWM_FUNC_STATUS_DISABLE';
+          cmp_out_inv            = hrpwm_func_status_array[boolArray.indexOf(appIns.gcheck_csg_comp_inv_enable.value.toString())];
+          
+                                                                                     
+          static_mode_ist_enable = hrpwm_func_status_array[boolArray.indexOf(appIns.gcombo_dac_mode.value.equals("Static").toString())];
+          
+          step_gain              = appIns.ginteger_pulse_swallow_gain.value.toString();
+          pulse_swallow_val      = appIns.ginteger_pulse_swallow_count.value.toString();
+          
+          dac_dsv1               = (appIns.gfloat_dac_dsv1.value * 1023.0/3300.0).toInteger().toString();
+          dac_dsv2               = (appIns.gfloat_dac_dsv2.value * 1023.0/3300.0).toInteger().toString();
+          
+          
+          
+          if(appIns.gcombo_restart_slope.value == 'Upon Rising Edge Of External Signal')
+          {
+              dac_slope_ref_val_mode = 0;
+          }
+          else if(appIns.gcombo_restart_slope.value == 'Upon Falling edge Of External Signal')
+          {
+              dac_slope_ref_val_mode = 0;
+          }
+          else if(appIns.gcombo_restart_slope.value == 'Upon Both Edges Of External Signal')
+          {
+              dac_slope_ref_val_mode = 0;
+          }
+          else if(appIns.gcombo_restart_slope.value == 'If DAC Value Reaches Stop Value (DSV2)')
+          {
+              dac_slope_ref_val_mode = 2;
+          }
+          else
+          {
+              dac_slope_ref_val_mode = 0;
+          }
+          
+          if(appIns.gcombo_dac_mode.value == 'Static')
+          {
+              dac_ctrl_mode     = 'XMC_HRPWM_CSG_SLOPE_CTRL_MODE_STATIC';
+          }
+          else if(appIns.gcombo_dac_mode.value == 'Decrementing Slope')
+          {
+              dac_ctrl_mode     = 'XMC_HRPWM_CSG_SLOPE_CTRL_MODE_DEC_GEN';
+          }
+          else if(appIns.gcombo_dac_mode.value == 'Incrementing Slope')
+          {
+              dac_ctrl_mode     = 'XMC_HRPWM_CSG_SLOPE_CTRL_MODE_INC_GEN';
+          }
+          else if(appIns.gcombo_dac_mode.value == 'Triangular Slope')
+          {
+              dac_ctrl_mode     = 'XMC_HRPWM_CSG_SLOPE_CTRL_MODE_TRIANGULAR';
+             
+              /*Over rides the selection made by the "appIns.gcombo_dac_mode.value" combo box in triangle mode of operation*/
+              dac_slope_ref_val_mode = 2; 
+              
+              /*Over rides the selection made by the "appIns.gcombo_restart_slope.value" combo box in triangle mode of operation*/
+              start_slope_edge = 'XMC_HRPWM_CSG_EDGE_SEL_DISABLED';
+              
+          }
+
+          sr_crse                 = csg_sr_node[(int) appIns.hwres_csg_slice.getRegValue("csgsrs","csgsrs_crfls")]
+          sr_cfse                 = csg_sr_node[(int) appIns.hwres_csg_slice.getRegValue("csgsrs","csgsrs_crfls")]
+          sr_cfee                 = csg_sr_node[(int) appIns.hwres_csg_slice.getRegValue("csgsrs","csgsrs_csls")]
+          
+          int_cmp_rise            = appIns.gcheck_cmp_event_rise.value;
+          int_cmp_fall            = appIns.gcheck_cmp_event_fall.value;
+          int_clamp_state_enter   = appIns.gcheck_cmp_state_enter.value;
+          
+          csg_dac_run_bit         = csg_run_bit[Integer.parseInt(SliceNo)*3 + 0];
+          csg_cmp_run_bit         = csg_run_bit[Integer.parseInt(SliceNo)*3 + 1];
+          csg_cmp_psl_bit         = csg_run_bit[Integer.parseInt(SliceNo)*3 + 2];
+          
+          csg_dac_slope_start     = csg_slope_start[Integer.parseInt(SliceNo)];
+          csg_dac_slope_stop      = csg_slope_stop[Integer.parseInt(SliceNo)];
+          csg_dac_prescaler_start = csg_prescaler_start[Integer.parseInt(SliceNo)];
+          csg_dac_prescaler_stop  = csg_prescaler_stop[Integer.parseInt(SliceNo)];
+          
+          run_dac_at_init         = appIns.gcheck_dac_run_at_init.value;
+          
+          csg_shadow_transfer_msk = csg_shadow_tx[Integer.parseInt(SliceNo)];
+          
+          
+          
+      
+/**************************************************************************************/
+    out.print("""
+const XMC_HRPWM_CSG_CMP_t ${appInst}_csg_cmp_config = 
+  {
+    .cmp_input_sel               = ${cmp_input_sel},
+    .cmp_input_sw                = ${cmp_input_sw},
+    .cmp_ext_sw_enable           = ${cmp_ext_sw_enable},
+    .cmp_out_inv                 = ${cmp_out_inv},
+    
+    .blanking_mode               = ${blanking_mode},
+    .blank_ext_enable            = ${blank_ext_enable},
+    .blanking_val                = ${blanking_val}U,
+    .filter_enable               = ${filter_enable},
+    .filter_window               = ${filter_window},
+    .filter_control              = 0U,    /* 00B Filtering is always done if enabled
+                                             01B Filtering is only done when CSGyDSV1 value is currently fed to the DAC
+                                             10B Filtering is only done when the CSGyDSV2 value is currently fed to the DAC */
+    
+
+    
+    .clamp_ctrl_lvl              = ${clamp_ctrl_lvl},
+    .clamp_level                 = ${clamp_level}U,
+    .clamp_exit_sw_config        = ${clamp_exit_sw_config}U,
+    .clamp_enter_config          = ${clamp_enter_config}U,
+    .clamp_exit_config           = ${clamp_exit_config}U,
+  };
+
+const XMC_HRPWM_CSG_DAC_t ${appInst}_csg_dac_config = 
+  {
+    .start_mode                  = XMC_HRPWM_CSG_SWSM_DSV1_W_TRIGGER,
+    .dac_dsv1                    = ${dac_dsv1}U,
+    .dac_dsv2                    = ${dac_dsv2}U
+  };
+
+const XMC_HRPWM_CSG_SGEN_t ${appInst}_csg_sgen_config = 
+  {
+    .prescaler_ext_start_mode    = XMC_HRPWM_CSG_PRESCALER_EXT_START_CLR_N_STRT,
+    .prescaler_ext_stop_mode     = XMC_HRPWM_CSG_PRESCALER_EXT_STOP_STP,
+    .fixed_prescaler_enable      = 1U,  /* Fixed pre-scaler, 0:enabled, 1:disabled */ /* to be updated */
+    .prescaler                   = 0U,  /* Pre-scaler division factor */ /* to be updated */
+    
+    .ctrl_mode                   = ${dac_ctrl_mode},
+    .ext_start_mode              = XMC_HRPWM_CSG_SLOPE_EXT_START_STRT,
+    .ext_stop_mode               = XMC_HRPWM_CSG_SLOPE_EXT_STOP_STP,
+    .slope_ref_val_mode          = ${dac_slope_ref_val_mode}U,
+          
+    .step_gain                   = ${step_gain},
+    .static_mode_ist_enable      = ${static_mode_ist_enable},
+    .pulse_swallow_enable        = XMC_HRPWM_FUNC_STATUS_ENABLE, 
+    
+    .pulse_swallow_win_mode      = 2U, /*64 pulse window*/
+    
+    .pulse_swallow_val           = ${pulse_swallow_val}U,
+  };
+
+
+const XMC_HRPWM_CSG_INPUT_CONFIG_t ${appInst}_csg_blanking_config =
+  {
+    .mapped_input                = ${blanking_input},
+    .edge                        = ${blanking_edge},
+    .level                       = ${blanking_level},
+  };
+
+const XMC_HRPWM_CSG_INPUT_CONFIG_t ${appInst}_csg_clamping_config =
+  {
+    .mapped_input                = ${clamp_trigger_input},
+    .edge                        = ${clamp_trigger_edge},
+    .level                       = ${clamp_trigger_level},
+  };
+
+const XMC_HRPWM_CSG_INPUT_CONFIG_t ${appInst}_csg_start_slope_config =
+  {
+    .mapped_input                = ${start_slope_input},
+    .edge                        = ${start_slope_edge},
+    .level                       = ${start_slope_level},
+  };
+
+const XMC_HRPWM_CSG_INPUT_CONFIG_t ${appInst}_csg_shadow_transfer_config =
+  {
+    .mapped_input                = ${shadow_transfer_input},
+    .edge                        = ${shadow_transfer_edge},
+    .level                       = ${shadow_transfer_level},
+  };
+
+const COMP_SLOPE_GEN_CONFIG_t  ${appInst}_ConfigHandle =
+  {
+    .csg_cmp_config              = &${appInst}_csg_cmp_config,
+    .csg_dac_config              = &${appInst}_csg_dac_config,
+    .csg_sgen_config             = &${appInst}_csg_sgen_config,
+    .csg_blanking_config         = &${appInst}_csg_blanking_config,
+    .csg_clamping_config         = &${appInst}_csg_clamping_config,
+    .csg_start_slope_config      = &${appInst}_csg_start_slope_config,
+    .csg_shadow_transfer_config  = &${appInst}_csg_shadow_transfer_config,
+    .csg_dac_run_bit             = ${csg_dac_run_bit},
+    .csg_cmp_run_bit             = ${csg_cmp_run_bit},
+    .csg_cmp_psl_bit             = ${csg_cmp_psl_bit},
+    .csg_dac_slope_start         = ${csg_dac_slope_start},
+    .csg_dac_slope_stop          = ${csg_dac_slope_stop},
+    .csg_dac_prescaler_start     = ${csg_dac_prescaler_start},
+    .csg_dac_prescaler_stop      = ${csg_dac_prescaler_stop},
+    
+    
+    .int_cmp_rise                = ${int_cmp_rise},
+    .int_cmp_fall                = ${int_cmp_fall},
+    .int_clamp_state_enter       = ${int_clamp_state_enter},
+    
+    .sr_crse                     = ${sr_crse},
+    .sr_cfse                     = ${sr_cfse},
+    .sr_csee                     = ${sr_cfee},
+    
+    .run_dac_at_init             = ${run_dac_at_init},
+    
+    .global_ccu8_handle          = ${CCU8_Global_Handle},
+    .global_hrpwm_handle         = ${HRPWM_Global_Handle},
+  };
+
+COMP_SLOPE_GEN_t ${appInst} =
+  {
+    .config_ptr                  = &${appInst}_ConfigHandle,
+    .csg_module_ptr              = ${KernRegs_Handle},
+    .csg_slice_ptr               = ${Slice_Handle},
+    .csg_kernel_number           = ${KernelNo}U,
+    .csg_slice_number            = ${SliceNo}U,
+    
+    .csg_shadow_transfer_msk     = ${csg_shadow_transfer_msk},
+    
+    .state                       = COMP_SLOPE_GEN_UNINITIALIZED,
+  };
+
+""");
+
+} else {
+out.print("""
+  /*CSG resource is not mapped for COMP_SLOPE_GEN APP instant: ${appInst} */
+""");
+  }
+}
+
+
+/**
+ * @}
+ */
+ 
+/*CODE_BLOCK_END*/

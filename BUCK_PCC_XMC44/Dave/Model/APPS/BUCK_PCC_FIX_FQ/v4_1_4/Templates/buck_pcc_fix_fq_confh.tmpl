@@ -1,0 +1,329 @@
+package Model.APPS.BUCK_PCC_FIX_FQ.v4_1_4.Templates;
+
+import Model.APPS.BUCK_PCC_FIX_FQ.v4_1_4.BUCK_PCC_FIX_FQ
+
+out.print("""
+/**
+ * @cond
+ ***********************************************************************************************************************
+ *
+ * Copyright (c) 2015-2020, Infineon Technologies AG
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification,are permitted provided that the
+ * following conditions are met:
+ *
+ *   Redistributions of source code must retain the above copyright notice, this list of conditions and the  following
+ *   disclaimer.
+ *
+ *   Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
+ *   disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ *   Neither the name of the copyright holders nor the names of its contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE  FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY,OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * To improve the quality of the software, users are encouraged to share modifications, enhancements or bug fixes
+ * with Infineon Technologies AG (dave@infineon.com).
+ ***********************************************************************************************************************
+ *
+ * Change History
+ * --------------
+ *
+ * 2015-10-08:
+ *     - Initial version for DAVEv4
+ *
+ * @endcond
+ *
+ */
+
+#ifndef BUCK_PCC_FIX_FQ_CONF_H_
+#define BUCK_PCC_FIX_FQ_CONF_H_
+
+/***********************************************************************************************************************
+ * HEADER FILES
+ **********************************************************************************************************************/
+
+/***********************************************************************************************************************
+ * MACROS
+ **********************************************************************************************************************/
+
+#define BUCK_PCC_FIX_FQ_MAJOR_VERSION (${(BUCK_PCC_FIX_FQ.version).findAll( /\d+/ )*.toInteger()[0]}U)
+#define BUCK_PCC_FIX_FQ_MINOR_VERSION (${(BUCK_PCC_FIX_FQ.version).findAll( /\d+/ )*.toInteger()[1]}U)
+#define BUCK_PCC_FIX_FQ_PATCH_VERSION (${(BUCK_PCC_FIX_FQ.version).findAll( /\d+/ )*.toInteger()[2]}U)
+""");
+
+String  appInst                  = null;
+String  hrpwm_app               = null;
+String  pwm_ccu8_app            = null;
+String  blanking_or_slope       = null;
+String  blanking_and_slope      = null;
+String  adc_scan_app            = null;
+String  adc_queue_app           = null;
+String  pi_cntrl                = null;
+String  type3_cntrl             = null;
+String  type2_cntrl             = null;
+String  vout_result_interrupt   = null;
+String  end_of_req_src_interrupt= null;
+String  soft_start              = null;
+
+List list_mappedgrp             = ["NULL","NULL","NULL","NULL","NULL","NULL","NULL"]
+List list_actualchannel         = ["0xFF","0xFF","0xFF","0xFF","0xFF","0xFF","0xFF"]
+List list_q_position            = ["0xFF","0xFF","0xFF","0xFF","0xFF","0xFF","0xFF"]
+
+for (BUCK_PCC_FIX_FQ appIns : appInstancesList)
+{
+    appInst = appIns.getInstanceLabel()
+    
+    String  mc_family             = null;
+    
+    if (daveEnv.project.selectedDevice.deviceId.family == "XMC4")
+    {
+        mc_family                 = "XMC4"
+    }
+    else
+    {
+        mc_family                 = "XMC1"
+    }
+    
+    //check selected PWM APP (HRPWM/PWM_CCU8)
+    if(mc_family == "XMC4")
+    {
+        hrpwm_app                = "true" //HRPWM APP is selected
+    }
+    else
+    {
+        pwm_ccu8_app             = "true" //PWM_CCU8 APP is selected
+        
+        if(appIns.gcheck_slope_compensation.value || appIns.gcheck_blanking.value)
+        {
+            blanking_or_slope   = "true" //PWM_CCU4 APP is used for blanking / slope generation
+        }
+        if(appIns.gcheck_slope_compensation.value && appIns.gcheck_blanking.value)
+        {
+            blanking_and_slope  = "true" //PWM_CCU4 APP & DIGITAL_IO APP are used for blanking and slope generation
+        }
+    }
+    
+    //check selected ADC request source (ADC_SCAN/ADC_QUEUE)
+    if(appIns.gcombo_adc_measurement_mode.value == "Scan")
+    {
+        adc_scan_app             = "true" //Scan request soure is selected
+    }
+    else
+    {
+        adc_queue_app             = "true" //Queue request soure is selected
+    }
+    
+    //check slected compensator (PI/Type II (2P2Z)/Type III (3P3Z))
+    if(appIns.gcombo_controller_type.value == "PI")
+    {
+        pi_cntrl                = "true"  //PI compensator is selected
+    }
+    else if(appIns.gcombo_controller_type.value == "Type II (2P2Z)")
+    {
+        type2_cntrl             = "true"  //Type II compensator is selected
+    }
+    else
+    {
+        type3_cntrl             = "true"  //Type III compensator is selected
+    }
+
+    //check if soft start feature is used
+    if (appIns.gcheck_soft_start.value == true)
+    {
+        soft_start                 = "true";
+    }
+    
+    //check if Vout Result Event is selected
+    if (appIns.gcombo_isr_event.value == "Vout Result Event")
+    {
+        vout_result_interrupt   = "true"  //Vout Result Event is selected
+    }
+    
+    //check if End of Req source event is selected
+    if (appIns.gcombo_isr_event.value == "End Of Request Source Event")
+    {
+        end_of_req_src_interrupt= "true"  //End Of Request Source Event is selected
+    }
+    
+    /* Interrupt node */
+    if (appIns.gcombo_isr_event.value == "Vout Result Event")
+    {    
+        List mappedUri             = appIns.hwres_nvicnode.getSolverUri()
+
+        if (mappedUri) 
+        {    
+            String nodeID         = mappedUri[-1]
+            out.print("""
+/* ${appInst} APP control loop is executed at Vout Result Event */
+#define ${appInst}_${appIns.gstring_int_handler_cntrl_loop.value} (IRQ_Hdlr_${nodeID})
+            """);
+        }
+    }
+    
+    Integer num_of_adc            = 7 //max number of ADC channels
+    Integer num_of_phases         = 3 //max number of phases
+
+    //print max number of ADC channels and max nubmer of phases 
+    out.print("""
+#define BUCK_PCC_FIX_FQ_NUM_OF_ADC_CH        (${num_of_adc}U) /* Max number of ADC channels */
+#define BUCK_PCC_FIX_FQ_NUM_OF_PWM_PHASES    (${num_of_phases}U) /* Max number of phases */
+    """);
+    
+    //macros for ADC queue positions
+    List list_measurements         =     [
+                                    appIns.gcheck_measure_vout.value,
+                                    appIns.gcheck_measure_vin.value,
+                                    appIns.gcheck_measure_iout1.value,
+                                    appIns.gcheck_measure_iout2.value,
+                                    appIns.gcheck_measure_iout3.value,
+                                    appIns.gcheck_measure_iout4.value,
+                                    appIns.gcheck_measure_user_defined_1.value,
+                                      ];
+    
+    List list_channeluri         =     [
+                                    appIns.rarray_hwres_adcchan[0].getSolverUri(),
+                                    appIns.rarray_hwres_adcchan[1].getSolverUri(),
+                                    appIns.rarray_hwres_adcchan[2].getSolverUri(),
+                                    appIns.rarray_hwres_adcchan[3].getSolverUri(),
+                                    appIns.rarray_hwres_adcchan[4].getSolverUri(),
+                                    appIns.rarray_hwres_adcchan[5].getSolverUri(),
+                                    appIns.rarray_hwres_adcchan[6].getSolverUri(),
+                                    ]
+    
+    List list_positions         =
+                                    [
+                                    appIns.gcombo_vout_q_pos.value,
+                                    appIns.gcombo_vin_q_pos.value,
+                                    appIns.gcombo_iout1_q_pos.value,
+                                    appIns.gcombo_iout2_q_pos.value,
+                                    appIns.gcombo_iout3_q_pos.value,
+                                    appIns.gcombo_iout4_q_pos.value,
+                                    appIns.gcombo_adc_q_pos_user_defined_1.value,
+                                    ];
+
+    /*
+     * The below generated macro defines VADC group number and queue position number.
+     * All users consuming ADC_QUEUE APP in sharable mode shall generate this macro.
+     * This logic warns the user if the same queue group and position is used by other APP. 
+     */
+    if (appIns.gcombo_adc_measurement_mode.value == "Queue")
+    {
+        for(channel = 0; channel < 7; channel++)
+        {
+            if(list_measurements[channel] == true)
+            {
+                list_mappedgrp[channel]     = list_channeluri[channel][6]
+                list_q_position[channel]     = list_positions[channel]
+                out.print("""
+/* Macros for ADC queue positions */
+/* VADC_QUEUE_GROUP_<adc_group_number>__POSITION_<adc_queue_position_number> */
+#ifndef VADC_QUEUE_GROUP_${list_mappedgrp[channel]}_POSITION_${list_q_position[channel]}
+#define VADC_QUEUE_GROUP_${list_mappedgrp[channel]}_POSITION_${list_q_position[channel]} (0)
+#else
+#error "Redefined the same queue position"
+#endif
+                """);
+            }
+        }
+    }
+}
+    
+
+if (hrpwm_app             == "true")
+{
+    out.print("""
+#define BUCK_PCC_FIX_FQ_HRPWM_USED
+    """);
+}
+
+if (pwm_ccu8_app         == "true")
+{
+    out.print("""
+#define BUCK_PCC_FIX_FQ_PWM_CCU8_USED
+    """);
+}
+
+if (blanking_or_slope   == "true")
+{
+    out.print("""
+#define BUCK_PCC_FIX_FQ_BLANKING_OR_SLOPE_USED
+    """);
+}
+
+if (blanking_and_slope  == "true")
+{
+    out.print("""
+#define BUCK_PCC_FIX_FQ_BLANKING_AND_SLOPE_USED
+    """);
+}
+
+if (adc_scan_app         == "true")
+{
+    out.print("""
+#define BUCK_PCC_FIX_FQ_ADC_SCAN_USED
+    """);
+}
+
+if (adc_queue_app         == "true")
+{
+    out.print("""
+#define BUCK_PCC_FIX_FQ_ADC_QUEUE_USED
+    """);
+}
+
+if (vout_result_interrupt== "true")
+{
+    out.print("""
+#define BUCK_PCC_FIX_FQ_RESULT_INT_USED
+    """);
+}
+
+if (end_of_req_src_interrupt     == "true")
+{
+    out.print("""
+#define BUCK_PCC_FIX_FQ_END_OF_REQ_SOURCE_INT_USED
+    """);
+}
+
+if (pi_cntrl             == "true")
+{
+    out.print("""
+#define BUCK_PCC_FIX_FQ_PI_FILTER_USED
+    """);
+}
+
+if (type2_cntrl         == "true")
+{
+    out.print("""
+#define BUCK_PCC_FIX_FQ_TYPE_II_FILTER_USED
+    """);
+}
+
+if (type3_cntrl         == "true")
+{
+    out.print("""
+#define BUCK_PCC_FIX_FQ_TYPE_III_FILTER_USED
+    """);
+}
+
+if(soft_start             == "true")
+{
+    out.print("""
+#define BUCK_PCC_FIX_FQ_SOFT_START_USED
+    """);
+}
+
+
+out.print("""
+#endif /* BUCK_PCC_FIX_FQ_CONF_H_ */
+    
+""");

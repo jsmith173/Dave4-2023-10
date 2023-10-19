@@ -1,0 +1,589 @@
+<p1:Tab  xmlns="http://www.eclipse.org/xwt/presentation" xmlns:x="http://www.eclipse.org/xwt" xmlns:p1="clr-namespace:com.ifx.davex.ui.controls.app" x:Class="e" layout="{x:Null}">
+	<p1:TabFolder bounds="5, 5, 700, 500">
+		<p1:GTab text="Buck Converter Configuration" visible="true" enabled="true" widgetName="gtab_buck_conv_config">
+			<p1:GTab.control>
+				<p1:Tab widgetName="composite14" layout="{x:Null}">
+					<p1:GGroup text="Topology Configuration" widgetName="ggroup_toloplogy_config" bounds="5, 5, 684, 135" layout="{x:Null}">
+						<p1:GCheck manifestObj="true" text="Synchronous converter" toolTipText="Complimentary PWM signals are generated to control the buck switches." widgetName="gcheck_synch_conv" description="Selecting this option enables synchronous PWM generation for buck. &lt;BR&gt;&#13;&#10;&lt;BR&gt;&#13;&#10;Complimentary PWM signals are generated to control the buck switches. PWM_CCU8 APP would be used to generate complimentary PWM signals. &lt;BR&gt; &#13;&#10;&lt;BR&gt;&#13;&#10;Unselecting this option uses PWM_CCU4 APP to generate the PWM." value="true" bounds="8, 22, 143, 16"/>
+						<p1:GLabel text="Number of phases:" visible="true" widgetName="glabel_no_of_phases" bounds="8, 54, 100, 15"/>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" options="1&#13;&#10;2&#13;&#10;3&#13;&#10;4" value="1" widgetName="gcombo_no_of_phases" toolTipText="Interleaved buck - poly phase converter" description="For interleaved operation of buck regulator, the user can choose up to 4 PWM generators for this purpose. The angles between the PWMs are automatically distributed evenly." bounds="161, 51, 162, 21"/>
+						<p1:GLabel text="Vout measurement trigger:" visible="true" widgetName="glabel_mesurement_trigger" bounds="8, 85, 142, 15"/>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" options="User Manual Connection&#13;&#10;PWM Timer (Phase 0)" value="User Manual Connection" widgetName="gcombo_mesurement_trigger" toolTipText="For &apos;User Manual Connection&apos;, manually connect trigger source to ADC for conversion." description="There are two possible sources of trigger for ADC.&lt;BR&gt;&#13;&#10;&lt;BR&gt;&#13;&#10;User Manual Connection: &lt;BR&gt;&#13;&#10;User can connect any other existing timer for trigger or shall consume a new timer (external timer) APP and do trigger signal connection. This trigger can run at a different frequency that the PWM timer frequency. Then the control loop shall run at this frequency.&lt;BR&gt;&#13;&#10;&lt;b&gt;Note: Sequence to start BUCK_VC_FIX_FQ&lt;/b&gt;&lt;BR&gt;&#13;&#10;First call BUCK_VC_FIX_FQ_Start() first and then start external timer. &lt;BR&gt;&#13;&#10;For this case it is advised to set the initial duty cycle to 0 in BUCK_VC_FIX_FQ APP.&lt;BR&gt;&#13;&#10;&lt;BR&gt;&#13;&#10;PWM Timer (Phase 0): &lt;BR&gt;&#13;&#10;User can select the period match of phase 0 timer as trigger for ADC APPs. Then the control loop shall run at the PWM frequency. &#13;&#10;" bounds="161, 82, 162, 21"/>
+						<p1:GLabel text="Note:                                          Additionally &apos;Trigger edge selection&apos; needs to be configured in ADC APP&apos;s." visible="true" manifestObj="true" widgetName="glabel_1413" bounds="8, 113, 620, 15"/>
+					</p1:GGroup>
+					<p1:GImage visible="true" manifestObj="true" widgetName="gimage_buck_topology" path="doc/Buck_vcm_single_phase_synch.png" bounds="15, 155, 653, 306">
+						<p1:GFloat description="Nominal Vin." format="*,6" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" maxValue="10000" minValue="1.8" toolTipText="Buck input voltage" value="12" widgetName="gfloat_vin" x:Style="BORDER" bounds="21, 86, 67, 21"/>
+						<p1:GFloat description="Required regulated output voltage." format="*,6" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" maxValue="10000" minValue="0.5" toolTipText="Buck reference output voltage" value="3.3" widgetName="gfloat_vout_ref" x:Style="BORDER" bounds="535, 251, 67, 21"/>
+					</p1:GImage>
+				</p1:Tab>
+			</p1:GTab.control>
+		</p1:GTab>
+		<p1:GTab text="PWM Settings" visible="true" enabled="true" widgetName="gtab_pwm_config">
+			<p1:GTab.control>
+				<p1:Tab widgetName="composite1" layout="{x:Null}">
+					<p1:GGroup text="Switching Parameters" widgetName="ggroup_switching_params" bounds="5, 5, 325, 323">
+						<p1:GGroup.layout>
+							<GridLayout horizontalSpacing="10" verticalSpacing="10" numColumns="2"/>
+						</p1:GGroup.layout>
+						<p1:GCheck description="Enables high resolution mode for PWM generation. HRPWM APP would be used to generate PWM pulses of 150 pico second resolution." manifestObj="true" text="Enable high resolution PWM (150 ps)" toolTipText="Generates High Resolution PWM signal with 150 ps resolution to control the switches" widgetName="gcheck_enable_high_res"/>
+						<Label/>
+						<p1:GLabel text="PWM frequency [kHz]:" visible="true" widgetName="glabel_pwm_freq"/>
+						<p1:GInteger format="(com.ifx.davex.ui.controls.util.AppUiConstants).DEC" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" maxValue="10000" minValue="2" widgetName="ginteger_pwm_freq" value="200" toolTipText="Desired frequency of operation" description="Buck switching frequency">
+							<p1:GInteger.layoutData>
+								<GridData horizontalAlignment="FILL" widthHint="82"/>
+							</p1:GInteger.layoutData>
+						</p1:GInteger>
+						<p1:GLabel text="PWM resolution [nsec]:" visible="true" widgetName="glabel_pwm_res"/>
+						<p1:GFloat format="*,6" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" maxValue="20000" minValue="9" widgetName="gfloat_pwm_res" x:Style="BORDER" value="16" toolTipText="Determines minimum step of timer" description="PWM timer tick resolution.">
+							<p1:GFloat.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GFloat.layoutData>
+						</p1:GFloat>
+						<p1:GLabel text="Initial duty cycle [%]:" visible="true" widgetName="glabel_init_dc"/>
+						<p1:GFloat x:Style="BORDER" minValue="0" maxValue="100" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" format="*,6" manifestObj="true" widgetName="gfloat_init_dc" value="10" description="Initial duty cycle" toolTipText="Set during APP initialization">
+							<p1:GFloat.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GFloat.layoutData>
+						</p1:GFloat>
+						<p1:GLabel text="Min duty cycle [%]:" visible="true" widgetName="glabel_min_dc"/>
+						<p1:GFloat x:Style="BORDER" minValue="0" maxValue="100" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" format="*,6" manifestObj="true" widgetName="gfloat_min_dc" value="0" description="Minimum duty cycle to be applied to switches." toolTipText="Minimum duty cycle is linked to compensator&apos;s minimum output saturation voltage.">
+							<p1:GFloat.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GFloat.layoutData>
+						</p1:GFloat>
+						<p1:GLabel text="Max duty cycle [%]:" visible="true" widgetName="glabel_max_dc"/>
+						<p1:GFloat x:Style="BORDER" minValue="0" maxValue="100" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" format="*,6" manifestObj="true" widgetName="gfloat_max_dc" value="40" description="Maximum duty cycle to be applied to switches." toolTipText="Maximum duty cycle is linked to compensator&apos;s maximum output saturation voltage.">
+							<p1:GFloat.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GFloat.layoutData>
+						</p1:GFloat>
+						<p1:GLabel text="Passive level of output:" visible="true" widgetName="glabel_passive_lvl"/>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" widgetName="gcombo_passive_lvl" options="Low&#13;&#10;High" value="Low" toolTipText="Select the output level when the state of STx is Low.&#13;&#10;This is also the output level when trap signal is active." description="Passive level of the PWM timers.">
+							<p1:GCombo.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GCombo.layoutData>
+						</p1:GCombo>
+						<p1:GLabel text="Phase shift between phases [degrees]:" visible="true" widgetName="glabel_phase_shift"/>
+						<p1:GInteger x:Style="NONE" minValue="0" maxValue="360" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" format="(com.ifx.davex.ui.controls.util.AppUiConstants).DEC" manifestObj="true" widgetName="ginteger_phase_shift" value="180" enabled="false" description="Phase shift between interleaved phases.">
+							<p1:GInteger.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GInteger.layoutData>
+						</p1:GInteger>
+						<p1:GLabel text="Dead time rising [nsec]:" visible="true" widgetName="glabel_dt_rising" manifestObj="true"/>
+						<p1:GFloat x:Style="BORDER" minValue="0.0" maxValue="1500" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" format="*,6" manifestObj="true" widgetName="gfloat_dt_rising" value="100.0" toolTipText="Rising dead time" description="Dead time for rising edge">
+							<p1:GFloat.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GFloat.layoutData>
+						</p1:GFloat>
+						<p1:GLabel text="Dead time falling [nsec]:" visible="true" widgetName="glabel_dt_falling" manifestObj="true"/>
+						<p1:GFloat x:Style="BORDER" minValue="0.0" maxValue="1500" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" format="*,6" manifestObj="true" widgetName="gfloat_dt_falling" value="100.0" toolTipText="Falling dead time" description="Dead time for falling edge.">
+							<p1:GFloat.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GFloat.layoutData>
+						</p1:GFloat>
+					</p1:GGroup>
+					<p1:GImage visible="true" manifestObj="true" widgetName="gimage_pwm" bounds="340, 15, 340, 307" path="doc/pwm_ccu.png"/>
+				</p1:Tab>
+			</p1:GTab.control>
+		</p1:GTab>
+		<p1:GTab text="ADC Measurements" visible="true" enabled="true" widgetName="gtab_adc_measurement_config">
+			<p1:GTab.control>
+				<p1:Tab widgetName="composite2" layout="{x:Null}">
+					<p1:GGroup text="Measurement Entities for ADC" widgetName="ggroup_measurement_entities_for_adc" bounds="5, 5, 448, 329">
+						<p1:GGroup.layout>
+							<GridLayout numColumns="6"/>
+						</p1:GGroup.layout>
+						<Label/>
+						<p1:GLabel text="ADC measurement mode:" visible="true" widgetName="glabel_adc_measurement_mode"/>
+						<Label/>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" widgetName="gcombo_adc_measurement_mode" options="Scan&#13;&#10;Queue" value="Scan" manifestObj="true" toolTipText="Selection of ADC request source:  Scan or Queue." description="The user can select the ADC SCAN or ADC QUEUE APPs for measuring the analog signals. These APPs need to be triggered at regular interval for digitization of analog signals. Control loop is executed at the end of ADC conversion.">
+							<p1:GCombo.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GCombo.layoutData>
+						</p1:GCombo>
+						<Label/>
+						<Label/>
+						<p1:GLabel text="Enable" visible="true" widgetName="glabel_measure">
+							<p1:GLabel.layoutData>
+								<GridData horizontalAlignment="FILL" verticalAlignment="FILL"/>
+							</p1:GLabel.layoutData>
+						</p1:GLabel>
+						<p1:GLabel text="Measure" visible="true" widgetName="glabel_entity">
+							<p1:GLabel.layoutData>
+								<GridData horizontalAlignment="FILL" verticalAlignment="FILL"/>
+							</p1:GLabel.layoutData>
+						</p1:GLabel>
+						<Label/>
+						<p1:GLabel text="Queue position" visible="true" widgetName="glabel_queue_position">
+							<p1:GLabel.layoutData>
+								<GridData horizontalAlignment="FILL" verticalAlignment="FILL"/>
+							</p1:GLabel.layoutData>
+						</p1:GLabel>
+						<Label/>
+						<p1:GLabel text="Divider ratio/gain" visible="true" widgetName="glabel_div_ratio_gain">
+							<p1:GLabel.layoutData>
+								<GridData horizontalAlignment="FILL" verticalAlignment="FILL"/>
+							</p1:GLabel.layoutData>
+						</p1:GLabel>
+						<p1:GCheck manifestObj="true" widgetName="gcheck_measure_vout" value="true" enabled="false" toolTipText="Select to measure Vout voltage" description="Enables output voltage measurement."/>
+						<p1:GString x:Style="BORDER" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" widgetName="gstring_vout_measurement" value="Vout" description="Variable name of output voltage measurement. &lt;BR&gt; &#13;&#10;&lt;BR&gt;&#13;&#10;Note: Name should be compliant to &apos;C&apos; identifier naming rule.&lt;BR&gt;&#13;&#10;Correct: buck_vout1&lt;BR&gt;&#13;&#10;Wrong : buck_vout#1 (# should not be used in &apos;C&apos; identifier)&lt;BR&gt;" toolTipText="The name would be used in &apos;buck_vc_fix_fq_conf.c&apos; for &apos;Vout&apos; ADC initializations.">
+							<p1:GString.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GString.layoutData>
+						</p1:GString>
+						<Label/>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" widgetName="gcombo_vout_q_pos" value="0" options="0&#13;&#10;1&#13;&#10;2&#13;&#10;3&#13;&#10;4&#13;&#10;5&#13;&#10;6&#13;&#10;7" description="ADC queue position of output voltage measurement.">
+							<p1:GCombo.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GCombo.layoutData>
+						</p1:GCombo>
+						<Label/>
+						<p1:GFloat x:Style="BORDER" minValue=".0000001" maxValue="100" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" format="*,6" manifestObj="true" widgetName="gfloat_vout_gain" value="0.79295" description="Hardware gain of output voltage measurement. &lt;BR&gt; &#13;&#10;Example: &lt;BR&gt; &#13;&#10;If actual Vout is 12 volts and the gain is 0.2, then the maximum ADC measured voltage would be 2.4 volts. Measured voltage = 12*0.2 =2.4v" toolTipText="Hardware gain for Vout">
+							<p1:GFloat.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GFloat.layoutData>
+						</p1:GFloat>
+						<p1:GCheck manifestObj="true" widgetName="gcheck_measure_vin" toolTipText="Select to measure Vin voltage" description="Enables input voltage measurement."/>
+						<p1:GString x:Style="BORDER" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" widgetName="gstring_vin_measurement" value="Vin" description="Variable name of input voltage measurement. &lt;BR&gt; &#13;&#10;&lt;BR&gt;&#13;&#10;Note: Name should be compliant to &apos;C&apos; identifier naming rule.&lt;BR&gt;&#13;&#10;Correct: buck_vin1&lt;BR&gt;&#13;&#10;Wrong : buck_vin#1 (# should not be used in &apos;C&apos; identifier)&lt;BR&gt;" toolTipText="The name would be used in &apos;buck_vc_fix_fq_conf.c&apos; for &apos;Vin&apos; ADC initializations.">
+							<p1:GString.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GString.layoutData>
+						</p1:GString>
+						<Label/>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" widgetName="gcombo_vin_q_pos" value="1" options="0&#13;&#10;1&#13;&#10;2&#13;&#10;3&#13;&#10;4&#13;&#10;5&#13;&#10;6&#13;&#10;7" description="ADC queue position of input voltage measurement.">
+							<p1:GCombo.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GCombo.layoutData>
+						</p1:GCombo>
+						<Label/>
+						<p1:GFloat x:Style="BORDER" minValue=".0000001" maxValue="100" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" format="*,6" manifestObj="true" widgetName="gfloat_vin_gain" value="0.2093" description="Hardware gain of input voltage measurement.&#13;&#10;Example: &lt;BR&gt; &#13;&#10;If actual Vin is 12 volts and the gain is 0.2, then the maximum ADC measured voltage would be 2.4 volts. Measured voltage = 12*0.2 =2.4v" toolTipText="Hardware gain for Vin">
+							<p1:GFloat.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GFloat.layoutData>
+						</p1:GFloat>
+						<p1:GCheck manifestObj="true" widgetName="gcheck_measure_iout1" toolTipText="Select to measure Iout1 current" description="Enables Iout1 voltage measurement."/>
+						<p1:GString x:Style="BORDER" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" widgetName="gstring_iout1_measurement" value="Iout1" description="Variable name of Iout1 current measurement. &lt;BR&gt; &#13;&#10;&lt;BR&gt;&#13;&#10;Note: Name should be compliant to &apos;C&apos; identifier naming rule.&lt;BR&gt;&#13;&#10;Correct: buck_iout1&lt;BR&gt;&#13;&#10;Wrong : buck_iout#1 (# should not be used in &apos;C&apos; identifier)&lt;BR&gt;" toolTipText="The name would be used in &apos;buck_vc_fix_fq_conf.c&apos; for &apos;Iout1&apos; ADC initializations.">
+							<p1:GString.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GString.layoutData>
+						</p1:GString>
+						<Label/>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" widgetName="gcombo_iout1_q_pos" value="2" options="0&#13;&#10;1&#13;&#10;2&#13;&#10;3&#13;&#10;4&#13;&#10;5&#13;&#10;6&#13;&#10;7" description="ADC queue position of Iout1 current measurement.">
+							<p1:GCombo.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GCombo.layoutData>
+						</p1:GCombo>
+						<Label/>
+						<p1:GFloat x:Style="BORDER" minValue=".0000001" maxValue="100" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" format="*,6" manifestObj="true" widgetName="gfloat_iout1_gain" value="1" description="Hardware gain of Iout1 current measurement.&#13;&#10;Example: &lt;BR&gt; &#13;&#10;If actual Iout1 is 12 A and the gain is 0.2, then the maximum ADC measured current would be 2.4 A. Measured current = 12*0.2 =2.4 A" toolTipText="Hardware gain for Iout1">
+							<p1:GFloat.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GFloat.layoutData>
+						</p1:GFloat>
+						<p1:GCheck manifestObj="true" widgetName="gcheck_measure_iout2" toolTipText="Select to measure Iout2 current" description="Enables Iout2 voltage measurement."/>
+						<p1:GString x:Style="BORDER" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" widgetName="gstring_iout2_measurement" value="Iout2" description="Variable name of Iout2 current measurement.&lt;BR&gt; &#13;&#10;&lt;BR&gt;&#13;&#10;Note: Name should be compliant to &apos;C&apos; identifier naming rule.&lt;BR&gt;&#13;&#10;Correct: buck_iout2&lt;BR&gt;&#13;&#10;Wrong : buck_iout#2 (# should not be used in &apos;C&apos; identifier)&lt;BR&gt;" toolTipText="The name would be used in &apos;buck_vc_fix_fq_conf.c&apos; for &apos;Iout2&apos; ADC initializations.">
+							<p1:GString.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GString.layoutData>
+						</p1:GString>
+						<Label/>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" options="0&#13;&#10;1&#13;&#10;2&#13;&#10;3&#13;&#10;4&#13;&#10;5&#13;&#10;6&#13;&#10;7" value="3" widgetName="gcombo_iout2_q_pos" description="ADC queue position of Iout2 current measurement.">
+							<p1:GCombo.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GCombo.layoutData>
+						</p1:GCombo>
+						<Label/>
+						<p1:GFloat x:Style="BORDER" minValue=".0000001" maxValue="100" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" format="*,6" manifestObj="true" widgetName="gfloat_iout2_gain" value="1" description="Hardware gain of Iout2 current measurement.&#13;&#10;Example: &lt;BR&gt; &#13;&#10;If actual Iout2 is 12 A and the gain is 0.2, then the maximum ADC measured current would be 2.4 A. Measured current = 12*0.2 =2.4 A" toolTipText="Hardware gain for Iout2">
+							<p1:GFloat.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GFloat.layoutData>
+						</p1:GFloat>
+						<p1:GCheck manifestObj="true" widgetName="gcheck_measure_iout3" toolTipText="Select to measure Iout3 current" description="Enables Iout3 voltage measurement."/>
+						<p1:GString x:Style="BORDER" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" widgetName="gstring_iout3_measurement" value="Iout3" description="Variable name of Iout3 current measurement.&lt;BR&gt; &#13;&#10;&lt;BR&gt;&#13;&#10;Note: Name should be compliant to &apos;C&apos; identifier naming rule.&lt;BR&gt;&#13;&#10;Correct: buck_iout3&lt;BR&gt;&#13;&#10;Wrong : buck_iout#3 (# should not be used in &apos;C&apos; identifier)&lt;BR&gt;" toolTipText="The name would be used in &apos;buck_vc_fix_fq_conf.c&apos; for &apos;Iout3&apos; ADC initializations.">
+							<p1:GString.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GString.layoutData>
+						</p1:GString>
+						<Label/>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" options="0&#13;&#10;1&#13;&#10;2&#13;&#10;3&#13;&#10;4&#13;&#10;5&#13;&#10;6&#13;&#10;7" value="4" widgetName="gcombo_iout3_q_pos" description="ADC queue position of Iout3 current measurement.">
+							<p1:GCombo.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GCombo.layoutData>
+						</p1:GCombo>
+						<Label/>
+						<p1:GFloat x:Style="BORDER" minValue=".0000001" maxValue="100" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" format="*,6" manifestObj="true" widgetName="gfloat_iout3_gain" value="1" description="Hardware gain of Iout3 current measurement.&#13;&#10;Example: &lt;BR&gt; &#13;&#10;If actual Iout3 is 12 A and the gain is 0.2, then the maximum ADC measured current would be 2.4 A. Measured current = 12*0.2 =2.4 A" toolTipText="Hardware gain for Iout3">
+							<p1:GFloat.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GFloat.layoutData>
+						</p1:GFloat>
+						<p1:GCheck manifestObj="true" widgetName="gcheck_measure_iout4" toolTipText="Select to measure Iout4 current" description="Enables Iout4 voltage measurement."/>
+						<p1:GString x:Style="BORDER" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" widgetName="gstring_iout4_measurement" value="Iout4" description="Variable name of Iout4 current measurement.&lt;BR&gt; &#13;&#10;&lt;BR&gt;&#13;&#10;Note: Name should be compliant to &apos;C&apos; identifier naming rule.&lt;BR&gt;&#13;&#10;Correct: buck_iout4&lt;BR&gt;&#13;&#10;Wrong : buck_iout#4 (# should not be used in &apos;C&apos; identifier)&lt;BR&gt;" toolTipText="The name would be used in &apos;buck_vc_fix_fq_conf.c&apos; for &apos;Iout4&apos; ADC initializations.">
+							<p1:GString.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GString.layoutData>
+						</p1:GString>
+						<Label/>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" options="0&#13;&#10;1&#13;&#10;2&#13;&#10;3&#13;&#10;4&#13;&#10;5&#13;&#10;6&#13;&#10;7" value="5" widgetName="gcombo_iout4_q_pos" description="ADC queue position of Iout4 current measurement.">
+							<p1:GCombo.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GCombo.layoutData>
+						</p1:GCombo>
+						<Label/>
+						<p1:GFloat x:Style="BORDER" minValue=".0000001" maxValue="100" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" format="*,6" manifestObj="true" widgetName="gfloat_iout4_gain" value="1" description="Hardware gain of Iout4 current measurement.&#13;&#10;Example: &lt;BR&gt; &#13;&#10;If actual Iout4 is 12 A and the gain is 0.2, then the maximum ADC measured current would be 2.4 A. Measured current = 12*0.2 =2.4 A" toolTipText="Hardware gain for Iout4">
+							<p1:GFloat.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GFloat.layoutData>
+						</p1:GFloat>
+						<p1:GCheck manifestObj="true" widgetName="gcheck_measure_user_defined_1" toolTipText="Select to measure user defined entity" description="Enables 1st user defined measurement."/>
+						<p1:GString x:Style="BORDER" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" widgetName="gstring_udef1_measurement" value="User_Defined" description="Variable name of user defined measurement.&lt;BR&gt;&#13;&#10;Example: Temperature measurement. &lt;BR&gt;&#13;&#10;&lt;BR&gt;&#13;&#10;Note: Name should be compliant to &apos;C&apos; identifier naming rule.&lt;BR&gt;&#13;&#10;Correct: buck1_tmperature&lt;BR&gt;&#13;&#10;Wrong : buck#1_tmperature (# should not be used in &apos;C&apos; identifier)&lt;BR&gt;" toolTipText="The name would be used in &apos;buck_vc_fix_fq_conf.c&apos; for &apos;User_Defined&apos; ADC initializations.">
+							<p1:GString.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GString.layoutData>
+						</p1:GString>
+						<Label/>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" widgetName="gcombo_adc_q_pos_user_defined_1" value="6" options="0&#13;&#10;1&#13;&#10;2&#13;&#10;3&#13;&#10;4&#13;&#10;5&#13;&#10;6&#13;&#10;7" description="ADC queue position of 1st user defined measurement.">
+							<p1:GCombo.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GCombo.layoutData>
+						</p1:GCombo>
+						<Label/>
+						<Label/>
+					</p1:GGroup>
+					<p1:GImage visible="true" manifestObj="true" widgetName="gimage_adc" bounds="460, 11, 228, 320" path="doc/adc.png"/>
+					<p1:GMessage text="Invalid name given in the Measure field - Vout/Vin/Ioutx/User_Defined" visible="true" manifestObj="true" isError="false" widgetName="gmessage_measurements" bounds="6, 348, 446, 15" description="This widget warns the user in case of invalid name given for &apos;Vout/Vin/Ioutx,User_defined&apos;."/>
+				</p1:Tab>
+			</p1:GTab.control>
+		</p1:GTab>
+		<p1:GTab text="Control Settings" visible="true" enabled="true" manifestObj="true" widgetName="gtab_controller_config">
+			<p1:GTab.control>
+				<p1:Tab widgetName="composite_7" location="-7, -244">
+					<p1:GGroup bounds="7, 242, 286, 227" text="Raw coefficient values (float input)" widgetName="ggroup_controller_config" layout="{x:Null}" description="Raw coefficient values (float input)">
+						<p1:GLabel manifestObj="true" text="            " widgetName="gLabel145" bounds="321, 23, 36, 15"/>
+						<p1:GLabel manifestObj="true" text="A1:" widgetName="glabel_a1" bounds="11, 143, 17, 15" description="A1 coefficient"/>
+						<p1:GFloat description="A1 coefficient for TYPE II (2P2Z) &amp; TYPE III (3P3Z) compensator." format="*,6" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" maxValue="2047" minValue="-2048" value="1.529212840391" widgetName="gfloat_a1" x:Style="BORDER" bounds="48, 141, 70, 21"/>
+						<p1:GLabel manifestObj="true" text="A2:" widgetName="glabel_a2" bounds="11, 172, 17, 15" description="A2 coefficient"/>
+						<p1:GFloat description="A2 coefficient for TYPE II (2P2Z) &amp; TYPE III (3P3Z) compensator." format="*,6" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" maxValue="2047" minValue="-2048" value="-0.362413476977" widgetName="gfloat_a2" x:Style="BORDER" bounds="48, 170, 70, 21"/>
+						<p1:GLabel manifestObj="true" text="A3:" widgetName="glabel_a3" bounds="11, 201, 17, 15" description="A3 coefficient"/>
+						<p1:GFloat description="A3 coefficient for TYPE III (3P3Z) compensator." format="*,6" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" maxValue="2047" minValue="-2048" value="-0.166799363414" widgetName="gfloat_a3" x:Style="BORDER" bounds="48, 199, 70, 21"/>
+						<p1:GLabel manifestObj="true" text="B0:" widgetName="glabel_b0" bounds="11, 28, 16, 15" description="B0 coefficient"/>
+						<p1:GFloat description="B0 coefficient for TYPE II (2P2Z) &amp; TYPE III (3P3Z) compensator." format="*,6" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" maxValue="2047" minValue="-2048" value="1.584570155507" widgetName="gfloat_b0" x:Style="BORDER" bounds="48, 26, 70, 21"/>
+						<p1:GLabel manifestObj="true" text="B1:" widgetName="glabel_b1" bounds="11, 57, 16, 15" description="B1 coefficient"/>
+						<p1:GFloat description="B1 coefficient for TYPE II (2P2Z) &amp; TYPE III (3P3Z) compensator." format="*,6" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" maxValue="2047" minValue="-2048" value="-1.474570376299" widgetName="gfloat_b1" x:Style="BORDER" bounds="48, 55, 70, 21"/>
+						<p1:GLabel manifestObj="true" text="B2:" widgetName="glabel_b2" bounds="11, 86, 16, 15" description="B2 coefficient"/>
+						<p1:GFloat description="B2 coefficient for TYPE II (2P2Z) &amp; TYPE III (3P3Z) compensator." format="*,6" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" maxValue="2047" minValue="-2048" value="-1.582984032568" widgetName="gfloat_b2" x:Style="BORDER" bounds="48, 84, 70, 21"/>
+						<p1:GLabel manifestObj="true" text="B3:" widgetName="glabel_b3" bounds="11, 115, 16, 15" description="B3 coefficient"/>
+						<p1:GFloat description="B3 coefficient for TYPE III (3P3Z) compensator." format="*,6" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" maxValue="2047" minValue="-2048" value="1.476156499238" widgetName="gfloat_b3" x:Style="BORDER" bounds="48, 113, 70, 21"/>
+						<p1:GLabel manifestObj="true" text="K (gain):" widgetName="glabel_k_gain" bounds="143, 86, 44, 15"/>
+						<p1:GFloat x:Style="BORDER" minValue="-1024" maxValue="1023" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" format="*,6" manifestObj="true" widgetName="gfloat_k_gain" bounds="198, 84, 70, 21" description="K is digital controller gain. Scales the controller output to take into account the PWM, ADC and pre-ADC scaling gains." value=""/>
+						<p1:GLabel manifestObj="true" text="Max out:" widgetName="glabel_max_out" bounds="143, 115, 46, 15"/>
+						<p1:GFloat x:Style="BORDER" minValue="10" maxValue="12000" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" format="*,6" manifestObj="true" widgetName="gfloat_max_out" bounds="198, 113, 70, 21" description="Maximum duty cycle limit per switch." value="" toolTipText="Maximum duty cycle limit per switch"/>
+						<p1:GLabel manifestObj="true" text="Min out:" widgetName="glabel_min_out" bounds="143, 144, 49, 15"/>
+						<p1:GFloat x:Style="BORDER" minValue="0.0" maxValue="10000" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" format="*,6" manifestObj="true" widgetName="gfloat_min_out" bounds="198, 142, 70, 21" value="" description="Minimum duty cycle limit per switch." toolTipText="Minimum duty cycle limit per switch"/>
+					</p1:GGroup>
+					<p1:GImage bounds="38, 40, 600, 150" manifestObj="true" path="doc/filter_3p3z.png" widgetName="gimage_filter"/>
+					<p1:GGroup text="Filter variable formats" manifestObj="true" widgetName="ggroup_filter_var_format" bounds="319, 241, 363, 179" layout="{x:Null}">
+						<p1:GLabel text="Integer bits" visible="true" manifestObj="true" widgetName="glabel_integer_bits" bounds="121, 20, 66, 15"/>
+						<p1:GLabel text="Fractional bits" visible="true" manifestObj="true" widgetName="glabel_factional_bits" bounds="209, 20, 80, 15"/>
+						<p1:GLabel text="A coefficients" visible="true" manifestObj="true" widgetName="glabel_a_coeffs" bounds="22, 79, 71, 15"/>
+						<p1:GInteger x:Style="NONE" minValue="-10" maxValue="32" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" format="(com.ifx.davex.ui.controls.util.AppUiConstants).DEC" manifestObj="true" widgetName="ginteger_a_coeffs_int_bits" value="8" bounds="120, 76, 65, 23" description="Number of integer bits required to scale A coefficients for Type II or Type III controller type. Valid only for XMC1x family."/>
+						<p1:GInteger x:Style="NONE" minValue="0" maxValue="32" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" format="(com.ifx.davex.ui.controls.util.AppUiConstants).DEC" manifestObj="true" widgetName="ginteger_a_coeffs_fract_bits" bounds="210, 76, 65, 23" value="16" toolTipText="Number of fractional bits required to scale A coefficient." description="Number of fractional bits required to scale A coefficients for Type II or Type III controller type. Valid only for XMC1x family."/>
+						<p1:GLabel text="B coefficients" visible="true" manifestObj="true" widgetName="glabel_b_coeffs" bounds="22, 48, 72, 15"/>
+						<p1:GInteger x:Style="NONE" minValue="-10" maxValue="32" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" format="(com.ifx.davex.ui.controls.util.AppUiConstants).DEC" manifestObj="true" widgetName="ginteger_b_coeffs_int_bits" bounds="120, 45, 65, 23" value="0" description="Number of integer bits required to scale B coefficients for Type II or Type III controller type. Valid only for XMC1x family."/>
+						<p1:GInteger x:Style="NONE" minValue="0" maxValue="32" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" format="(com.ifx.davex.ui.controls.util.AppUiConstants).DEC" manifestObj="true" widgetName="ginteger_b_coeffs_fract_bits" bounds="210, 45, 65, 23" value="0" description="Number of fractional bits required to scale B coefficients for Type II or Type III controller type. Valid only for XMC1x family."/>
+						<p1:GLabel text="Output" visible="true" manifestObj="true" widgetName="glabel_output" bounds="22, 110, 38, 15"/>
+						<p1:GInteger x:Style="NONE" minValue="-10" maxValue="32" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" format="(com.ifx.davex.ui.controls.util.AppUiConstants).DEC" manifestObj="true" widgetName="ginteger_comp_output_int_bits" bounds="120, 107, 65, 23" value="0" description="Number of integer bits required to scale output of Type II or Type III controller type. Valid only for XMC1x family."/>
+						<p1:GInteger x:Style="NONE" minValue="0" maxValue="32" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" format="(com.ifx.davex.ui.controls.util.AppUiConstants).DEC" manifestObj="true" widgetName="ginteger_comp_output_fract_bits" bounds="210, 107, 65, 23" value="0" enabled="false" description="Number of fractional bits required to scale Output for Type II or Type III controller type. Valid only for XMC1x family."/>
+					</p1:GGroup>
+					<p1:GLabel text="Controller type:" widgetName="glabel_controller_type" bounds="8, 15, 82, 15"/>
+					<p1:GCombo description="Selects the type of control." mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" options="Type II (2P2Z)&#13;&#10;Type III (3P3Z)" toolTipText="Filter processes Vout and calculates duty cycle" value="Type III (3P3Z)" widgetName="gcombo_controller_type" bounds="181, 12, 106, 21"/>
+					<p1:GLabel text="Control loop frequency divider:" widgetName="glabel_volt_control_rate" bounds="8, 211, 165, 15"/>
+					<p1:GInteger description="Control ISR is executed every nth trigger." format="(com.ifx.davex.ui.controls.util.AppUiConstants).DEC" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" maxValue="100" minValue="1" toolTipText="Higher value slows down the rate of execution of control loop ISR" value="1" widgetName="ginteger_volt_control_rate" bounds="186, 208, 106, 23"/>
+					<p1:GLabel text="Note: Control loop will be calculated in fixed point (signed).&#13;&#10;           ADC resolution is 12 bits.&#13;&#10;           ADC reference voltage is 3.3 volts." visible="true" manifestObj="true" widgetName="glabel_note_fixed_pt_calc" bounds="320, 424, 324, 48"/>
+				</p1:Tab>
+			</p1:GTab.control>
+		</p1:GTab>
+		<p1:GTab text="Control Configuration" visible="true" enabled="true" manifestObj="true" widgetName="gtab_control_configurations">
+			<p1:GTab.control>
+				<p1:Tab widgetName="composite_14">
+					<p1:GGroup bounds="0, 2, 692, 464" manifestObj="true" text="Control Configurations" widgetName="ggroup_18">
+						<p1:GImage bounds="6, 20, 600, 333" manifestObj="true" path="doc/buck_control_config_without_ff.png" widgetName="gimage_control_config">
+							<p1:GCheck bounds="191, 207, 15, 16" manifestObj="true" text="User Code" toolTipText="Executes user defined call back function after execution of control loop ISR." widgetName="gcheck_user_code" description="Executes user defined call back function after execution of control loop ISR."/>
+							<p1:GCheck bounds="290, 200, 16, 16" manifestObj="true" text="Voltage Control Loop" value="true" widgetName="gcheck_volt_ctrl_loop_enable" toolTipText="Selecting Voltage Control Loop, generates buck voltage control code in control loop." description="Selecting Voltage Control Loop, generates buck voltage control code in control loop."/>
+							<p1:GCheck bounds="454, 199, 16, 16" manifestObj="true" text="Soft-Start Ramp" toolTipText="Enables soft start using SYSTIMER" widgetName="gcheck_soft_start" description="Enables soft start using SYSTIMER"/>
+							<p1:GInteger bounds="461, 258, 58, 23" format="(com.ifx.davex.ui.controls.util.AppUiConstants).DEC" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" maxValue="1000000" minValue="100" toolTipText="Enter the required time (micro sec) transition for voltage to ramp from 0 to Vref." value="5000" widgetName="ginteger_soft_start_val" description="Enter the required time (micro sec) transition for voltage to ramp from 0 to Vref."/>
+							<p1:GCheck manifestObj="true" widgetName="gcheck_vin_feed_fwd" bounds="290, 247, 16, 16" toolTipText="If selected, ratio of actual measured Vin to expected Vin is applied to the controller output." description="If selected, ratio of actual measured Vin to expected Vin is applied to the controller output." text="Enable Vin Feed-Forward"/>
+						</p1:GImage>
+						<p1:GGroup bounds="5, 363, 606, 59" manifestObj="true" text="User call back" widgetName="ggroup_user_code">
+							<p1:GString bounds="13, 23, 185, 21" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" toolTipText="Enter the user defined method name. This is a call back function which is executed after control loop ISR." value="user_callback" widgetName="gstring_user_code" x:Style="BORDER" description="Enter the user defined method name. This is a call back function which is executed after control loop ISR."/>
+							<p1:GMessage text="Invalid function name - User call back" visible="true" manifestObj="true" isError="false" widgetName="gmessage_user_callback" bounds="245, 24, 286, 15" description="This widget warns the user in case of invalid function name given for &apos;User call back&apos;."/>
+						</p1:GGroup>
+					</p1:GGroup>
+				</p1:Tab>
+			</p1:GTab.control>
+		</p1:GTab>
+		<p1:GTab text="Overload Protection" visible="true" enabled="true" manifestObj="true" widgetName="gtab_overlaod_protection">
+			<p1:GTab.control>
+				<p1:Tab widgetName="composite_26">
+					<p1:GGroup bounds="4, 7, 682, 229" text="Overload Configuration" widgetName="glabel_overload_config">
+						<p1:GGroup.layout>
+							<GridLayout numColumns="9"/>
+						</p1:GGroup.layout>
+						<p1:GLabel text="Measurement" widgetName="glabel_measurement"/>
+						<Label/>
+						<p1:GLabel text="Software protection" widgetName="glabel_type_of_protection"/>
+						<Label/>
+						<p1:GLabel text="Over limit" widgetName="glabel_hw_high_limit"/>
+						<Label/>
+						<p1:GLabel text="Under limit" widgetName="glabel_hw_low_limit"/>
+						<Label/>
+						<p1:GLabel text="Reaction to overload condition" widgetName="glabel_reaction_to_overld_cond"/>
+						<p1:GLabel manifestObj="true" text="Vout [V]:" widgetName="glabel_overload_protect_vout"/>
+						<Label/>
+						<p1:GCheck description="Checks if the measured Vout value is within the selected range." manifestObj="true" text="abc" widgetName="gcheck_sw_protection_vout" toolTipText="Checks if the measured Vout value is within the selected range.">
+							<p1:GCheck.layoutData>
+								<GridData widthHint="15"/>
+							</p1:GCheck.layoutData>
+						</p1:GCheck>
+						<Label/>
+						<p1:GFloat format="*,6" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" maxValue="11000" minValue=".5" value="3.96" widgetName="gfloat_high_limit_vout" x:Style="BORDER" toolTipText="Over voltage boundary for Vout." description="Over voltage boundary for Vout.">
+							<p1:GFloat.layoutData>
+								<GridData grabExcessHorizontalSpace="true" horizontalAlignment="FILL"/>
+							</p1:GFloat.layoutData>
+						</p1:GFloat>
+						<Label/>
+						<p1:GFloat format="*,6" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" maxValue="1100" minValue=".5" value="2.31" widgetName="gfloat_low_limit_vout" x:Style="BORDER" toolTipText="Under voltage boundary for Vout." description="Under voltage boundary for Vout.">
+							<p1:GFloat.layoutData>
+								<GridData grabExcessHorizontalSpace="true" horizontalAlignment="FILL"/>
+							</p1:GFloat.layoutData>
+						</p1:GFloat>
+						<Label/>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" options="Stop Buck (OVP, UVP)" value="Stop Buck (OVP, UVP)" widgetName="gcombo_protection_reaction_vout" toolTipText="Overload Voltage Protection (OVP) and Under Voltage Protection (UVP) &#13;&#10;is done if Vout voltage is not in the selected range." description="Overload Voltage Protection (OVP) and Under Voltage Protection (UVP) is done if Vout voltage is not in the selected range.">
+							<p1:GCombo.layoutData>
+								<GridData grabExcessHorizontalSpace="true" horizontalAlignment="FILL"/>
+							</p1:GCombo.layoutData>
+						</p1:GCombo>
+						<p1:GLabel manifestObj="true" text="Vin [V]:" widgetName="glabel_overload_protect_vin"/>
+						<Label/>
+						<p1:GCheck manifestObj="true" widgetName="gcheck_sw_protection_vin" description="Checks if the measured Vin value is within the selected range." toolTipText="Checks if the measured Vin value is within the selected range."/>
+						<Label/>
+						<p1:GFloat format="*,6" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" maxValue="11000" minValue="1" value="14.4" widgetName="gfloat_high_limit_vin" x:Style="BORDER" toolTipText="Over voltage boundary for Vin." description="Over voltage boundary for Vin.">
+							<p1:GFloat.layoutData>
+								<GridData grabExcessHorizontalSpace="true" horizontalAlignment="FILL"/>
+							</p1:GFloat.layoutData>
+						</p1:GFloat>
+						<Label/>
+						<p1:GFloat format="*,6" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" maxValue="1100" minValue="0" value="9.6" widgetName="gfloat_low_limit_vin" x:Style="BORDER" description="Under voltage boundary for Vin." toolTipText="Under voltage boundary for Vin.">
+							<p1:GFloat.layoutData>
+								<GridData grabExcessHorizontalSpace="true" horizontalAlignment="FILL"/>
+							</p1:GFloat.layoutData>
+						</p1:GFloat>
+						<Label/>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" options="Stop Buck (OVP, UVP)" value="Stop Buck (OVP, UVP)" widgetName="gcombo_protection_reaction_vin" description="Overload Voltage Protection (OVP) and Under Voltage Protection (UVP) is done if Vin voltage is not in the selected range." toolTipText="Overload Voltage Protection (OVP) and Under Voltage Protection (UVP) &#13;&#10;is done if Vin voltage is not in the selected range.">
+							<p1:GCombo.layoutData>
+								<GridData grabExcessHorizontalSpace="true" horizontalAlignment="FILL"/>
+							</p1:GCombo.layoutData>
+						</p1:GCombo>
+						<p1:GLabel manifestObj="true" text="Iout1 [A]:" widgetName="glabel_overload_protect_iout1"/>
+						<Label/>
+						<p1:GCheck manifestObj="true" widgetName="gcheck_sw_protection_iout1" description="Checks if the measured Iout1 value is within the selected range." toolTipText="Checks if the measured Iout1 value is within the selected range."/>
+						<Label/>
+						<p1:GFloat format="*,6" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" maxValue="1100" minValue="0.02" value="2" widgetName="gfloat_high_limit_iout1" x:Style="BORDER" toolTipText="Over current boundary for Iout1." description="Over current boundary for Iout1.">
+							<p1:GFloat.layoutData>
+								<GridData grabExcessHorizontalSpace="true" horizontalAlignment="FILL"/>
+							</p1:GFloat.layoutData>
+						</p1:GFloat>
+						<Label/>
+						<p1:GFloat format="*,6" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" maxValue="1100" minValue="0.01" value="0.01" widgetName="gfloat_low_limit_iout1" x:Style="BORDER" toolTipText="Under current boundary for Iout1." description="Under current boundary for Iout1.">
+							<p1:GFloat.layoutData>
+								<GridData grabExcessHorizontalSpace="true" horizontalAlignment="FILL"/>
+							</p1:GFloat.layoutData>
+						</p1:GFloat>
+						<Label/>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" options="Stop Buck (OCP, UCP)" value="Stop Buck (OCP, UCP)" widgetName="gcombo_protection_reaction_iout1" toolTipText="Overload Current Protection (OCP) and Under Current Protection (UCP) &#13;&#10;is performed if Iout1 current is not in the selected range." description="Overload Current Protection (OCP) and Under Current Protection (UCP) is performed if Iout1 current is not in the selected range.">
+							<p1:GCombo.layoutData>
+								<GridData grabExcessHorizontalSpace="true" horizontalAlignment="FILL"/>
+							</p1:GCombo.layoutData>
+						</p1:GCombo>
+						<p1:GLabel manifestObj="true" text="Iout2 [A]:" widgetName="glabel_overload_protect_iout2"/>
+						<Label/>
+						<p1:GCheck manifestObj="true" widgetName="gcheck_sw_protection_iout2" description="Checks if the measured Iout2 value is within the selected range." toolTipText="Checks if the measured Iout2 value is within the selected range."/>
+						<Label/>
+						<p1:GFloat format="*,6" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" maxValue="1100" minValue="0.02" value="2" widgetName="gfloat_high_limit_iout2" x:Style="BORDER" toolTipText="Over current boundary for Iout2." description="Over current boundary for Iout2.">
+							<p1:GFloat.layoutData>
+								<GridData grabExcessHorizontalSpace="true" horizontalAlignment="FILL"/>
+							</p1:GFloat.layoutData>
+						</p1:GFloat>
+						<Label/>
+						<p1:GFloat format="*,6" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" maxValue="1100" minValue="0.01" value="0.01" widgetName="gfloat_low_limit_iout2" x:Style="BORDER" description="Under current boundary for Iout2." toolTipText="Under current boundary for Iout2.">
+							<p1:GFloat.layoutData>
+								<GridData grabExcessHorizontalSpace="true" horizontalAlignment="FILL"/>
+							</p1:GFloat.layoutData>
+						</p1:GFloat>
+						<Label/>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" options="Stop Buck (OCP, UCP)" value="Stop Buck (OCP, UCP)" widgetName="gcombo_protection_reaction_iout2" toolTipText="Overload Current Protection (OCP) and Under Current Protection (UCP) &#13;&#10;is performed if Iout2 current is not in the selected range." description="Overload Current Protection (OCP) and Under Current Protection (UCP) is performed if Iout2 current is not in the selected range.">
+							<p1:GCombo.layoutData>
+								<GridData grabExcessHorizontalSpace="true" horizontalAlignment="FILL"/>
+							</p1:GCombo.layoutData>
+						</p1:GCombo>
+						<p1:GLabel manifestObj="true" text="Iout3 [A]:" widgetName="glabel_overload_protect_iout3"/>
+						<Label/>
+						<p1:GCheck manifestObj="true" widgetName="gcheck_sw_protection_iout3" description="Checks if the measured Iout3 value is within the selected range." toolTipText="Checks if the measured Iout3 value is within the selected range."/>
+						<Label/>
+						<p1:GFloat format="*,6" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" maxValue="1100" minValue="0.02" value="2" widgetName="gfloat_high_limit_iout3" x:Style="BORDER" toolTipText="Over current boundary for Iout3." description="Over current boundary for Iout3.">
+							<p1:GFloat.layoutData>
+								<GridData grabExcessHorizontalSpace="true" horizontalAlignment="FILL"/>
+							</p1:GFloat.layoutData>
+						</p1:GFloat>
+						<Label/>
+						<p1:GFloat format="*,6" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" maxValue="1100" minValue="0.01" value="0.01" widgetName="gfloat_low_limit_iout3" x:Style="BORDER" description="Under current boundary for Iout3." toolTipText="Under current boundary for Iout3.">
+							<p1:GFloat.layoutData>
+								<GridData grabExcessHorizontalSpace="true" horizontalAlignment="FILL"/>
+							</p1:GFloat.layoutData>
+						</p1:GFloat>
+						<Label/>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" options="Stop Buck (OCP, UCP)" value="Stop Buck (OCP, UCP)" widgetName="gcombo_protection_reaction_iout3" description="Overload Current Protection (OCP) and Under Current Protection (UCP) is performed if Iout3 current is not in the selected range." toolTipText="Overload Current Protection (OCP) and Under Current Protection (UCP) &#13;&#10;is performed if Iout3 current is not in the selected range.">
+							<p1:GCombo.layoutData>
+								<GridData grabExcessHorizontalSpace="true" horizontalAlignment="FILL"/>
+							</p1:GCombo.layoutData>
+						</p1:GCombo>
+						<p1:GLabel manifestObj="true" text="Iout4 [A]:" widgetName="glabel_overload_protect_iout4"/>
+						<Label/>
+						<p1:GCheck manifestObj="true" widgetName="gcheck_sw_protection_iout4" description="Checks if the measured Iout4 value is within the selected range." toolTipText="Checks if the measured Iout4 value is within the selected range."/>
+						<Label/>
+						<p1:GFloat format="*,6" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" maxValue="1100" minValue="0.02" value="2" widgetName="gfloat_high_limit_iout4" x:Style="BORDER" toolTipText="Over current boundary for Iout4." description="Over current boundary for Iout4.">
+							<p1:GFloat.layoutData>
+								<GridData grabExcessHorizontalSpace="true" horizontalAlignment="FILL"/>
+							</p1:GFloat.layoutData>
+						</p1:GFloat>
+						<Label/>
+						<p1:GFloat format="*,6" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" maxValue="1100" minValue="0.01" value="0.01" widgetName="gfloat_low_limit_iout4" x:Style="BORDER" toolTipText="Under current boundary for Iout4." description="Under current boundary for Iout4.">
+							<p1:GFloat.layoutData>
+								<GridData grabExcessHorizontalSpace="true" horizontalAlignment="FILL"/>
+							</p1:GFloat.layoutData>
+						</p1:GFloat>
+						<Label/>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" options="Stop Buck (OCP, UCP)" value="Stop Buck (OCP, UCP)" widgetName="gcombo_protection_reaction_iout4" toolTipText="Overload Current Protection (OCP) and Under Current Protection (UCP) &#13;&#10;is performed if Iout4 current is not in the selected range." description="Overload Current Protection (OCP) and Under Current Protection (UCP) is performed if Iout4 current is not in the selected range.">
+							<p1:GCombo.layoutData>
+								<GridData grabExcessHorizontalSpace="true" horizontalAlignment="FILL"/>
+							</p1:GCombo.layoutData>
+						</p1:GCombo>
+					</p1:GGroup>
+				</p1:Tab>
+			</p1:GTab.control>
+		</p1:GTab>
+		<p1:GTab text="Interrupt Settings" visible="true" enabled="true" widgetName="gtab_interrupt_config">
+			<p1:GTab.control>
+				<p1:GGroup text="Control Loop Interrupt" widgetName="ggroup_control_loop_interrupt">
+					<p1:GGroup.layout>
+						<GridLayout numColumns="2"/>
+					</p1:GGroup.layout>
+					<p1:GLabel text="Control loop ISR function name:" widgetName="glabel_int_handler_cntrl_loop"/>
+					<p1:GString mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" value="Control_Loop_ISR" widgetName="gstring_int_handler_cntrl_loop" x:Style="BORDER" toolTipText="Control loop algorithm is implemented in this function" description="User can enter the name of the control loop he wishes.&lt;br&gt;&#13;&#10;Note: &lt;br&gt;&#13;&#10;The field should not be left blank.&lt;br&gt;&#13;&#10;Name should be compliant to &apos;C&apos; identifier naming rule.">
+						<p1:GString.layoutData>
+							<GridData grabExcessHorizontalSpace="true" horizontalAlignment="FILL"/>
+						</p1:GString.layoutData>
+					</p1:GString>
+					<p1:GLabel text="Execute control loop ISR at:" widgetName="glabel_isr_event"/>
+					<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" options="Vout Result Event&#13;&#10;End Of Request Source Event" widgetName="gcombo_isr_event" value="Vout Result Event" toolTipText="For &apos;End Of Request Source Event&apos; enable interrupt in ADC APPs." description="Control loop ISR could be chosen to execute after &quot;Vout Result Event&quot; or at the &quot;End Of Request Source Event&quot;. ">
+						<p1:GCombo.layoutData>
+							<GridData grabExcessHorizontalSpace="true" horizontalAlignment="FILL" widthHint="318"/>
+						</p1:GCombo.layoutData>
+					</p1:GCombo>
+					<p1:GInterruptPrio manifestObj="true" maxPriority="63" maxSubPriority="63" minPriority="0" minSubPriority="0" priorityMandatory="false" priorityValue="0" subPriorityMandatory="false" subPriorityValue="0" text="Interrupt priority" widgetName="ginterruptprio_cntrl_loop" description="Enter the required priority number."/>
+					<Label/>
+					<Label/>
+					<p1:GMessage text="Invalid function name - Control loop ISR" visible="true" manifestObj="true" isError="false" widgetName="gmessage_cntrl_loop_isr" description="This widget warns the user in case of invalid function name given for &apos;Control loop ISR&apos;.">
+						<p1:GMessage.layoutData>
+							<GridData grabExcessHorizontalSpace="true" horizontalAlignment="FILL"/>
+						</p1:GMessage.layoutData>
+					</p1:GMessage>
+				</p1:GGroup>
+			</p1:GTab.control>
+		</p1:GTab>
+		<p1:GTab text="dummy adc measurement" visible="true" enabled="true" manifestObj="true" widgetName="gtab_dummy_adc_measurement">
+			<p1:GTab.control>
+				<p1:Tab widgetName="composite_1">
+					<p1:GLabel text="Vout measurement enable" visible="true" widgetName="glabel_measure_vout" bounds="19, 25, 203, 15" toolTipText="Vout measurement enable"/>
+					<p1:GLabel text="Vin  measurement enable" visible="true" widgetName="glabel_measure_vin" bounds="19, 45, 203, 15" toolTipText="Vin  measurement enable"/>
+					<p1:GLabel bounds="19, 85, 203, 15" text="Iout2 measurement enable" widgetName="glabel_measure_iout2" toolTipText="Iout2 measurement enable"/>
+					<p1:GLabel bounds="19, 65, 203, 15" text="Iout1 measurement enable" widgetName="glabel_measure_iout1" toolTipText="Iout1 measurement enable"/>
+					<p1:GLabel bounds="19, 107, 203, 15" text="Iout3 measurement enable" widgetName="glabel_measure_iout3" toolTipText="Iout3 measurement enable"/>
+					<p1:GLabel bounds="19, 127, 203, 15" text="Iout4 measurement enable" widgetName="glabel_measure_iout4" toolTipText="Iout4 measurement enable"/>
+					<p1:GLabel bounds="19, 147, 203, 15" text="User Defined 1 measurement enable" widgetName="glabel_measure_user_defined_1" toolTipText="User Defined 1 measurement enable"/>
+					<p1:GLabel bounds="19, 167, 203, 15" text="User Defined 2 measurement enable" widgetName="glabel_measure_user_defined_2" toolTipText="User Defined 2 measurement enable"/>
+					<p1:GLabel bounds="259, 166, 203, 15" text="User Defined 2 ADC queue position" toolTipText="User Defined 2 ADC queue position" widgetName="glabel_adc_q_pos_user_defined_2"/>
+					<p1:GLabel bounds="259, 146, 203, 15" text="User Defined 1 ADC queue position" toolTipText="User Defined 1 ADC queue position" widgetName="glabel_adc_q_pos_user_defined_1"/>
+					<p1:GLabel bounds="259, 126, 203, 15" text="Iout4 ADC queue position" toolTipText="Iout4 ADC queue position" widgetName="glabel_iout4_q_pos"/>
+					<p1:GLabel bounds="259, 106, 203, 15" text="Iout3 ADC queue position" toolTipText="Iout3 ADC queue position" widgetName="glabel_iout3_q_pos"/>
+					<p1:GLabel bounds="259, 84, 203, 15" text="Iout2 ADC queue position" toolTipText="Iout2 ADC queue position" widgetName="glabel_iout2_q_pos"/>
+					<p1:GLabel bounds="259, 64, 203, 15" text="Iout1 ADC queue position" toolTipText="Iout1 ADC queue position" widgetName="glabel_iout1_q_pos"/>
+					<p1:GLabel bounds="259, 44, 203, 15" text="Vin ADC queue position" toolTipText="Vin ADC queue position" widgetName="glabel_vin_q_pos"/>
+					<p1:GLabel bounds="259, 24, 203, 15" text="Vout ADC queue position" toolTipText="Vout ADC queue position" widgetName="glabel_vout_q_pos"/>
+					<p1:GLabel bounds="480, 23, 203, 15" text="Vout hardware gain" toolTipText="Vout hardware gain" widgetName="glabel_vout_gain"/>
+					<p1:GLabel bounds="480, 43, 203, 15" text="Vin hardware gain" toolTipText="Vin hardware gain" widgetName="glabel_vin_gain"/>
+					<p1:GLabel bounds="480, 63, 203, 15" text="Iout1 hardware gain" toolTipText="Iout1 hardware gain" widgetName="glabel_iout1_gain"/>
+					<p1:GLabel bounds="480, 83, 203, 15" text="Iout2 hardware gain" toolTipText="Iout2 hardware gain" widgetName="glabel_iout2_gain"/>
+					<p1:GLabel bounds="480, 105, 203, 15" text="Iout3 hardware gain" toolTipText="Iout3 hardware gain" widgetName="glabel_iout3_gain"/>
+					<p1:GLabel bounds="480, 125, 203, 15" text="Iout4 hardware gain" toolTipText="Iout4 hardware gain" widgetName="glabel_iout4_gain"/>
+					<p1:GLabel bounds="480, 145, 203, 15" text="User Defined 1  hardware gain" toolTipText="User Defined 1 hardware gain" widgetName="glabel_div_ratio_udef1"/>
+					<p1:GLabel bounds="480, 165, 203, 15" text="User Defined 2  hardware gain" toolTipText="User Defined 2 hardware gain" widgetName="glabel_div_ratio_udef2"/>
+					<p1:GLabel bounds="17, 219, 203, 15" text="Vout ADC refill enable" toolTipText="Vout ADC refill enable" widgetName="glabel_vout_refill"/>
+					<p1:GLabel bounds="17, 239, 203, 15" text="Vin ADC refill enable" toolTipText="Vin ADC refill enable" widgetName="glabel_vin_refill"/>
+					<p1:GLabel bounds="17, 259, 203, 15" text="Iout1 ADC refill enable" toolTipText="Iout1 ADC refill enable" widgetName="glabel_iout1_refill"/>
+					<p1:GLabel bounds="17, 279, 203, 15" text="Iout2 ADC refill enable" toolTipText="Iout2 ADC refill enable" widgetName="glabel_iout2_refill"/>
+					<p1:GLabel bounds="17, 301, 203, 15" text="Iout3 ADC refill enable" toolTipText="Iout3 ADC refill enable" widgetName="glabel_iout3_refill"/>
+					<p1:GLabel bounds="17, 321, 203, 15" text="Iout4 ADC refill enable" toolTipText="Iout4 ADC refill enable" widgetName="glabel_iout4_refill"/>
+					<p1:GLabel bounds="17, 341, 203, 15" text="User Defined 1  ADC refill enable" toolTipText="User Defined 1 ADC refill enable" widgetName="glabel_udef1_refill"/>
+					<p1:GLabel bounds="17, 361, 203, 15" text="User Defined 2  ADC refill enable" toolTipText="User Defined 2 ADC refill enable" widgetName="glabel_udef2_refill"/>
+					<p1:GLabel bounds="256, 217, 203, 15" text="Vout measurement variable name" toolTipText="Vout measurement variable name" widgetName="glabel_vout_measurement"/>
+					<p1:GLabel bounds="256, 237, 203, 15" text="Vin measurement variable name" toolTipText="Vin measurement variable name" widgetName="glabel_vin_measurement"/>
+					<p1:GLabel bounds="256, 257, 203, 15" text="Iout1 measurement variable name" toolTipText="Iout1 measurement variable name" widgetName="glabel_iout1_measurement"/>
+					<p1:GLabel bounds="256, 277, 203, 15" text="Iout2 measurement variable name" toolTipText="Iout2 measurement variable name" widgetName="glabel_iout2_measurement"/>
+					<p1:GLabel bounds="256, 299, 203, 15" text="Iout3 measurement variable name" toolTipText="Iout3 measurement variable name" widgetName="glabel_iout3_measurement"/>
+					<p1:GLabel bounds="256, 319, 203, 15" text="Iout4 measurement variable name" toolTipText="Iout4 measurement variable name" widgetName="glabel_iout4_measurement"/>
+					<p1:GLabel bounds="256, 339, 203, 15" text="User Defined 1  measurement variable name" toolTipText="User Defined 1 measurement variable name" widgetName="glabel_udef1_measurement"/>
+					<p1:GLabel bounds="256, 359, 203, 15" text="User Defined 2  measurement variable name" toolTipText="User Defined 2 measurement variable name" widgetName="glabel_udef2_measurement"/>
+					<p1:GLabel text="Buck input voltage [V]" visible="true" manifestObj="true" widgetName="glabel_vin" bounds="17, 411, 135, 15"/>
+					<p1:GLabel bounds="19, 431, 127, 15" manifestObj="true" text="Buck output reference voltage [V]" widgetName="glabel_vout_ref"/>
+				</p1:Tab>
+			</p1:GTab.control>
+		</p1:GTab>
+		<p1:GTab text="dummy_overload_protections" visible="true" enabled="true" manifestObj="true" widgetName="gtab_dummy_overload_protections" toolTipText="dummy_overload_protections">
+			<p1:GTab.control>
+				<p1:Tab widgetName="composite_9">
+					<p1:GLabel bounds="11, 18, 203, 15" text="Vout software protection enable" toolTipText="Vout software protection enable" widgetName="glabel_sw_protection_vout"/>
+					<p1:GLabel bounds="11, 38, 203, 15" text="Vin  software protection enable" toolTipText="Vin  software protection enable" widgetName="glabel_sw_protection_vin"/>
+					<p1:GLabel bounds="11, 58, 203, 15"  text="Iout1 software protection enable" toolTipText="Iout1 software protection enable" widgetName="glabel_sw_protection_iout1"/>
+					<p1:GLabel bounds="11, 78, 203, 15"  text="Iout2 software protection enable" toolTipText="Iout2 software protection enable" widgetName="glabel_sw_protection_iout2"/>
+					<p1:GLabel bounds="11, 100, 203, 15"  text="Iout3 software protection enable" toolTipText="Iout3 software protection enable" widgetName="glabel_sw_protection_iout3"/>
+					<p1:GLabel bounds="11, 120, 203, 15"  text="Iout4 software protection enable" toolTipText="Iout4 software protection enable" widgetName="glabel_sw_protection_iout4"/>
+					<p1:GLabel bounds="226, 118, 203, 15"  text="Iout4 over limit" toolTipText="Iout4 over limit" widgetName="glabel_high_limit_iout4"/>
+					<p1:GLabel bounds="226, 98, 203, 15"  text="Iout3 over limit" toolTipText="Iout3 over limit" widgetName="glabel_high_limit_iout3"/>
+					<p1:GLabel bounds="226, 76, 203, 15"  text="Iout2 over limit" toolTipText="Iout2 over limit" widgetName="glabel_high_limit_iout2"/>
+					<p1:GLabel bounds="226, 56, 203, 15"  text="Iout1over limit" toolTipText="Iout1 over limit" widgetName="glabel_high_limit_iout1"/>
+					<p1:GLabel bounds="226, 36, 203, 15"  text="Vin over limit" toolTipText="Vin over limit" widgetName="glabel_high_limit_vin"/>
+					<p1:GLabel bounds="226, 16, 203, 15"  text="Vout over limit" toolTipText="Vout over limit" widgetName="glabel_high_limit_vout"/>
+					<p1:GLabel bounds="467, 16, 203, 15"  text="Vout under limit" toolTipText="Vout under limit" widgetName="glabel_low_limit_vout"/>
+					<p1:GLabel bounds="467, 36, 203, 15"  text="Vin under limit" toolTipText="Vin under limit" widgetName="glabel_low_limit_vin"/>
+					<p1:GLabel bounds="467, 56, 203, 15"  text="Iout1 under limit" toolTipText="Iout1 under limit" widgetName="glabel_low_limit_iout1"/>
+					<p1:GLabel bounds="467, 76, 203, 15"  text="Iout2 under limit" toolTipText="Iout2 under limit" widgetName="glabel_low_limit_iout2"/>
+					<p1:GLabel bounds="467, 98, 203, 15"  text="Iout3 under limit" toolTipText="Iout3 under limit" widgetName="glabel_low_limit_iout3"/>
+					<p1:GLabel bounds="467, 118, 203, 15"  text="Iout4 under limit" toolTipText="Iout4 under limit" widgetName="glabel_low_limit_iout4"/>
+					<p1:GLabel bounds="9, 173, 203, 15"  text="Vout protection action" toolTipText="Vout protection action" widgetName="glabel_protection_reaction_vout"/>
+					<p1:GLabel bounds="9, 193, 203, 15"  text="Vin  protection action" toolTipText="Vin  protection action" widgetName="glabel_protection_reaction_vin"/>
+					<p1:GLabel bounds="9, 213, 203, 15"  text="Iout1 protection action" toolTipText="Iout1 protection action" widgetName="glabel_protection_reaction_iout1"/>
+					<p1:GLabel bounds="9, 233, 203, 15"  text="Iout2 protection action" toolTipText="Iout2 protection action" widgetName="glabel_protection_reaction_iout2"/>
+					<p1:GLabel bounds="9, 255, 203, 15"  text="Iout3 protection action" toolTipText="Iout3 protection action" widgetName="glabel_protection_reaction_iout3"/>
+					<p1:GLabel bounds="9, 275, 203, 15"  text="Iout4 protection action" toolTipText="Iout4 protection action" widgetName="glabel_protection_reaction_iout4"/>
+					<p1:GLabel text="Soft start timing" visible="true" manifestObj="true" widgetName="glabel_soft_start_val" bounds="488, 267, 112, 15"/>
+					<p1:GLabel text="User code" visible="true" manifestObj="true" widgetName="glabel_user_code" bounds="490, 289, 55, 15"/>
+					<p1:GLabel visible="true" manifestObj="true" widgetName="glabel_b_coeffs_int_bits" bounds="10, 329, 206, 15" toolTipText="Integer bits for B Coefficients" text="Integer bits for B coefficients"/>
+					<p1:GLabel text="Integer bits for A coefficients" visible="true" manifestObj="true" widgetName="glabel_a_coeffs_int_bits" bounds="8, 351, 174, 15"/>
+					<p1:GLabel text="Integer bits for controller output" visible="true" manifestObj="true" widgetName="glabel_comp_output_int_bits" bounds="12, 374, 187, 15"/>
+					<p1:GLabel text="Fractional bits for B coefficients" visible="true" manifestObj="true" widgetName="glabel_b_coeffs_fract_bits" bounds="11, 394, 172, 15"/>
+					<p1:GLabel text="Fractional bits for A coefficients" visible="true" manifestObj="true" widgetName="glabel_a_coeffs_fract_bits" bounds="14, 416, 177, 15"/>
+					<p1:GLabel text="Fractional bits for controller output" visible="true" manifestObj="true" widgetName="glabel_comp_output_fract_bits" bounds="12, 440, 209, 15"/>
+				</p1:Tab>
+			</p1:GTab.control>
+		</p1:GTab>
+	</p1:TabFolder>
+</p1:Tab>

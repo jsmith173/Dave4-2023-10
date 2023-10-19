@@ -1,0 +1,663 @@
+<p1:Tab  xmlns="http://www.eclipse.org/xwt/presentation" xmlns:x="http://www.eclipse.org/xwt" xmlns:p1="clr-namespace:com.ifx.davex.ui.controls.app" x:Class="e" layout="{x:Null}">
+	<p1:TabFolder bounds="5, 5, 640, 650">
+		<p1:GTab text="General Settings" visible="true" enabled="true" widgetName="gtab_general" manifestObj="true">
+			<p1:GTab.control>
+				<p1:Tab widgetName="composite38">
+					<p1:Tab.layout>
+						<GridLayout makeColumnsEqualWidth="true"/>
+					</p1:Tab.layout>
+					<p1:GGroup text="Clock Settings" widgetName="ggroup_clock_settings">
+						<p1:GGroup.layoutData>
+							<GridData horizontalAlignment="FILL" grabExcessHorizontalSpace="true"/>
+						</p1:GGroup.layoutData>
+						<p1:GGroup.layout>
+							<GridLayout numColumns="3"/>
+						</p1:GGroup.layout>
+						<p1:GLabel text="Clock Frequency [MHz]:       " visible="true" widgetName="glabel_clock"/>
+						<p1:GFloat x:Style="BORDER" minValue="80" maxValue="180" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" format="*,6" manifestObj="true" widgetName="gfloat_clock" value="100" description="Module Clock Frequency">
+							<p1:GFloat.layoutData>
+								<GridData widthHint="98"/>
+							</p1:GFloat.layoutData>
+						</p1:GFloat>
+						<p1:GMessage text="Valid clock values are 80MHz, 120MHz and 180MHz" visible="true" manifestObj="true" isError="false" widgetName="gmessage_clock">
+							<p1:GMessage.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GMessage.layoutData>
+						</p1:GMessage>
+					</p1:GGroup>
+					<p1:GGroup text="PWM Settings" widgetName="ggroup_PWM_settings">
+						<p1:GGroup.layout>
+							<GridLayout numColumns="4"/>
+						</p1:GGroup.layout>
+						<p1:GGroup.layoutData>
+							<GridData horizontalAlignment="FILL"/>
+						</p1:GGroup.layoutData>
+						<p1:GLabel text="Counting Mode:                    " visible="true" widgetName="glabel_counting_mode">
+							<p1:GLabel.layoutData>
+								<GridData horizontalAlignment="RIGHT"/>
+							</p1:GLabel.layoutData>
+						</p1:GLabel>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" options="Edge Aligned&#13;&#10;Center Aligned" value="Edge Aligned" widgetName="gcombo_counting_mode" toolTipText="Select the counting mode of timer operation." description="Selects between Edge and Center aligned modes">
+							<p1:GCombo.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GCombo.layoutData>
+						</p1:GCombo>
+						<p1:GLabel text="  " visible="true" manifestObj="true" widgetName="gLabel378"/>
+						<p1:GCheck text="Start During Initialization" widgetName="gcheck_init_start" toolTipText="Starts the timer after initialization." description="Starts the timer after initilization" manifestObj="true">
+							<p1:GCheck.layoutData>
+								<GridData grabExcessHorizontalSpace="true"/>
+							</p1:GCheck.layoutData>
+						</p1:GCheck>
+						<p1:GLabel text="Compare Mode:" visible="true" widgetName="glabel_compare_mode"/>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" options="Symmetric&#13;&#10;Asymmetric" value="Symmetric" widgetName="gcombo_compare_mode" toolTipText="Select the compare mode of timer operation." description="Selects between Symmetric and Asymmetric modes">
+							<p1:GCombo.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GCombo.layoutData>
+						</p1:GCombo>
+						<Label/>
+						<p1:GCheck manifestObj="true" text="Single-Shot Mode" widgetName="gcheck_single_shot" toolTipText="Timer operates in single shot mode." description="Timer generates only one output pulse.">
+							<p1:GCheck.layoutData>
+								<GridData grabExcessHorizontalSpace="true"/>
+							</p1:GCheck.layoutData>
+						</p1:GCheck>
+					</p1:GGroup>
+					<p1:GGroup text="Timer Settings" widgetName="ggroup_timer_settings">
+						<p1:GGroup.layoutData>
+							<GridData horizontalAlignment="FILL"/>
+						</p1:GGroup.layoutData>
+						<p1:GGroup.layout>
+							<GridLayout numColumns="4"/>
+						</p1:GGroup.layout>
+						<p1:GLabel text="Frequency [Hz]:                     " visible="true" widgetName="glabel_freq"/>
+						<p1:GInteger format="(com.ifx.davex.ui.controls.util.AppUiConstants).DEC" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" maxValue="30000000" minValue="1" value="100000" widgetName="ginteger_freq" toolTipText="Set the desired PWM frequency to decide the period." description="PWM operating frequency.">
+							<p1:GInteger.layoutData>
+								<GridData horizontalAlignment="FILL" widthHint="100"/>
+							</p1:GInteger.layoutData>
+						</p1:GInteger>
+						<p1:GLabel text="         PWM Resolution [psec]:               " visible="true" widgetName="glabel_act_res"/>
+						<p1:GFloat format="*,6" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" maxValue="150" minValue="150" value="150" widgetName="gfloat_act_res" x:Style="BORDER" description="High resolution positioning resolution." enabled="false">
+							<p1:GFloat.layoutData>
+								<GridData horizontalAlignment="RIGHT" widthHint="90"/>
+							</p1:GFloat.layoutData>
+						</p1:GFloat>
+						<p1:GLabel text="Actual Frequency [Hz]:" visible="true" widgetName="glabel_act_freq"/>
+						<p1:GFloat x:Style="BORDER" minValue="0" maxValue="120000000" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" format="*,2" manifestObj="true" widgetName="gfloat_act_freq" value="1500" description="Actual PWM operating frequency">
+							<p1:GFloat.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GFloat.layoutData>
+						</p1:GFloat>
+						<p1:GLabel text="         Period Register:" visible="true" widgetName="glabel_period"/>
+						<p1:GInteger format="(com.ifx.davex.ui.controls.util.AppUiConstants).HEX" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" maxValue="65535" minValue="0" value="39999" widgetName="ginteger_period" description="Timer period value">
+							<p1:GInteger.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GInteger.layoutData>
+						</p1:GInteger>
+					</p1:GGroup>
+					<p1:GGroup text="Asymmetric" widgetName="ggroup_duty" manifestObj="true">
+						<p1:GGroup.layoutData>
+							<GridData verticalAlignment="FILL" horizontalAlignment="FILL"/>
+						</p1:GGroup.layoutData>
+						<p1:GGroup.layout>
+							<GridLayout numColumns="4"/>
+						</p1:GGroup.layout>
+						<p1:GLabel text="CCU8 Compare 1:                 " visible="true" widgetName="glabel_cmp_ch1"/>
+						<p1:GInteger format="(com.ifx.davex.ui.controls.util.AppUiConstants).HEX" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" maxValue="65535" minValue="0" value="100" widgetName="ginteger_cmp_ch1" toolTipText="Set the CCU8 compare 1 register value." description="CCU8 compare1 register.">
+							<p1:GInteger.layoutData>
+								<GridData widthHint="100" horizontalAlignment="FILL"/>
+							</p1:GInteger.layoutData>
+						</p1:GInteger>
+						<p1:GLabel text="         HRPWM Compare 1:                     " visible="true" widgetName="glabel_hr_cmp1"/>
+						<p1:GInteger format="(com.ifx.davex.ui.controls.util.AppUiConstants).HEX" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" maxValue="82" minValue="0" value="0" widgetName="ginteger_hr_cmp1" toolTipText="Set the HRC compare 1 register value." description="HRPWM CR1 register used for high resolution positioning on rising edge of PWM signal.">
+							<p1:GInteger.layoutData>
+								<GridData horizontalAlignment="FILL" widthHint="100"/>
+							</p1:GInteger.layoutData>
+						</p1:GInteger>
+						<p1:GLabel text="CCU8 Compare 2:                 " visible="true" widgetName="glabel_cmp_ch2"/>
+						<p1:GInteger format="(com.ifx.davex.ui.controls.util.AppUiConstants).HEX" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" maxValue="65535" minValue="0" value="200" widgetName="ginteger_cmp_ch2" toolTipText="Set the CCU8 compare 2 register value." description="CCU8 compare2 register.">
+							<p1:GInteger.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GInteger.layoutData>
+						</p1:GInteger>
+						<p1:GLabel text="         HRPWM Compare 2:                     " visible="true" widgetName="glabel_hr_cmp2"/>
+						<p1:GInteger format="(com.ifx.davex.ui.controls.util.AppUiConstants).HEX" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" maxValue="82" minValue="0" value="0" widgetName="ginteger_hr_cmp2" toolTipText="Set the HRC compare 2 register value." description="HRPWM CR2 register used for high resolution positioning on falling edge of PWM signal.">
+							<p1:GInteger.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GInteger.layoutData>
+						</p1:GInteger>
+						<p1:GLabel text="Actual Duty Cycle [%]:" visible="true" widgetName="glabel_act_duty"/>
+						<p1:GFloat format="*,6" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" maxValue="100" minValue="0" value="50" widgetName="gfloat_act_duty" x:Style="BORDER" description="Actual duty cycle asymmetric mode.">
+							<p1:GFloat.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GFloat.layoutData>
+						</p1:GFloat>
+						<Label/>
+						<Label/>
+					</p1:GGroup>
+					<p1:GGroup manifestObj="true" widgetName="ggroup_image">
+						<p1:GGroup.layoutData>
+							<GridData horizontalAlignment="FILL" verticalAlignment="FILL"/>
+						</p1:GGroup.layoutData>
+						<p1:GImage visible="true" manifestObj="true" widgetName="gimage_general_img1" bounds="6, 20, 610, 175" path="Uimodel/general_img1.PNG"/>
+					</p1:GGroup>
+					<p1:GLabel text="Note: The PWM scheme provided in the above picture is valid only for default UI&#13;&#10;           configuration. Inversions might happen depending on user selections.&#13;&#10;" visible="true" manifestObj="true" widgetName="glabel_image_note"/>
+				</p1:Tab>
+			</p1:GTab.control>
+		</p1:GTab>
+		<p1:GTab text="HRPWM Settings" visible="true" enabled="true" manifestObj="true" widgetName="gtab_hrpwm">
+			<p1:GTab.control>
+				<p1:Tab widgetName="composite1">
+					<p1:Tab.layout>
+						<GridLayout numColumns="2" makeColumnsEqualWidth="true"/>
+					</p1:Tab.layout>
+					<p1:GGroup text="High Resolution Path" widgetName="ggroup_hr">
+						<p1:GGroup.layoutData>
+							<GridData grabExcessHorizontalSpace="true" horizontalAlignment="FILL" verticalAlignment="FILL"/>
+						</p1:GGroup.layoutData>
+						<p1:GGroup.layout>
+							<GridLayout numColumns="4"/>
+						</p1:GGroup.layout>
+						<p1:GCheck text="Enable High Resolution Path" manifestObj="true" widgetName="gcheck_hr_enable" description="Enables high resolution path." value="true">
+							<p1:GCheck.layoutData>
+								<GridData horizontalSpan="4"/>
+							</p1:GCheck.layoutData>
+						</p1:GCheck>
+						<p1:GLabel text="Signal Selector:" visible="true" widgetName="glabel_hr_conn">
+							<p1:GLabel.layoutData>
+								<GridData horizontalSpan="4"/>
+							</p1:GLabel.layoutData>
+						</p1:GLabel>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" widgetName="gcombo_hr_conn" options="Set0 &lt;-&gt; CCU8;       Clear0 &lt;-&gt; CCU8&#13;&#10;Set0 &lt;-&gt; CCU8;       Clear0 &lt;-&gt; Manually&#13;&#10;Set0 &lt;-&gt; Manually; Clear0 &lt;-&gt; CCU8&#13;&#10;Set0 &lt;-&gt; Manually; Clear0 &lt;-&gt; Manually" value="Set0 &lt;-&gt; CCU8;       Clear0 &lt;-&gt; CCU8" toolTipText="Select automatic/manual signal connection.&#13;&#10;Use &quot;HW signal connections&quot; tab in DAVE IDE for connecting manual signals." description="Selects the ST signal connection from CCU8 to Set/Clear of HRC.">
+							<p1:GCombo.layoutData>
+								<GridData horizontalAlignment="FILL" horizontalSpan="4"/>
+							</p1:GCombo.layoutData>
+						</p1:GCombo>
+						<p1:GLabel text="Set0: " visible="true" widgetName="glabel_hr_set0"/>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" widgetName="gcombo_hr_set0" options="Inactive&#13;&#10;Rising&#13;&#10;Falling&#13;&#10;Both&#13;&#10;" value="Rising" toolTipText="Select the edge for setting the HRPWM OUT high." description="Select Edge for triggering high resolution Set of HRC.">
+							<p1:GCombo.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GCombo.layoutData>
+						</p1:GCombo>
+						<p1:GLabel text="Clear0:  " visible="true" widgetName="glabel_hr_clear0">
+							<p1:GLabel.layoutData>
+								<GridData horizontalAlignment="RIGHT"/>
+							</p1:GLabel.layoutData>
+						</p1:GLabel>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" widgetName="gcombo_hr_clear0" options="Inactive&#13;&#10;Rising&#13;&#10;Falling&#13;&#10;Both" value="Falling" toolTipText="Select the edge for clearing the HRPWM OUT low." description="Select Edge for triggering high resolution Clear of HRC."/>
+					</p1:GGroup>
+					<p1:GGroup text="Low Resolution Path" widgetName="ggroup_lr">
+						<p1:GGroup.layoutData>
+							<GridData verticalAlignment="FILL" grabExcessHorizontalSpace="true" horizontalAlignment="FILL"/>
+						</p1:GGroup.layoutData>
+						<p1:GGroup.layout>
+							<GridLayout numColumns="4"/>
+						</p1:GGroup.layout>
+						<p1:GCheck text="Enable Low Resolution Path" manifestObj="true" widgetName="gcheck_lr_enable" description="Enables low resolution path.">
+							<p1:GCheck.layoutData>
+								<GridData verticalAlignment="FILL" horizontalSpan="4"/>
+							</p1:GCheck.layoutData>
+						</p1:GCheck>
+						<p1:GLabel text="Signal Selector:" visible="true" widgetName="glabel_lr_conn">
+							<p1:GLabel.layoutData>
+								<GridData horizontalSpan="4"/>
+							</p1:GLabel.layoutData>
+						</p1:GLabel>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" widgetName="gcombo_lr_conn" options="Set1 &lt;-&gt; CCU8;       Clear1 &lt;-&gt; CCU8&#13;&#10;Set1 &lt;-&gt; CCU8;       Clear1 &lt;-&gt; Manually&#13;&#10;Set1 &lt;-&gt; Manually; Clear1 &lt;-&gt; CCU8&#13;&#10;Set1 &lt;-&gt; Manually; Clear1 &lt;-&gt; Manually" value="Set1 &lt;-&gt; Manually; Clear1 &lt;-&gt; Manually" toolTipText="Select automatic/manual signal connection.&#13;&#10;Use &quot;HW signal connections&quot; tab in DAVE IDE for connecting manual signals." description="Selects the ST signal connection from CCU8 to Set/Clear of HRC.">
+							<p1:GCombo.layoutData>
+								<GridData horizontalAlignment="FILL" horizontalSpan="4"/>
+							</p1:GCombo.layoutData>
+						</p1:GCombo>
+						<p1:GLabel text="Set1: " visible="true" widgetName="glabel_lr_set1"/>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" widgetName="gcombo_lr_set1" options="Inactive&#13;&#10;Rising&#13;&#10;Falling&#13;&#10;Both" value="Inactive" toolTipText="Select the edge for setting the HRPWM OUT high." description="Select Edge for triggering low resolution Set of HRC."/>
+						<p1:GLabel text="Clear1:  " visible="true" widgetName="glabel_lr_clear1"/>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" widgetName="gcombo_lr_clear1" options="Inactive&#13;&#10;Rising&#13;&#10;Falling&#13;&#10;Both" value="Inactive" toolTipText="Select the edge for clearing the HRPWM OUT low." description="Select Edge for triggering low resolution Clear of HRC."/>
+					</p1:GGroup>
+					<p1:GGroup text="HRC Output Control" widgetName="ggroup_hr_out">
+						<p1:GGroup.layout>
+							<GridLayout numColumns="2"/>
+						</p1:GGroup.layout>
+						<p1:GGroup.layoutData>
+							<GridData horizontalAlignment="FILL" horizontalSpan="2"/>
+						</p1:GGroup.layoutData>
+						<p1:GGroup manifestObj="true" text="Dead Time" widgetName="ggroup_hr_dt">
+							<p1:GGroup.layoutData>
+								<GridData horizontalSpan="2" horizontalAlignment="FILL"/>
+							</p1:GGroup.layoutData>
+						<p1:GGroup.layout>
+							<GridLayout numColumns="4"/>
+						</p1:GGroup.layout>
+						<p1:GCheck description="Enable channel 1 dead time." manifestObj="true" text="Enable Dead Time" toolTipText="Enables the dead time." widgetName="gcheck_hr_dt_enable"/>
+						<Label/>
+						<Label/>
+						<Label/>
+						<p1:GLabel text="Rising Time [nsec]:    " widgetName="glabel_hr_dt_rise">
+							<p1:GLabel.layoutData>
+								<GridData horizontalAlignment="RIGHT"/>
+							</p1:GLabel.layoutData>
+						</p1:GLabel>
+						<p1:GFloat description="Rising dead time" format="*,6" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" maxValue="POSITIVE_INFINITY" minValue="0.0" toolTipText="Rising dead time." value="0.0" widgetName="gfloat_hr_dt_rise" x:Style="BORDER">
+							<p1:GFloat.layoutData>
+								<GridData horizontalAlignment="FILL" widthHint="100"/>
+							</p1:GFloat.layoutData>
+						</p1:GFloat>
+						<p1:GLabel text="                     Falling Time [nsec]:" widgetName="glabel_hr_dt_fall">
+							<p1:GLabel.layoutData>
+								<GridData horizontalAlignment="RIGHT"/>
+							</p1:GLabel.layoutData>
+						</p1:GLabel>
+						<p1:GFloat description="Falling dead time" format="*,6" mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" maxValue="POSITIVE_INFINITY" minValue="0.0" toolTipText="Falling dead time." value="0.0" widgetName="gfloat_hr_dt_fall" x:Style="BORDER">
+							<p1:GFloat.layoutData>
+								<GridData horizontalAlignment="FILL" widthHint="100"/>
+							</p1:GFloat.layoutData>
+						</p1:GFloat>
+					</p1:GGroup>
+						<p1:GGroup text="Direct Output HROUT0" widgetName="ggroup_hr_out0">
+							<p1:GGroup.layoutData>
+								<GridData horizontalAlignment="FILL" grabExcessHorizontalSpace="true"/>
+							</p1:GGroup.layoutData>
+							<p1:GGroup.layout>
+								<GridLayout numColumns="2"/>
+							</p1:GGroup.layout>
+							<p1:GCheck text="Trap Enable" manifestObj="true" widgetName="gcheck_hr_out0_trap" toolTipText="Enable and configure Trap signal in corresponding CCU8 slice." description="Enables the trap for high resolution direct output.">
+								<p1:GCheck.layoutData>
+									<GridData horizontalSpan="2"/>
+								</p1:GCheck.layoutData>
+							</p1:GCheck>
+							<p1:GLabel text="Passive Level:               " visible="true" widgetName="glabel_hr_out0_pass_level"/>
+							<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" widgetName="gcombo_hr_out0_pass_level" options="Low&#13;&#10;High" value="Low" toolTipText="Set the passive level of HRC OUT." description="Selects the passive level for high resolution direct output.">
+								<p1:GCombo.layoutData>
+									<GridData horizontalAlignment="FILL" widthHint="108"/>
+								</p1:GCombo.layoutData>
+							</p1:GCombo>
+							<p1:GLabel text="Connected To:" visible="true" widgetName="glabel_hr_out0_conn"/>
+							<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" widgetName="gcombo_hr_out0_conn" options="Q&#13;&#10;Qn&#13;&#10;" value="Q" description="Selects the connection of high resolution direct output(enable invertion or not).&lt;br&gt;&#13;&#10;If both signals, direct and inverted are connected to same Q or Qn latch, the dead time cannot be generated between these 2 signals.">
+								<p1:GCombo.layoutData>
+									<GridData horizontalAlignment="FILL"/>
+								</p1:GCombo.layoutData>
+							</p1:GCombo>
+						</p1:GGroup>
+						<p1:GGroup text="Inverted Output HROUT1" widgetName="ggroup_hr_out1">
+							<p1:GGroup.layoutData>
+								<GridData horizontalAlignment="FILL" grabExcessHorizontalSpace="true"/>
+							</p1:GGroup.layoutData>
+							<p1:GGroup.layout>
+								<GridLayout numColumns="2"/>
+							</p1:GGroup.layout>
+							<p1:GCheck text="Trap Enable" manifestObj="true" widgetName="gcheck_hr_out1_trap" toolTipText="Enable and configure Trap signal in corresponding CCU8 slice." description="Enables the trap for high resolution inverted output.">
+								<p1:GCheck.layoutData>
+									<GridData horizontalSpan="2"/>
+								</p1:GCheck.layoutData>
+							</p1:GCheck>
+							<p1:GLabel text="Passive Level:          " visible="true" widgetName="glabel_hr_out1_pass_level"/>
+							<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" widgetName="gcombo_hr_out1_pass_level" options="Low&#13;&#10;High" value="Low" toolTipText="Set the passive level of HRC OUT." description="Selects the passive level for high resolution inverted output.">
+								<p1:GCombo.layoutData>
+									<GridData horizontalAlignment="FILL" widthHint="108"/>
+								</p1:GCombo.layoutData>
+							</p1:GCombo>
+							<p1:GLabel text="Connected To:" visible="true" widgetName="glabel_hr_out1_conn"/>
+							<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" widgetName="gcombo_hr_out1_conn" options="Qn&#13;&#10;Q" value="Qn" description="Selects the connection of high resolution inverted output(enable invertion or not).&lt;br&gt;&#13;&#10;If both signals, direct and inverted are connected to same Q or Qn latch, the dead time cannot be generated between these 2 signals.">
+								<p1:GCombo.layoutData>
+									<GridData horizontalAlignment="FILL"/>
+								</p1:GCombo.layoutData>
+							</p1:GCombo>
+						</p1:GGroup>
+					</p1:GGroup>
+				</p1:Tab>
+			</p1:GTab.control>
+		</p1:GTab>
+		<p1:GTab text="External Event Settings" visible="true" enabled="true" widgetName="gtab_ee" manifestObj="true">
+			<p1:GTab.control>
+				<p1:Tab widgetName="composite7">
+					<p1:Tab.layout>
+						<GridLayout numColumns="3"/>
+					</p1:Tab.layout>
+					<p1:GGroup text="Event 0" widgetName="ggroup_event0" manifestObj="true">
+						<p1:GGroup.layoutData>
+							<GridData horizontalAlignment="FILL"/>
+						</p1:GGroup.layoutData>
+						<p1:GGroup.layout>
+							<GridLayout/>
+						</p1:GGroup.layout>
+						<p1:GLabel text="Function:" visible="true" widgetName="glabel_e0_fn"/>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" widgetName="gcombo_e0_fn" options="No Event&#13;&#10;External Start&#13;&#10;External Stop&#13;&#10;External Count Direction&#13;&#10;External Gating&#13;&#10;External Count&#13;&#10;External Load&#13;&#10;External Modulation" value="No Event" toolTipText="Select the functionality of event 0." description="Selects the function for external event.">
+							<p1:GCombo.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GCombo.layoutData>
+						</p1:GCombo>
+						<p1:GLabel text="Trigger edge:" widgetName="glabel_e0_trigger"/>
+						<p1:GCombo description="Selects the trigger edge for event 0." mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" options="No Trigger&#13;&#10;Rising&#13;&#10;Falling&#13;&#10;Both" toolTipText="Select the trigger edge." value="No Trigger" widgetName="gcombo_e0_trigger">
+							<p1:GCombo.layoutData>
+								<GridData grabExcessHorizontalSpace="true" horizontalAlignment="FILL"/>
+							</p1:GCombo.layoutData>
+						</p1:GCombo>
+						<p1:GLabel text="Low pass filtering:" visible="true" widgetName="glabel_e0_filter"/>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" options="No Filter&#13;&#10;3 CCU8 Clock Cycles&#13;&#10;5 CCU8 Clock Cycles&#13;&#10;7 CCU8 Clock Cycles" value="No Filter" widgetName="gcombo_e0_filter" toolTipText="Select the filtering of event 0." description="Selects the filtering for external event.">
+							<p1:GCombo.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GCombo.layoutData>
+						</p1:GCombo>
+					</p1:GGroup>
+					<p1:GGroup text="Event 1" widgetName="ggroup_event1" manifestObj="true">
+						<p1:GGroup.layoutData>
+							<GridData horizontalAlignment="FILL"/>
+						</p1:GGroup.layoutData>
+						<p1:GGroup.layout>
+							<GridLayout/>
+						</p1:GGroup.layout>
+						<p1:GLabel text="Function:" visible="true" widgetName="glabel_e1_fn"/>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" widgetName="gcombo_e1_fn" options="No Event&#13;&#10;External Start&#13;&#10;External Stop&#13;&#10;External Count Direction&#13;&#10;External Gating&#13;&#10;External Count&#13;&#10;External Load&#13;&#10;External Modulation&#13;&#10;External Override (Edge)" value="No Event" toolTipText="Select the functionality of event 1." description="Selects the function for external event.">
+							<p1:GCombo.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GCombo.layoutData>
+						</p1:GCombo>
+						<p1:GLabel text="Trigger edge:" widgetName="glabel_e1_trigger"/>
+						<p1:GCombo description="Selects the trigger edge for event 1." mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" options="No Trigger&#13;&#10;Rising&#13;&#10;Falling&#13;&#10;Both" toolTipText="Select the trigger edge." value="No Trigger" widgetName="gcombo_e1_trigger">
+							<p1:GCombo.layoutData>
+								<GridData grabExcessHorizontalSpace="true" horizontalAlignment="FILL"/>
+							</p1:GCombo.layoutData>
+						</p1:GCombo>
+						<p1:GLabel text="Low pass filtering:" visible="true" widgetName="glabel_e1_filter"/>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" options="No Filter&#13;&#10;3 CCU8 Clock Cycles&#13;&#10;5 CCU8 Clock Cycles&#13;&#10;7 CCU8 Clock Cycles" value="No Filter" widgetName="gcombo_e1_filter" toolTipText="Select the filtering of event 1." description="Selects the filtering for external event.">
+							<p1:GCombo.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GCombo.layoutData>
+						</p1:GCombo>
+					</p1:GGroup>
+					<p1:GGroup text="Event 2" widgetName="ggroup_event2" manifestObj="true">
+						<p1:GGroup.layout>
+							<GridLayout/>
+						</p1:GGroup.layout>
+						<p1:GGroup.layoutData>
+							<GridData horizontalAlignment="FILL"/>
+						</p1:GGroup.layoutData>
+						<p1:GLabel text="Function:" visible="true" widgetName="glabel_e2_fn"/>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" widgetName="gcombo_e2_fn" options="No Event&#13;&#10;External Start&#13;&#10;External Stop&#13;&#10;External Count Direction&#13;&#10;External Gating&#13;&#10;External Count&#13;&#10;External Load&#13;&#10;External Modulation&#13;&#10;External Override (Level)&#13;&#10;External Trap" value="No Event" toolTipText="Select the functionality of event 2." description="Selects the function for external event.">
+							<p1:GCombo.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GCombo.layoutData>
+						</p1:GCombo>
+						<p1:GLabel text="Trigger edge:" widgetName="glabel_e2_trigger"/>
+						<p1:GCombo description="Selects the trigger edge for event 2." mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" options="No Trigger&#13;&#10;Rising&#13;&#10;Falling&#13;&#10;Both" toolTipText="Select the trigger edge." value="No Trigger" widgetName="gcombo_e2_trigger">
+							<p1:GCombo.layoutData>
+								<GridData grabExcessHorizontalSpace="true" horizontalAlignment="FILL"/>
+							</p1:GCombo.layoutData>
+						</p1:GCombo>
+						<p1:GLabel text="Low pass filtering:" visible="true" widgetName="glabel_e2_filter"/>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" options="No Filter&#13;&#10;3 CCU8 Clock Cycles&#13;&#10;5 CCU8 Clock Cycles&#13;&#10;7 CCU8 Clock Cycles" value="No Filter" widgetName="gcombo_e2_filter" toolTipText="Select the filtering of event 2." description="Selects the filtering for external event.">
+							<p1:GCombo.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GCombo.layoutData>
+						</p1:GCombo>
+					</p1:GGroup>
+					<p1:GGroup text="External Start" widgetName="ggroup_ext_start" manifestObj="true">
+						<p1:GGroup.layoutData>
+							<GridData horizontalAlignment="FILL" verticalAlignment="FILL" verticalSpan="2"/>
+						</p1:GGroup.layoutData>
+						<p1:GGroup.layout>
+							<GridLayout/>
+						</p1:GGroup.layout>
+						<p1:GCheck manifestObj="true" text="Synchronous start" toolTipText="Connects the selected event to &quot;global start control&quot; for synchronous start.&#13;&#10;Active edge is set to rising." widgetName="gcheck_sync_start" description="Starts multiple timer synchronously."/>
+						<p1:GLabel text="Active edge:" visible="true" widgetName="glabel_ext_start_edge"/>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" options="No Trigger&#13;&#10;Rising&#13;&#10;Falling&#13;&#10;Both" value="No Trigger" widgetName="gcombo_ext_start_edge" toolTipText="Select the trigger edge." description="Selects the trigger edge for external start.">
+							<p1:GCombo.layoutData>
+								<GridData horizontalAlignment="FILL" grabExcessHorizontalSpace="true"/>
+							</p1:GCombo.layoutData>
+						</p1:GCombo>
+						<p1:GLabel text="Function control:" visible="true" widgetName="glabel_ext_start_action"/>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" options="Start Timer&#13;&#10;Clear And Start Timer" value="Start Timer" widgetName="gcombo_ext_start_action" toolTipText="Select the action." description="Selects the action for external start.">
+							<p1:GCombo.layoutData>
+								<GridData horizontalAlignment="FILL" grabExcessHorizontalSpace="true"/>
+							</p1:GCombo.layoutData>
+						</p1:GCombo>
+					</p1:GGroup>
+					<p1:GGroup text="External Stop" widgetName="ggroup_ext_stop" manifestObj="true">
+						<p1:GGroup.layoutData>
+							<GridData horizontalAlignment="FILL" verticalAlignment="FILL" verticalSpan="2"/>
+						</p1:GGroup.layoutData>
+						<p1:GGroup.layout>
+							<GridLayout/>
+						</p1:GGroup.layout>
+						<p1:GLabel visible="true" widgetName="glabel_326" enabled="false"/>
+						<p1:GLabel text="Active edge:" visible="true" widgetName="glabel_ext_stop_edge"/>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" options="No Trigger&#13;&#10;Rising&#13;&#10;Falling&#13;&#10;Both" value="No Trigger" widgetName="gcombo_ext_stop_edge" toolTipText="Select the trigger edge." description="Selects the trigger edge for external stop.">
+							<p1:GCombo.layoutData>
+								<GridData horizontalAlignment="FILL" verticalAlignment="FILL" grabExcessHorizontalSpace="true"/>
+							</p1:GCombo.layoutData>
+						</p1:GCombo>
+						<p1:GLabel text="Function control:" visible="true" widgetName="glabel_ext_stop_action"/>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" options="Stop Timer&#13;&#10;Clear Timer&#13;&#10;Clear And Stop Timer" value="Stop Timer" widgetName="gcombo_ext_stop_action" toolTipText="Select the action." description="Selects the action for external stop.">
+							<p1:GCombo.layoutData>
+								<GridData horizontalAlignment="FILL" grabExcessHorizontalSpace="true"/>
+							</p1:GCombo.layoutData>
+						</p1:GCombo>
+					</p1:GGroup>
+					<p1:GGroup text="Trap" widgetName="ggroup_ext_trap" manifestObj="true">
+						<p1:GGroup.layoutData>
+							<GridData horizontalAlignment="FILL" verticalAlignment="FILL" verticalSpan="2"/>
+						</p1:GGroup.layoutData>
+						<p1:GGroup.layout>
+							<GridLayout numColumns="2"/>
+						</p1:GGroup.layout>
+						<p1:GCheck manifestObj="true" text="Enable trap at initialization" widgetName="gcheck_ext_trap" toolTipText="Enables the trap fuctionality." description="Enables trap after initilization.">
+							<p1:GCheck.layoutData>
+								<GridData horizontalSpan="2"/>
+							</p1:GCheck.layoutData>
+						</p1:GCheck>
+						<p1:GLabel text="Trap level" visible="true" widgetName="glabel_ext_trap_level">
+							<p1:GLabel.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GLabel.layoutData>
+						</p1:GLabel>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" options="Active High&#13;&#10;Active Low" value="Active High" widgetName="gcombo_ext_trap_level" toolTipText="Select the detection level for trap event trigger." description="Selects the active level for trap.">
+							<p1:GCombo.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GCombo.layoutData>
+						</p1:GCombo>
+						<p1:GLabel text="Exit synchronization" visible="true" widgetName="glabel_ext_trap_sync"/>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" options="Disable&#13;&#10;Enable&#13;&#10;" value="Enable" widgetName="gcombo_ext_trap_sync" toolTipText="Trap exit is aligned to PWM period." description="Selects the synchronization for trap application on PWM.">
+							<p1:GCombo.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GCombo.layoutData>
+						</p1:GCombo>
+						<p1:GLabel text="Exit control" visible="true" widgetName="glabel_ext_trap_exit"/>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" options="Auto Exit&#13;&#10;SW Exit" value="Auto Exit" widgetName="gcombo_ext_trap_exit" toolTipText="Auto Exit: Exit if HW trap condition not present.&#13;&#10;SW Exit:    Exit by a SW request." description="Selects the mode of trap exit.">
+							<p1:GCombo.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GCombo.layoutData>
+						</p1:GCombo>
+					</p1:GGroup>
+					<p1:GGroup text="External Load" widgetName="ggroup_ext_load" manifestObj="true">
+						<p1:GGroup.layoutData>
+							<GridData horizontalAlignment="FILL" verticalAlignment="FILL"/>
+						</p1:GGroup.layoutData>
+						<p1:GGroup.layout>
+							<GridLayout/>
+						</p1:GGroup.layout>
+						<p1:GLabel text="Active edge:" visible="true" widgetName="glabel_ext_load_edge"/>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" options="No Trigger&#13;&#10;Rising&#13;&#10;Falling&#13;&#10;Both" value="No Trigger" widgetName="gcombo_ext_load_edge" toolTipText="Select the trigger edge." description="Selects the trigger edge for external load.">
+							<p1:GCombo.layoutData>
+								<GridData horizontalAlignment="FILL" grabExcessHorizontalSpace="true"/>
+							</p1:GCombo.layoutData>
+						</p1:GCombo>
+					</p1:GGroup>
+					<p1:GGroup text="External Counting" widgetName="ggroup_ext_count" manifestObj="true">
+						<p1:GGroup.layoutData>
+							<GridData horizontalAlignment="FILL" verticalAlignment="FILL"/>
+						</p1:GGroup.layoutData>
+						<p1:GGroup.layout>
+							<GridLayout/>
+						</p1:GGroup.layout>
+						<p1:GLabel text="Active edge:" visible="true" widgetName="glabel_ext_count_edge"/>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" options="No Trigger&#13;&#10;Rising&#13;&#10;Falling&#13;&#10;Both" value="No Trigger" widgetName="gcombo_ext_count_edge" toolTipText="Select the trigger edge." description="Selects the trigger edge for external counting.">
+							<p1:GCombo.layoutData>
+								<GridData horizontalAlignment="FILL" grabExcessHorizontalSpace="true"/>
+							</p1:GCombo.layoutData>
+						</p1:GCombo>
+					</p1:GGroup>
+					<p1:GGroup text="External Override (Event 1)" widgetName="ggroup_ext_e1_override" manifestObj="true">
+						<p1:GGroup.layoutData>
+							<GridData horizontalAlignment="FILL" verticalAlignment="TOP"/>
+						</p1:GGroup.layoutData>
+						<p1:GGroup.layout>
+							<GridLayout/>
+						</p1:GGroup.layout>
+						<p1:GLabel text="Override trigger:" visible="true" widgetName="glabel_ext_e1_override_edge"/>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" options="No Trigger&#13;&#10;Rising&#13;&#10;Falling&#13;&#10;Both" toolTipText="Select the trigger edge." value="No Trigger" widgetName="gcombo_ext_e1_override_edge" description="Selects the trigger edge for external over ride.">
+							<p1:GCombo.layoutData>
+								<GridData grabExcessHorizontalSpace="true" horizontalAlignment="FILL"/>
+							</p1:GCombo.layoutData>
+						</p1:GCombo>
+					</p1:GGroup>
+					<p1:GGroup text="External Gating" widgetName="ggroup_ext_gate" manifestObj="true">
+						<p1:GGroup.layoutData>
+							<GridData horizontalAlignment="FILL" verticalAlignment="FILL"/>
+						</p1:GGroup.layoutData>
+						<p1:GGroup.layout>
+							<GridLayout/>
+						</p1:GGroup.layout>
+						<p1:GLabel text="Gating level:" visible="true" widgetName="glabel_ext_gate_level"/>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" options="Active On High Level&#13;&#10;Active On Low Level" value="Active On High Level" widgetName="gcombo_ext_gate_level" toolTipText="Select the level." description="Selects the active level for extenal gating.">
+							<p1:GCombo.layoutData>
+								<GridData horizontalAlignment="FILL" grabExcessHorizontalSpace="true"/>
+							</p1:GCombo.layoutData>
+						</p1:GCombo>
+					</p1:GGroup>
+					<p1:GGroup text="External Counting Direction" widgetName="ggroup_ext_count_dir" manifestObj="true">
+						<p1:GGroup.layoutData>
+							<GridData horizontalAlignment="FILL" verticalAlignment="FILL"/>
+						</p1:GGroup.layoutData>
+						<p1:GGroup.layout>
+							<GridLayout/>
+						</p1:GGroup.layout>
+						<p1:GLabel text="Count level:" visible="true" widgetName="glabel_ext_count_dir_level"/>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" options="Count Up On Low Level&#13;&#10;Count Up On High Level" value="Count Up On Low Level" widgetName="gcombo_ext_count_dir_level" toolTipText="Select the edge aligned mode." description="Selects the active level for externla counting.">
+							<p1:GCombo.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GCombo.layoutData>
+						</p1:GCombo>
+					</p1:GGroup>
+					<p1:GGroup text="External Override (Event 2)" widgetName="ggroup_ext_e2_override" manifestObj="true">
+						<p1:GGroup.layoutData>
+							<GridData horizontalAlignment="FILL" verticalAlignment="TOP"/>
+						</p1:GGroup.layoutData>
+						<p1:GGroup.layout>
+							<GridLayout/>
+						</p1:GGroup.layout>
+						<p1:GLabel text="Override level:" visible="true" widgetName="glabel_ext_e2_override_level"/>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" options="No Inversion&#13;&#10;Inversion" value="No Inversion" widgetName="gcombo_ext_e2_override_level" toolTipText="Select the level." description="Selects the active level for external over ride trigger.&lt;br&gt;&#13;&#10;Active On High Level -&gt; No inversion&lt;br&gt;&#13;&#10;Active On Low Level  -&gt; Inversion&lt;br&gt;">
+							<p1:GCombo.layoutData>
+								<GridData grabExcessHorizontalSpace="true" horizontalAlignment="FILL" verticalAlignment="TOP"/>
+							</p1:GCombo.layoutData>
+						</p1:GCombo>
+					</p1:GGroup>
+					<p1:GGroup text="External Modulation" widgetName="ggroup_ext_mod" manifestObj="true">
+						<p1:GGroup.layoutData>
+							<GridData horizontalAlignment="FILL" verticalAlignment="FILL" horizontalSpan="3"/>
+						</p1:GGroup.layoutData>
+						<p1:GGroup.layout>
+							<GridLayout numColumns="4"/>
+						</p1:GGroup.layout>
+						<p1:GLabel text="Level:" visible="true" widgetName="glabel_ext_mod_level"/>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" options="Active On High Level&#13;&#10;Active On Low Level" value="Active On High Level" widgetName="gcombo_ext_mod_level" toolTipText="Select the level." description="Selects the active level for external modulation.">
+							<p1:GCombo.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GCombo.layoutData>
+						</p1:GCombo>
+						<p1:GLabel text="PWM synchronization:" visible="true" widgetName="glabel_ext_mod_sync"/>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" options="Not Synchronized&#13;&#10;Synchronized" value="Not Synchronized" widgetName="gcombo_ext_mod_sync" toolTipText="Modulation is aligned to PWM period." description="Selects the synchronization.">
+							<p1:GCombo.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GCombo.layoutData>
+						</p1:GCombo>
+						<p1:GLabel text="Mode:" visible="true" widgetName="glabel_ext_mod_mode"/>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" options="Clear The CC8yST&#13;&#10;Gating The Outputs" value="Clear The CC8yST" widgetName="gcombo_ext_mod_mode" toolTipText="Select the mode of operation." description="Selects the Modulation action on PWM.">
+							<p1:GCombo.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GCombo.layoutData>
+						</p1:GCombo>
+						<Label/>
+						<Label/>
+					</p1:GGroup>
+					<Label/>
+					<Label/>
+				</p1:Tab>
+			</p1:GTab.control>
+		</p1:GTab>
+		<p1:GTab text="Timer Event Settings" visible="true" enabled="true" widgetName="gtab_interrupts" manifestObj="true">
+			<p1:GTab.control>
+				<p1:Tab widgetName="composite11">
+					<p1:Tab.layout>
+						<GridLayout/>
+					</p1:Tab.layout>
+					<p1:GGroup text="Enable Events" widgetName="ggroup_interrupt">
+						<p1:GGroup.layoutData>
+							<GridData grabExcessHorizontalSpace="true" horizontalAlignment="FILL"/>
+						</p1:GGroup.layoutData>
+						<p1:GGroup.layout>
+							<GridLayout/>
+						</p1:GGroup.layout>
+						<p1:GCheck text="Period match" manifestObj="true" widgetName="gcheck_int_per_match" description="Enables period match interrupt." toolTipText="Generates an event at every period match."/>
+						<p1:GCheck text="One match while counting down" manifestObj="true" widgetName="gcheck_int_one_match_down" description="Enables one match while timer counting down interrupt." toolTipText="Generates an event when timer is decremented to one."/>
+						<p1:GCheck text="Compare 1 match while counting up" manifestObj="true" widgetName="gcheck_int_cmp1_match_up" description="Enables channel 1 compare match while timer counting up interrupt." toolTipText="Generates an event at every compare match of channel 1, when timer is incrementing."/>
+						<p1:GCheck manifestObj="true" text="Compare 1 match while counting down" widgetName="gcheck_int_cmp1_match_down" description="Enables channel 1 compare match while timer counting down interrupt." toolTipText="Generates an event at every compare match of channel 1, when timer is decrementing."/>
+						<p1:GCheck manifestObj="true" text="Compare 2 match while counting up" widgetName="gcheck_int_cmp2_match_up" description="Enables channel 2 compare match while timer counting up interrupt." toolTipText="Generates an event at every compare match of channel 2, when timer is incrementing."/>
+						<p1:GCheck manifestObj="true" text="Compare 2 match while counting down" widgetName="gcheck_int_cmp2_match_down" description="Enables channel 2 compare match while timer counting down interrupt." toolTipText="Generates an event at every compare match of channel 2, when timer is decrementing."/>
+						<p1:GCheck text="Event 0" manifestObj="true" widgetName="gcheck_int_e0" description="Enables event 0 interrupt." toolTipText="Generates an event at every event 0 detection."/>
+						<p1:GCheck manifestObj="true" text="Event 1" widgetName="gcheck_int_e1" description="Enables event 1 interrupt." toolTipText="Generates an event at every event 1 detection."/>
+						<p1:GCheck manifestObj="true" text="Event 2" widgetName="gcheck_int_e2" description="Enables event 2 interrupt." toolTipText="Generates an event at every event 2 detection."/>
+					</p1:GGroup>
+				</p1:Tab>
+			</p1:GTab.control>
+		</p1:GTab>
+		<p1:GTab text="Pin Settings" visible="true" enabled="true" manifestObj="true" widgetName="gtab_pins">
+			<p1:GTab.control>
+				<p1:Tab widgetName="composite_97">
+					<p1:Tab.layout>
+						<GridLayout/>
+					</p1:Tab.layout>
+					<p1:GGroup manifestObj="true" widgetName="ggroup_166">
+						<p1:GGroup.layoutData>
+							<GridData horizontalAlignment="FILL" verticalAlignment="FILL"/>
+						</p1:GGroup.layoutData>
+						<p1:GImage description="Image: HRPWM outputs." manifestObj="true" path="Uimodel/HRPWM.PNG" widgetName="gimage_pin_hrc" bounds="30, 15, 521, 161" toolTipText=""/>
+					</p1:GGroup>
+					<p1:GGroup manifestObj="true" text="HRC Direct Output Settings" widgetName="ggroup_hr_out0_setting">
+						<p1:GGroup.layoutData>
+							<GridData grabExcessHorizontalSpace="true" horizontalAlignment="FILL"/>
+						</p1:GGroup.layoutData>
+						<p1:GGroup.layout>
+							<GridLayout numColumns="2"/>
+						</p1:GGroup.layout>
+						<p1:GCheck description="Enables channel 1 direct output in CCU8 timer mode." manifestObj="true" text="Output Enable" toolTipText="CCU8x.OUTy0" widgetName="gcheck_hr_out0_enable"/>
+						<Label/>
+						<p1:GLabel text="Mode:" widgetName="glabel_hr_out0_char"/>
+						<p1:GCombo description="Select the output drive type for channel 1 direct output." mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" options="Push Pull&#13;&#10;Open Drain" toolTipText="Selcet output drive type." value="Push Pull" widgetName="gcombo_hr_out0_char">
+							<p1:GCombo.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GCombo.layoutData>
+						</p1:GCombo>
+						<p1:GLabel text="Driver strength:" widgetName="glabel_hr_out0_strng"/>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" options="Weak Driver&#13;&#10;Medium Driver&#13;&#10;Strong Driver Soft Edge&#13;&#10;Strong Driver Slow Edge&#13;&#10;Strong Driver Sharp Edge&#13;&#10;Strong Driver Medium Edge" value="Strong Driver Sharp Edge" widgetName="gcombo_hr_out0_strng" description="Selects the drive strength for output pin." toolTipText="Select the output pad driver strength based on pin assignment."/>
+					</p1:GGroup>
+					<p1:GGroup manifestObj="true" text="HRC  Inverted Output Settings" widgetName="ggroup_hr_out1_setting">
+						<p1:GGroup.layoutData>
+							<GridData grabExcessHorizontalSpace="true" horizontalAlignment="FILL"/>
+						</p1:GGroup.layoutData>
+						<p1:GGroup.layout>
+							<GridLayout numColumns="2"/>
+						</p1:GGroup.layout>
+						<p1:GCheck description="Enables channel 1 inverted output in CCU8 timer mode." manifestObj="true" text="Output Enable" toolTipText="CCU8x.OUTy1" widgetName="gcheck_hr_out1_enable"/>
+						<Label/>
+						<p1:GLabel text="Mode:" widgetName="glabel_hr_out1_char"/>
+						<p1:GCombo description="Select the output drive type for channel 1 inverted output." mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" options="Push Pull&#13;&#10;Open Drain" toolTipText="Selcet output drive type." value="Push Pull" widgetName="gcombo_hr_out1_char">
+							<p1:GCombo.layoutData>
+								<GridData horizontalAlignment="FILL"/>
+							</p1:GCombo.layoutData>
+						</p1:GCombo>
+						<p1:GLabel text="Driver strength:" widgetName="glabel_hr_out1_strng"/>
+						<p1:GCombo mandatory="(com.ifx.davex.ui.controls.util.AppUiConstants).FALSE" manifestObj="true" options="Weak Driver&#13;&#10;Medium Driver&#13;&#10;Strong Driver Soft Edge&#13;&#10;Strong Driver Slow Edge&#13;&#10;Strong Driver Sharp Edge&#13;&#10;Strong Driver Medium Edge" value="Strong Driver Sharp Edge" widgetName="gcombo_hr_out1_strng" description="Selects the drive strength for output pin." toolTipText="Select the output pad driver strength based on pin assignment."/>
+					</p1:GGroup>
+				</p1:Tab>
+			</p1:GTab.control>
+		</p1:GTab>
+	</p1:TabFolder>
+</p1:Tab>

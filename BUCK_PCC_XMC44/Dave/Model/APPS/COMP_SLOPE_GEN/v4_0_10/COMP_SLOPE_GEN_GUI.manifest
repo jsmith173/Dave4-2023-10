@@ -1,0 +1,111 @@
+package Model.APPS.COMP_SLOPE_GEN.v4_0_10;
+
+// Import statements
+import ifx.davex.app.manifest.*
+
+abstract class COMP_SLOPE_GEN_GUI extends AppManifest {
+	/* Begin : UI variable section */
+	 public GTab tab_cmp_output_settings;
+	 public GTab gtab_cmp_clamping;
+	 public GTab gtab_csg;
+	 public GTab gtab_cmp_event;
+	 public GImage gimage_csg;
+	 public GImage gimage_peak_cur_ctrl;
+	 public GCombo gcombo_csg_comp_filtering;
+	 public GCombo gcombo_blanking_config;
+	 public GCombo gcombo_csg_cinx;
+	 public GCombo gcombo_csg_clamp_level;
+	 public GCombo gcombo_csg_clamp_ctrl_lvl;
+	 public GCombo gcombo_csg_clamp_enter_config;
+	 public GCombo gcombo_scg_clamp_exit_config;
+	 public GCombo gcombo_csg_clamp_exit_sw_config;
+	 public GCombo gcombo_dac_mode;
+	 public GCombo gcombo_restart_slope;
+	 public GFloat gfloat_blanking_time;
+	 public GFloat gfloat_dac_dsv1;
+	 public GFloat gfloat_dac_dsv2;
+	 public GFloat gfloat_slope_value;
+	 public GCheck gcheck_csg_comp_inv_enable;
+	 public GCheck gcheck_csg_comp_clamp_enable;
+	 public GCheck gcheck_dac_run_at_init;
+	 public GCheck gcheck_cmp_event_rise;
+	 public GCheck gcheck_cmp_event_fall;
+	 public GCheck gcheck_cmp_state_enter;
+	 public GLabel glabel_csg_comp_filtering;
+	 public GLabel glabel_blanking_config;
+	 public GLabel glabel_blanking_time;
+	 public GLabel glabel_csg_cinx;
+	 public GLabel glabel_csg_clamp_level;
+	 public GLabel glabel_csg_clamp_ctrl_lvl;
+	 public GLabel glabel_csg_clamp_enter_config;
+	 public GLabel glabel_scg_clamp_exit_config;
+	 public GLabel glabel_csg_clamp_exit_sw_config;
+	 public GLabel glabel_dac_mode;
+	 public GLabel glabel_dac_dsv1;
+	 public GLabel glabel_dac_dsv2;
+	 public GLabel glabel_slope_value;
+	 public GLabel glabel_restart_slope;
+	 public GLabel glabel_29;
+	 public GGroup ggroup_1;
+	 public GGroup ggroup_2;
+	 public GGroup ggroup_csg;
+	 public GGroup ggroup_3;
+	 public GGroup ggroup_slope_gen_settings;
+	 public GGroup ggroup_8;
+	 public GGroup ggroup_4;
+
+	 public COMP_SLOPE_GEN_GUI(DaveEnv daveEnv){
+
+	 tab_cmp_output_settings = GTab(widgetName:"tab_cmp_output_settings", text:"Comparator Output Settings", enabled:true, visible:true)
+	 gtab_cmp_clamping = GTab(widgetName:"gtab_cmp_clamping", text:"Comparator Clamping", enabled:true, visible:true)
+	 gtab_csg = GTab(widgetName:"gtab_csg", text:"DAC and Slope Settings", enabled:true, visible:true)
+	 gtab_cmp_event = GTab(widgetName:"gtab_cmp_event", text:"Comparator Event Settings", enabled:true, visible:true)
+	 gimage_csg = GImage(widgetName:"gimage_csg", path: "Uimodel/csg_cmp_op_setting.png", enabled:true, visible:true)
+	 gimage_peak_cur_ctrl = GImage(widgetName:"gimage_peak_cur_ctrl", path: "Uimodel/triangle.png", enabled:true, visible:true)
+	 gcombo_csg_comp_filtering = GCombo(widgetName:"gcombo_csg_comp_filtering", options:["No Filtering","2 Clock Cycle","3 Clock Cycle","4 Clock Cycle","5 Clock Cycle","6 Clock Cycle","7 Clock Cycle","8 Clock Cycle","9 Clock Cycle","10 Clock Cycle","11 Clock Cycle","12 Clock Cycle","13 Clock Cycle","14 Clock Cycle","15 Clock Cycle","16 Clock Cycle","32 Clock Cycle"], value:"No Filtering", enabled:true, visible:true, isMandatoryValue:false)
+	 gcombo_blanking_config = GCombo(widgetName:"gcombo_blanking_config", options:["Disabled","Start Upon Low To High Transition Of Comp Output","Start Upon High To Low Transition Of Comp Output","Start Upon Both Transitions Of Comp Output","Start Upon Low To High Transition Of External Signal","Start Upon High To Low Transition Of External Signal","Start Upon Both Transitions Of External Signal"], value:"Disabled", enabled:true, visible:true, isMandatoryValue:false)
+	 gcombo_csg_cinx = GCombo(widgetName:"gcombo_csg_cinx", options:["CINA","CINB"], value:"CINA", enabled:true, visible:true, isMandatoryValue:false)
+	 gcombo_csg_clamp_level = GCombo(widgetName:"gcombo_csg_clamp_level", options:["Low","High"], value:"Low", enabled:true, visible:true, isMandatoryValue:false)
+	 gcombo_csg_clamp_ctrl_lvl = GCombo(widgetName:"gcombo_csg_clamp_ctrl_lvl", options:["High","Low"], value:"High", enabled:true, visible:true, isMandatoryValue:false)
+	 gcombo_csg_clamp_enter_config = GCombo(widgetName:"gcombo_csg_clamp_enter_config", options:["Immediately","After The Comparator Output Passes To Low","After The Comparator Output Passes To High"], value:"Immediately", enabled:true, visible:true, isMandatoryValue:false)
+	 gcombo_scg_clamp_exit_config = GCombo(widgetName:"gcombo_scg_clamp_exit_config", options:["Immediately","After The Comparator Output Passes To Low","After The Comparator Output Passes To High"], value:"Immediately", enabled:true, visible:true, isMandatoryValue:false)
+	 gcombo_csg_clamp_exit_sw_config = GCombo(widgetName:"gcombo_csg_clamp_exit_sw_config", options:["External Signal And SW","Only SW"], value:"External Signal And SW", enabled:true, visible:true, isMandatoryValue:false)
+	 gcombo_dac_mode = GCombo(widgetName:"gcombo_dac_mode", options:["Static","Decrementing Slope","Incrementing Slope","Triangular Slope"], value:"Decrementing Slope", enabled:true, visible:true, isMandatoryValue:false)
+	 gcombo_restart_slope = GCombo(widgetName:"gcombo_restart_slope", options:["Upon Rising Edge Of External Signal","Upon Falling Edge Of External Signal","Upon Both Edges Of External Signal","If DAC Value Reaches Stop Value (DSV2)"], value:"Upon Falling Edge Of External Signal", enabled:true, visible:true, isMandatoryValue:false)
+	 gfloat_blanking_time = GFloat(widgetName:"gfloat_blanking_time", value:0.0, minValue:0, maxValue:2125, enabled:true, visible:true, isMandatoryValue:false)
+	 gfloat_dac_dsv1 = GFloat(widgetName:"gfloat_dac_dsv1", value:3000, minValue:0, maxValue:3300, enabled:true, visible:true, isMandatoryValue:false)
+	 gfloat_dac_dsv2 = GFloat(widgetName:"gfloat_dac_dsv2", value:0, minValue:0, maxValue:3300, enabled:true, visible:true, isMandatoryValue:false)
+	 gfloat_slope_value = GFloat(widgetName:"gfloat_slope_value", value:300, minValue:0, maxValue:3093, enabled:true, visible:true, isMandatoryValue:false)
+	 gcheck_csg_comp_inv_enable = GCheck(widgetName:"gcheck_csg_comp_inv_enable", value:false, enabled:true, visible:true)
+	 gcheck_csg_comp_clamp_enable = GCheck(widgetName:"gcheck_csg_comp_clamp_enable", value:false, enabled:true, visible:true)
+	 gcheck_dac_run_at_init = GCheck(widgetName:"gcheck_dac_run_at_init", value:true, enabled:true, visible:true)
+	 gcheck_cmp_event_rise = GCheck(widgetName:"gcheck_cmp_event_rise", value:false, enabled:true, visible:true)
+	 gcheck_cmp_event_fall = GCheck(widgetName:"gcheck_cmp_event_fall", value:false, enabled:true, visible:true)
+	 gcheck_cmp_state_enter = GCheck(widgetName:"gcheck_cmp_state_enter", value:false, enabled:true, visible:true)
+	 glabel_csg_comp_filtering = GLabel(widgetName:"glabel_csg_comp_filtering", text:"Filter comparator output", enabled:true, visible:true)
+	 glabel_blanking_config = GLabel(widgetName:"glabel_blanking_config", text:"Blanking mode              ", enabled:true, visible:true)
+	 glabel_blanking_time = GLabel(widgetName:"glabel_blanking_time", text:"Blanking time [nsec]:", enabled:true, visible:true)
+	 glabel_csg_cinx = GLabel(widgetName:"glabel_csg_cinx", text:"Comparator inverting pin input", enabled:false, visible:true)
+	 glabel_csg_clamp_level = GLabel(widgetName:"glabel_csg_clamp_level", text:"Comparator output clamp level:", enabled:true, visible:true)
+	 glabel_csg_clamp_ctrl_lvl = GLabel(widgetName:"glabel_csg_clamp_ctrl_lvl", text:"Clamping state happens when external clamp level is:", enabled:true, visible:true)
+	 glabel_csg_clamp_enter_config = GLabel(widgetName:"glabel_csg_clamp_enter_config", text:"Clamping state enter configuration:", enabled:true, visible:true)
+	 glabel_scg_clamp_exit_config = GLabel(widgetName:"glabel_scg_clamp_exit_config", text:"Clamping state exit configuration:", enabled:true, visible:true)
+	 glabel_csg_clamp_exit_sw_config = GLabel(widgetName:"glabel_csg_clamp_exit_sw_config", text:"Clamping state exit SW configuration:", enabled:true, visible:true)
+	 glabel_dac_mode = GLabel(widgetName:"glabel_dac_mode", text:"DAC mode:", enabled:true, visible:true)
+	 glabel_dac_dsv1 = GLabel(widgetName:"glabel_dac_dsv1", text:"Start value (DSV1) [mV]:", enabled:true, visible:true)
+	 glabel_dac_dsv2 = GLabel(widgetName:"glabel_dac_dsv2", text:"Stop value (DSV2) [mV]:", enabled:true, visible:true)
+	 glabel_slope_value = GLabel(widgetName:"glabel_slope_value", text:"Slope value[mV/usec]:", enabled:true, visible:true)
+	 glabel_restart_slope = GLabel(widgetName:"glabel_restart_slope", text:"Restart slope:                 ", enabled:true, visible:true)
+	 glabel_29 = GLabel(widgetName:"glabel_29", text:"Note: Slope value is given unsigned", enabled:true, visible:true)
+	 ggroup_1 = GGroup(widgetName:"ggroup_1", text:"Comparator Output Setting", enabled:true, visible:true)
+	 ggroup_2 = GGroup(widgetName:"ggroup_2", text:"Blanking Setting", enabled:true, visible:true)
+	 ggroup_csg = GGroup(widgetName:"ggroup_csg", text:"", enabled:true, visible:true)
+	 ggroup_3 = GGroup(widgetName:"ggroup_3", text:"Clamping of Comparator Output Settings", enabled:true, visible:true)
+	 ggroup_slope_gen_settings = GGroup(widgetName:"ggroup_slope_gen_settings", text:"Slope Generation Settings", enabled:true, visible:true)
+	 ggroup_8 = GGroup(widgetName:"ggroup_8", text:"", enabled:true, visible:true)
+	 ggroup_4 = GGroup(widgetName:"ggroup_4", text:"Enable Comparator Events", enabled:true, visible:true)
+
+
+	 }
+	/* End : UI variable section */
+}

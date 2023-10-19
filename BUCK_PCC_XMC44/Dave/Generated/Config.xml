@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Project MotherSystem_Version="" Name="BUCK_PCC_XMC44" Path="D:\Work\Dave4\BUCK_PCC_XMC44">
+    <COMPILER>
+        <Name>ARM_GCC_HOME</Name>
+        <Version/>
+        <Memory_Model/>
+    </COMPILER>
+    <DEVICE>
+        <Sales_Code>XMC4400-F100x512</Sales_Code>
+        <Description/>
+    </DEVICE>
+    <Generated_Files>
+        <Source_Files>
+            <Source_File>
+                <File_Name>adc_scan.c</File_Name>
+                <Path>\Dave\Generated\ADC_SCAN\adc_scan.c</Path>
+                <Type>C File</Type>
+            </Source_File>
+            <Source_File>
+                <File_Name>adc_scan_conf.c</File_Name>
+                <Path>\Dave\Generated\ADC_SCAN\adc_scan_conf.c</Path>
+                <Type>C File</Type>
+            </Source_File>
+            <Source_File>
+                <File_Name>buck_pcc_fix_fq.c</File_Name>
+                <Path>\Dave\Generated\BUCK_PCC_FIX_FQ\buck_pcc_fix_fq.c</Path>
+                <Type>C File</Type>
+            </Source_File>
+            <Source_File>
+                <File_Name>buck_pcc_fix_fq_conf.c</File_Name>
+                <Path>\Dave\Generated\BUCK_PCC_FIX_FQ\buck_pcc_fix_fq_conf.c</Path>
+                <Type>C File</Type>
+            </Source_File>
+            <Source_File>
+                <File_Name>buck_pcc_fix_fq_control_loop.c</File_Name>
+                <Path>\Dave\Generated\BUCK_PCC_FIX_FQ\buck_pcc_fix_fq_control_loop.c</Path>
+                <Type>C File</Type>
+            </Source_File>
+            <Source_File>
+                <File_Name>clock_xmc4.c</File_Name>
+                <Path>\Dave\Generated\CLOCK_XMC4\clock_xmc4.c</Path>
+                <Type>C File</Type>
+            </Source_File>
+            <Source_File>
+                <File_Name>clock_xmc4_conf.c</File_Name>
+                <Path>\Dave\Generated\CLOCK_XMC4\clock_xmc4_conf.c</Path>
+                <Type>C File</Type>
+            </Source_File>
+            <Source_File>
+                <File_Name>comp_slope_gen.c</File_Name>
+                <Path>\Dave\Generated\COMP_SLOPE_GEN\comp_slope_gen.c</Path>
+                <Type>C File</Type>
+            </Source_File>
+            <Source_File>
+                <File_Name>comp_slope_gen_conf.c</File_Name>
+                <Path>\Dave\Generated\COMP_SLOPE_GEN\comp_slope_gen_conf.c</Path>
+                <Type>C File</Type>
+            </Source_File>
+            <Source_File>
+                <File_Name>control_lib.c</File_Name>
+                <Path>\Dave\Generated\CONTROL_LIB\control_lib.c</Path>
+                <Type>C File</Type>
+            </Source_File>
+            <Source_File>
+                <File_Name>cpu_ctrl_xmc4.c</File_Name>
+                <Path>\Dave\Generated\CPU_CTRL_XMC4\cpu_ctrl_xmc4.c</Path>
+                <Type>C File</Type>
+            </Source_File>
+            <Source_File>
+                <File_Name>cpu_ctrl_xmc4_conf.c</File_Name>
+                <Path>\Dave\Generated\CPU_CTRL_XMC4\cpu_ctrl_xmc4_conf.c</Path>
+                <Type>C File</Type>
+            </Source_File>
+            <Source_File>
+                <File_Name>DAVE.c</File_Name>
+                <Path>\Dave\Generated\DAVE.c</Path>
+                <Type>C File</Type>
+            </Source_File>
+            <Source_File>
+                <File_Name>global_adc.c</File_Name>
+                <Path>\Dave\Generated\GLOBAL_ADC\global_adc.c</Path>
+                <Type>C File</Type>
+            </Source_File>
+            <Source_File>
+                <File_Name>global_adc_conf.c</File_Name>
+                <Path>\Dave\Generated\GLOBAL_ADC\global_adc_conf.c</Path>
+                <Type>C File</Type>
+            </Source_File>
+            <Source_File>
+                <File_Name>global_ccu8.c</File_Name>
+                <Path>\Dave\Generated\GLOBAL_CCU8\global_ccu8.c</Path>
+                <Type>C File</Type>
+            </Source_File>
+            <Source_File>
+                <File_Name>global_ccu8_conf.c</File_Name>
+                <Path>\Dave\Generated\GLOBAL_CCU8\global_ccu8_conf.c</Path>
+                <Type>C File</Type>
+            </Source_File>
+            <Source_File>
+                <File_Name>global_hrpwm.c</File_Name>
+                <Path>\Dave\Generated\GLOBAL_HRPWM\global_hrpwm.c</Path>
+                <Type>C File</Type>
+            </Source_File>
+            <Source_File>
+                <File_Name>global_hrpwm_conf.c</File_Name>
+                <Path>\Dave\Generated\GLOBAL_HRPWM\global_hrpwm_conf.c</Path>
+                <Type>C File</Type>
+            </Source_File>
+            <Source_File>
+                <File_Name>hrpwm.c</File_Name>
+                <Path>\Dave\Generated\HRPWM\hrpwm.c</Path>
+                <Type>C File</Type>
+            </Source_File>
+            <Source_File>
+                <File_Name>hrpwm_conf.c</File_Name>
+                <Path>\Dave\Generated\HRPWM\hrpwm_conf.c</Path>
+                <Type>C File</Type>
+            </Source_File>
+        </Source_Files>
+        <Header_Files>
+            <Header_File>
+                <File_Name>adc_scan.h</File_Name>
+                <Path>\Dave\Generated\ADC_SCAN\adc_scan.h</Path>
+                <Type>H File</Type>
+            </Header_File>
+            <Header_File>
+                <File_Name>adc_scan_conf.h</File_Name>
+                <Path>\Dave\Generated\ADC_SCAN\adc_scan_conf.h</Path>
+                <Type>H File</Type>
+            </Header_File>
+            <Header_File>
+                <File_Name>adc_scan_extern.h</File_Name>
+                <Path>\Dave\Generated\ADC_SCAN\adc_scan_extern.h</Path>
+                <Type>H File</Type>
+            </Header_File>
+            <Header_File>
+                <File_Name>buck_pcc_fix_fq.h</File_Name>
+                <Path>\Dave\Generated\BUCK_PCC_FIX_FQ\buck_pcc_fix_fq.h</Path>
+                <Type>H File</Type>
+            </Header_File>
+            <Header_File>
+                <File_Name>buck_pcc_fix_fq_conf.h</File_Name>
+                <Path>\Dave\Generated\BUCK_PCC_FIX_FQ\buck_pcc_fix_fq_conf.h</Path>
+                <Type>H File</Type>
+            </Header_File>
+            <Header_File>
+                <File_Name>buck_pcc_fix_fq_extern.h</File_Name>
+                <Path>\Dave\Generated\BUCK_PCC_FIX_FQ\buck_pcc_fix_fq_extern.h</Path>
+                <Type>H File</Type>
+            </Header_File>
+            <Header_File>
+                <File_Name>clock_xmc4.h</File_Name>
+                <Path>\Dave\Generated\CLOCK_XMC4\clock_xmc4.h</Path>
+                <Type>H File</Type>
+            </Header_File>
+            <Header_File>
+                <File_Name>clock_xmc4_conf.h</File_Name>
+                <Path>\Dave\Generated\CLOCK_XMC4\clock_xmc4_conf.h</Path>
+                <Type>H File</Type>
+            </Header_File>
+            <Header_File>
+                <File_Name>clock_xmc4_extern.h</File_Name>
+                <Path>\Dave\Generated\CLOCK_XMC4\clock_xmc4_extern.h</Path>
+                <Type>H File</Type>
+            </Header_File>
+            <Header_File>
+                <File_Name>comp_slope_gen.h</File_Name>
+                <Path>\Dave\Generated\COMP_SLOPE_GEN\comp_slope_gen.h</Path>
+                <Type>H File</Type>
+            </Header_File>
+            <Header_File>
+                <File_Name>comp_slope_gen_conf.h</File_Name>
+                <Path>\Dave\Generated\COMP_SLOPE_GEN\comp_slope_gen_conf.h</Path>
+                <Type>H File</Type>
+            </Header_File>
+            <Header_File>
+                <File_Name>comp_slope_gen_extern.h</File_Name>
+                <Path>\Dave\Generated\COMP_SLOPE_GEN\comp_slope_gen_extern.h</Path>
+                <Type>H File</Type>
+            </Header_File>
+            <Header_File>
+                <File_Name>control_lib.h</File_Name>
+                <Path>\Dave\Generated\CONTROL_LIB\control_lib.h</Path>
+                <Type>H File</Type>
+            </Header_File>
+            <Header_File>
+                <File_Name>control_lib_extern.h</File_Name>
+                <Path>\Dave\Generated\CONTROL_LIB\control_lib_extern.h</Path>
+                <Type>H File</Type>
+            </Header_File>
+            <Header_File>
+                <File_Name>cpu_ctrl_xmc4.h</File_Name>
+                <Path>\Dave\Generated\CPU_CTRL_XMC4\cpu_ctrl_xmc4.h</Path>
+                <Type>H File</Type>
+            </Header_File>
+            <Header_File>
+                <File_Name>cpu_ctrl_xmc4_conf.h</File_Name>
+                <Path>\Dave\Generated\CPU_CTRL_XMC4\cpu_ctrl_xmc4_conf.h</Path>
+                <Type>H File</Type>
+            </Header_File>
+            <Header_File>
+                <File_Name>cpu_ctrl_xmc4_extern.h</File_Name>
+                <Path>\Dave\Generated\CPU_CTRL_XMC4\cpu_ctrl_xmc4_extern.h</Path>
+                <Type>H File</Type>
+            </Header_File>
+            <Header_File>
+                <File_Name>DAVE.h</File_Name>
+                <Path>\Dave\Generated\DAVE.h</Path>
+                <Type>H File</Type>
+            </Header_File>
+            <Header_File>
+                <File_Name>DAVE_Common.h</File_Name>
+                <Path>\Dave\Generated\DAVE_Common.h</Path>
+                <Type>H File</Type>
+            </Header_File>
+            <Header_File>
+                <File_Name>global_adc.h</File_Name>
+                <Path>\Dave\Generated\GLOBAL_ADC\global_adc.h</Path>
+                <Type>H File</Type>
+            </Header_File>
+            <Header_File>
+                <File_Name>global_adc_conf.h</File_Name>
+                <Path>\Dave\Generated\GLOBAL_ADC\global_adc_conf.h</Path>
+                <Type>H File</Type>
+            </Header_File>
+            <Header_File>
+                <File_Name>global_adc_extern.h</File_Name>
+                <Path>\Dave\Generated\GLOBAL_ADC\global_adc_extern.h</Path>
+                <Type>H File</Type>
+            </Header_File>
+            <Header_File>
+                <File_Name>global_ccu8.h</File_Name>
+                <Path>\Dave\Generated\GLOBAL_CCU8\global_ccu8.h</Path>
+                <Type>H File</Type>
+            </Header_File>
+            <Header_File>
+                <File_Name>global_ccu8_conf.h</File_Name>
+                <Path>\Dave\Generated\GLOBAL_CCU8\global_ccu8_conf.h</Path>
+                <Type>H File</Type>
+            </Header_File>
+            <Header_File>
+                <File_Name>global_ccu8_extern.h</File_Name>
+                <Path>\Dave\Generated\GLOBAL_CCU8\global_ccu8_extern.h</Path>
+                <Type>H File</Type>
+            </Header_File>
+            <Header_File>
+                <File_Name>global_hrpwm.h</File_Name>
+                <Path>\Dave\Generated\GLOBAL_HRPWM\global_hrpwm.h</Path>
+                <Type>H File</Type>
+            </Header_File>
+            <Header_File>
+                <File_Name>global_hrpwm_conf.h</File_Name>
+                <Path>\Dave\Generated\GLOBAL_HRPWM\global_hrpwm_conf.h</Path>
+                <Type>H File</Type>
+            </Header_File>
+            <Header_File>
+                <File_Name>global_hrpwm_extern.h</File_Name>
+                <Path>\Dave\Generated\GLOBAL_HRPWM\global_hrpwm_extern.h</Path>
+                <Type>H File</Type>
+            </Header_File>
+            <Header_File>
+                <File_Name>hrpwm.h</File_Name>
+                <Path>\Dave\Generated\HRPWM\hrpwm.h</Path>
+                <Type>H File</Type>
+            </Header_File>
+            <Header_File>
+                <File_Name>hrpwm_conf.h</File_Name>
+                <Path>\Dave\Generated\HRPWM\hrpwm_conf.h</Path>
+                <Type>H File</Type>
+            </Header_File>
+            <Header_File>
+                <File_Name>hrpwm_extern.h</File_Name>
+                <Path>\Dave\Generated\HRPWM\hrpwm_extern.h</Path>
+                <Type>H File</Type>
+            </Header_File>
+        </Header_Files>
+        <Library_Files/>
+        <Assembly_Files/>
+    </Generated_Files>
+    <Include_Path>
+        <Path>\Libraries\XMCLib\inc</Path>
+        <Path>\Libraries\CMSIS\Include</Path>
+        <Path>\Libraries\CMSIS\Infineon\XMC4400_series\Include</Path>
+        <Path/>
+        <Path>\Dave\Generated</Path>
+        <Path>\Libraries</Path>
+    </Include_Path>
+    <Preprocessor_Symbols>
+        <Assembler_Symbol>XMC4400_F100x512=</Assembler_Symbol>
+        <Compiler_Symbol>XMC4400_F100x512=</Compiler_Symbol>
+    </Preprocessor_Symbols>
+</Project>
